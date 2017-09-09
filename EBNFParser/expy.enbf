@@ -1,0 +1,57 @@
+
+Expr   ::= Closure | BinOp 
+
+Factor ::= [Op] Atom
+
+
+
+Closure::= '{' [Expr [NEWLINE]]* '}' | 'def' [Expr] '(' tpdef ')' Closure
+
+
+Atom: (Liter | Expr) Trailer
+ 
+
+Trailer::= [ ('[' [Expr]* ']')+ | ('(' [Expr]* ')')+ | (['.' Name])+ ]
+
+
+
+
+
+
+
+
+
+
+Op     ::= <操作符, 略>
+Liter  ::= [Name, String, Number, True, False, None] 
+
+Expr   ::= (Liter | Closure | BinOp) Trailer
+
+Closure::= '{' [Expr [NEWLINE]]* '}' | 'def' [NAME] '(' tpdef ')' Closure
+
+BinOp  ::= Factor [Op Factor]*
+
+# BinOp  ::= Factor [Op Factor]*
+# 左递归未解决。
+
+
+Factor ::= [Op] Expr 
+
+Trailer::= [ ('[' [Expr]* ']')+ | ('(' [Expr]* ')')+ | (['.' Name])+ ]
+
+tpdef  ::=  (NAME)*
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+ 

@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sat Sep  9 20:13:34 2017
+Created on Sat Sep  9 23:34:03 2017
 
 @author: misakawa
 """
 
-Regex = 1
 from .Node import Name,  Number, String,\
                  Bracket,NEWLINE,END,Comment,Op,\
                  Liter, ast, mode, redef, recur, Seq, ELiter
-                 
-                 
+         
+# Error File
+# 左递归未解决。
 
-LangLiter = ast(
-           
+Atom   = ast(    
            [Number],
            [String],
            [Liter('True(?![a-zA-Z_0-9])',name = 'True')],
@@ -23,40 +22,32 @@ LangLiter = ast(
            [Name],
            name = 'Atom')
 
+Expr    = ast()
+Closure = ast()
+BinOp   = ast()
+Factor  = ast()
 Trailer = Seq()
-Expr    = ast() 
+Tpdef   = Seq([Name], atleast = 0, name = 'Tpdef')
 
-Atom = Seq()
-
-
-# factor
-Factor = ast()
-redef(Factor,
-      [Atom],
-      [Op, Factor],
-      name = 'Factor'
+redef(Expr,
+      [ast([Atom],[Closure],[BinOp]), Trailer],
+       name = 'Expr'
       )
 
-BinOp = ast([Factor, 
-             Seq([Op, Factor], atleast = 0)
-             ],
-            name = 'BinOp')
-
-Closure = ast()
 redef(Closure,
       [ELiter('{'), 
        Seq([Expr,
-              Seq([NEWLINE], atleast = 0)
-              ],atleast = 0),
+            Seq([NEWLINE], atleast = 0)
+            ],atleast = 0),
        ELiter('}')
-        ],
+       ],
        [Liter('def(?![a-zA-Z_0-9])'),  # lambda 
        ELiter('('),
        Seq([Name], atleast = 0),
        ELiter(')'),
        Closure
        ]        
-        ,
+       ,
        [Liter('def(?![a-zA-Z_0-9])'), # function with Name definition.
         Name,
         ELiter('('),
@@ -66,38 +57,20 @@ redef(Closure,
         ],
         name = 'Closure'
       )
-       
-redef(Expr,
-      [Closure],
-      [BinOp],
-      name = 'Expr'
+
+redef(BinOp,
+      [Expr, Seq([Op, Expr], atleast = 0)],
+      name = "BinOp"
+      )
+
+redef(Factor,
+      [Op, Expr],
+      [Expr],
+      name = "Factor"
       )
 
 redef(Trailer, 
-            [ELiter('['), Seq([Atom], atleast = 0), ELiter(']')],
-            [ELiter('('), Seq([Atom], atleast = 0), ELiter(')')],
+            [ELiter('['), Seq([Expr], atleast = 0), ELiter(']')],
+            [ELiter('('), Seq([Expr], atleast = 0), ELiter(')')],
             [ELiter('.'), Name],
           name = 'Trailer', atleast = 0)
-
-
-AtomExpr = ast([LangLiter, Trailer], name = 'AtomExpr')
-redef(Atom,
-      [AtomExpr],
-      [LangLiter],
-      
-#      [Expr],
-#      [ELiter('('), Expr, ELiter(')')],
-      name = 'Atom'
-      )
-
-AST = ast(
-        [Expr],
-        [Atom],
-        name = 'AST'
-        )
-
-
-
-
-
-

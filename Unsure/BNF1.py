@@ -1,18 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sat Sep  9 22:07:34 2017
-
-@author: misakawa
-"""
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
 Created on Sat Sep  9 20:13:34 2017
 
 @author: misakawa
 """
+
+# Error File
 
 Regex = 1
 from .Node import Name,  Number, String,\
@@ -29,31 +23,21 @@ LangLiter = ast(
            [Liter('False(?![a-zA-Z_0-9])',name = 'False')],
            [Liter('None(?![a-zA-Z_0-9])', name = 'None')],
            [Name],
-           name = 'Atom')
+           name = 'Liter')
 
 Trailer = Seq()
 Expr    = ast() 
 
-Atom = Seq([LangLiter, 
-           Trailer
-           ],
-           [Expr,
-            Trailer
-           ],
-      name = 'Atom') 
+Atom = Seq()
 
+
+# factor
 Factor = ast()
-
 redef(Factor,
       [Atom],
       [Op, Factor],
       name = 'Factor'
       )
-
-#Factor = ast([Seq([Op],atleast = 0), 
-#              Atom
-#              ], 
-#        name = 'Factor')
 
 BinOp = ast([Factor, 
              Seq([Op, Factor], atleast = 0)
@@ -63,19 +47,28 @@ BinOp = ast([Factor,
 Closure = ast()
 redef(Closure,
       [ELiter('{'), 
-       Seq([Atom,
+       Seq([Expr,
               Seq([NEWLINE], atleast = 0)
               ],atleast = 0),
        ELiter('}')
         ],
-       [ELiter('def(?![a-zA-Z_0-9])'),
+       [Liter('def(?![a-zA-Z_0-9])'),  # lambda 
+       ELiter('('),
+       Seq([Name], atleast = 0),
+       ELiter(')'),
+       Closure
+       ]        
+        ,
+       [Liter('def(?![a-zA-Z_0-9])'), # function with Name definition.
+        Name,
+        ELiter('('),
         Seq([Name], atleast = 0),
+        ELiter(')'),
         Closure
         ],
         name = 'Closure'
       )
-
-
+       
 redef(Expr,
       [Closure],
       [BinOp],
@@ -87,6 +80,25 @@ redef(Trailer,
             [ELiter('('), Seq([Atom], atleast = 0), ELiter(')')],
             [ELiter('.'), Name],
           name = 'Trailer', atleast = 0)
+
+
+AtomExpr = ast([LangLiter, Trailer], name = 'AtomExpr')
+redef(Atom,
+      [AtomExpr],
+      [LangLiter],
+      [Closure],
+      [BinOp],
+      
+#      [Expr],
+#      [ELiter('('), Expr, ELiter(')')],
+      name = 'Atom'
+      )
+
+AST = ast(
+        [Expr],
+        [Atom],
+        name = 'AST'
+        )
 
 
 

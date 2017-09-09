@@ -115,6 +115,7 @@ class ast:
     def setP(self, parent): self.parent = parent; parent.append(self); return self
     
     def match(self, objs, partial = True):
+        
         res   = mode().setName(self.name)
         count = 0
         goto = False
