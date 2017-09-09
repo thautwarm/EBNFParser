@@ -8,4 +8,4 @@ Created on Sat Sep  9 20:24:21 2017
 
 from EBNFParser.ObjRegex.BNF import *
 import sys
-sys.setrecursionlimit(100)
+sys.setrecursionlimit(50)

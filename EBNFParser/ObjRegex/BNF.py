@@ -34,18 +34,54 @@ Atom = Seq([LangLiter,
            ],
       name = 'Atom') 
 
-Factor = ast([Seq([Op],atleast = 0), 
-              Atom
-              ], 
-        name = 'Factor')
+Factor = ast()
 
-BinOp = ast([Atom, Op, Atom],
+redef(Factor,
+      [Atom],
+      [Op, Factor],
+      name = 'Factor'
+      )
+
+#Factor = ast([Seq([Op],atleast = 0), 
+#              Atom
+#              ], 
+#        name = 'Factor')
+
+BinOp = ast([Factor, 
+             Seq([Op, Factor], atleast = 0)
+             ],
             name = 'BinOp')
+
+Closure = ast()
+redef(Closure,
+      [ELiter('{'), 
+       Seq([Atom,
+              Seq([NEWLINE], atleast = 0)
+              ],atleast = 0),
+       ELiter('}')
+        ],
+       [ELiter('def(?![a-zA-Z_0-9])'),
+        Seq([Name], atleast = 0),
+        Closure
+        ],
+        name = 'Closure'
+      )
+
+
+redef(Expr,
+      [Closure],
+      [BinOp],
+      name = 'Expr'
+      )
 
 redef(Trailer, 
             [ELiter('['), Seq([Atom], atleast = 0), ELiter(']')],
             [ELiter('('), Seq([Atom], atleast = 0), ELiter(')')],
             [ELiter('.'), Name],
           name = 'Trailer', atleast = 0)
+
+
+
+
 
 

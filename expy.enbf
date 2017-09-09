@@ -3,7 +3,7 @@ Expr   ::= Closure | BinOp
 
 Factor ::= [Op] Atom
 
-BinOp  ::= Factor [Op Expr]+
+BinOp  ::= Factor [Op Factor]+
 
 Closure::= '{' [Expr [NEWLINE]]* '}' | 'def' [Expr] '(' [tpdef] ')' Closure
 
