@@ -8,11 +8,10 @@ BinOp  ::= [Atom Op Atom]+
 Closure::= '{' [Expr [NEWLINE]]* '}' | 'def' [Expr] '(' [tpdef] ')' Closure
 
 
-Atom: (Liter | Expr) ['.' Access | Trailer]
+Atom: (Liter | Expr) Trailer
+ 
 
-Access ::= NAME ['.' Access] 
-
-Trailer::= '[' [Expr]* ']' | '(' [Expr]* ')' 
+Trailer::= [ ('[' [Expr]* ']')+ | ('(' [Expr]* ')')+ | (['.' Name])+ ]
 
 
 Op:操作符

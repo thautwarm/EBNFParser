@@ -61,8 +61,9 @@ def reMatch(x, make = lambda x:x, escape = False):
     return _1
 
 class Liter:
-    def __init__(self, i):
+    def __init__(self, i, name = None):
         self.f = reMatch(i)
+        self.name = name
     def match(self, objs, partial = True):
         r = self.f(objs)
         if r:
@@ -70,8 +71,9 @@ class Liter:
                 return r
             return None
 class ELiter:
-    def __init__(self, i):
+    def __init__(self, i, name = None):
         self.f = reMatch(i, escape = True)
+        self.name = name
     def match(self, objs, partial = True):
         r = self.f(objs)
         if r:
@@ -80,14 +82,14 @@ class ELiter:
             return None
     
 
-Name   = Liter(L_Name)
-String = Liter(L_String)
-Number = Liter(L_Number)
-Bracket= Liter(L_Bracket)
-NEWLINE= Liter(L_NEWLINE)
-END    = Liter(L_END)
-Comment= Liter(L_Comment)
-Op     = Liter(L_Op)
+Name   = Liter(L_Name, 'Name')
+String = Liter(L_String,'String')
+Number = Liter(L_Number,'Number')
+Bracket= Liter(L_Bracket,'Bracket')
+NEWLINE= Liter(L_NEWLINE,'NEWLINE')
+END    = Liter(L_END,'END')
+Comment= Liter(L_Comment,'Comment')
+Op     = Liter(L_Op,'Op')
 
 class recur:pass
 def redef(self, *args, **kwargs):
@@ -115,13 +117,30 @@ class ast:
     def match(self, objs, partial = True):
         res   = mode().setName(self.name)
         count = 0
-        for possible in self.possibles:
+        goto = False
+        # debug
+        for i, possible in enumerate(self.possibles):
+        # ===
+        
+#        for possible in self.possibles:
             for thing in possible:
+                # debug
+                print(thing.name)
+                # ===
+                
                 r = thing.match(objs[count:], partial = partial)
+                
+                # debug
+                print("loc <1>:", r)
+                
+                # ===
+                
+                
                 if not r:
                     # nexr possible
                     res.clear()
                     count = 0
+                    goto = True
                     break
                 
                 a, b = r
@@ -132,7 +151,14 @@ class ast:
                         res.extend(b)
                     else:
                         res.append(b)
-                        
+            else:
+                goto = False
+                
+            if goto : 
+                print(i,'->')
+                continue
+            
+            print(i)                
             return count, res
                 
                     
@@ -149,25 +175,27 @@ class Seq(ast):
                 return 0 , None
             return None
         count = 0
+        
         # debug
         i = 0
+        # ===
+        
         while True:
             
             # debug
             i+=1
-            if i>50:raise
+            if i>20:raise
             # ===
             
             
-            r = super(Seq, self).match(objs, partial = True)
+            r = super(Seq, self).match(objs[count:], partial = True)
             if not r:
                 break
-            
-            # debug
-            print(r, objs)
-            # ===
+
             a , b = r
-            res.extend(b)
+            
+            if b:
+                res.extend(b)
             
             count += a
             
