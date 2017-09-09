@@ -5,7 +5,7 @@ Factor ::= [Op] Atom
 
 BinOp  ::= Factor [Op Factor]+
 
-Closure::= '{' [Expr [NEWLINE]]* '}' | 'def' [Expr] '(' [tpdef] ')' Closure
+Closure::= '{' [Expr [NEWLINE]]* '}' | 'def' [Expr] '(' tpdef ')' Closure
 
 
 Atom: (Liter | Expr) Trailer
@@ -15,9 +15,10 @@ Trailer::= [ ('[' [Expr]* ']')+ | ('(' [Expr]* ')')+ | (['.' Name])+ ]
 
 
 Op:操作符
-Liter : 字面量 [Name, String, Number, True, False, None] 
+Liter : [Name, String, Number, True, False, None] 
 
-tpdef:  (NAME ',')* NAME
+tpdef:  (NAME ',')* 
+
 
 
 

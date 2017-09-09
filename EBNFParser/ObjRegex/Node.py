@@ -119,10 +119,10 @@ class ast:
         count = 0
         goto = False
         # debug
-        for i, possible in enumerate(self.possibles):
+#        for i, possible in enumerate(self.possibles):
         # ===
         
-#        for possible in self.possibles:
+        for possible in self.possibles:
             for thing in possible:
                 
                 
@@ -154,11 +154,11 @@ class ast:
                 
             if goto : 
                 # debug
-                print(f'{self.name} -goto from', thing.name)
+#                print(f'{self.name} -goto from', thing.name)
                 # ===
                 continue
             
-            print(i)                
+#            print(i)                
             return count, res
                 
                     
@@ -177,14 +177,14 @@ class Seq(ast):
         count = 0
         
         # debug
-        i = 0
+#        i = 0
         # ===
         
         while True:
             
             # debug
-            i+=1
-            if i>20:raise
+#            i+=1
+#            if i>20:raise
             # ===
             
             
