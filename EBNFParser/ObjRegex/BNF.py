@@ -10,6 +10,9 @@ Regex = 1
 from .Node import Name,  Number, String,\
                  Bracket,NEWLINE,END,Comment,Op,\
                  Liter, ast, mode, redef, recur, Seq, ELiter
+                 
+                 
+
 LangLiter = ast(
            
            [Number],
@@ -21,14 +24,28 @@ LangLiter = ast(
            name = 'Atom')
 
 Trailer = Seq()
-Atom = ast([LangLiter, 
+Expr    = ast() 
+
+Atom = Seq([LangLiter, 
            Trailer
+           ],
+           [Expr,
+            Trailer
            ],
       name = 'Atom') 
 
-        
+Factor = ast([Seq([Op],atleast = 0), 
+              Atom
+              ], 
+        name = 'Factor')
+
+BinOp = ast([Atom, Op, Atom],
+            name = 'BinOp')
+
 redef(Trailer, 
             [ELiter('['), Seq([Atom], atleast = 0), ELiter(']')],
             [ELiter('('), Seq([Atom], atleast = 0), ELiter(')')],
             [ELiter('.'), Name],
-          name = 'Trailer')
+          name = 'Trailer', atleast = 0)
+
+

@@ -1,9 +1,9 @@
 
-Expr   ::= Closure | BinOp | Factor
+Expr   ::= Closure | BinOp 
 
-Factor ::= Atom [Trailer]  | [Op] Factor
+Factor ::= [Op] Atom
 
-BinOp  ::= [Atom Op Atom]+
+BinOp  ::= Factor [Op Expr]+
 
 Closure::= '{' [Expr [NEWLINE]]* '}' | 'def' [Expr] '(' [tpdef] ')' Closure
 

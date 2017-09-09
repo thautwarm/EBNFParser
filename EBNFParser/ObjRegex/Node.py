@@ -124,14 +124,12 @@ class ast:
         
 #        for possible in self.possibles:
             for thing in possible:
-                # debug
-                print(thing.name)
-                # ===
+                
                 
                 r = thing.match(objs[count:], partial = partial)
                 
                 # debug
-                print("loc <1>:", r)
+                print(f"{self.name} - loc <1>:", r)
                 
                 # ===
                 
@@ -155,7 +153,9 @@ class ast:
                 goto = False
                 
             if goto : 
-                print(i,'->')
+                # debug
+                print(f'{self.name} -goto from', thing.name)
+                # ===
                 continue
             
             print(i)                
@@ -199,7 +199,7 @@ class Seq(ast):
             
             count += a
             
-        if count < self.atleast:
+        if len(res) < self.atleast:
             return  None
         
         return count, res
