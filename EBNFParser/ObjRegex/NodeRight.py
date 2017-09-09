@@ -1,27 +1,24 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sat Sep  9 18:47:20 2017
+Created on Sun Sep 10 01:29:38 2017
 
 @author: misakawa
 """
-# ===========
+
 import re
-
-
-
 def reMatch(x, make = lambda x:x, escape = False):
     
     re_ = re.compile( re.escape(x) if escape else x)
     def _1(ys):
         if not ys: return None
-        r = re_.match(ys[0])
+        r = re_.match(ys[-1])
         if not r : return None
         a, b = r.span()
         if a!=0 : raise Exception('a is not 0')
-        if b is not len(ys[0]):
+        if b is not len(ys[-1]):
             return None
-        return 1, ys[0]
+        return 1, ys[-1]
     return _1
 
 class Liter:
@@ -34,6 +31,7 @@ class Liter:
             if partial or len(objs) == 1:
                 return r
             return None
+        
 class ELiter:
     def __init__(self, i, name = None):
         self.f = reMatch(i, escape = True)
@@ -52,13 +50,17 @@ def redef(self, *args, **kwargs):
     self.__init__(*args, **kwargs)
     return self
     
-class mode(list):
+from collections import deque
+class mode(deque):
     def setName(self, name):
         self.name = name
         return self
 
 
 
+def lim_0(a):
+    return a if a>0 else 0
+    
 class ast:
     def __init__(self, *ebnf, name = None):
         
@@ -73,17 +75,19 @@ class ast:
     def match(self, objs, partial = True):
         
         res   = mode().setName(self.name)
+        N     = len(objs)
         count = 0
-        goto = False
+        
+        goto  = False
         # debug
 #        for i, possible in enumerate(self.possibles):
         # ===
         
         for possible in self.possibles:
-            for thing in possible:
+            for thing in list(possible)[::-1]:
                 
                 
-                r = thing.match(objs[count:], partial = partial)
+                r = thing.match(objs[:lim_0(N-count)], partial = partial)
                 
                 # debug
                 print(f"{self.name} - loc <1>:", r)
@@ -103,9 +107,9 @@ class ast:
                 
                 if b:
                     if isinstance(thing, Seq):
-                        res.extend(b)
+                        res.extendleft(b)
                     else:
-                        res.append(b)
+                        res.appendleft(b)
             else:
                 goto = False
                 
@@ -117,6 +121,7 @@ class ast:
             
 #            print(i)                
             return count, res
+        
                 
                     
 class Seq(ast):
@@ -126,6 +131,7 @@ class Seq(ast):
         
     def match(self, objs, partial = True):
         
+        N = len(objs)
         res = mode().setName(self.name)
         if not objs:
             if self.atleast is 0:
@@ -145,14 +151,14 @@ class Seq(ast):
             # ===
             
             
-            r = super(Seq, self).match(objs[count:], partial = True)
+            r = super(Seq, self).match(objs[:lim_0(N-count)], partial = True)
             if not r:
                 break
 
             a , b = r
             
             if b:
-                res.extend(b)
+                res.extendLeft(b)
             
             count += a
             

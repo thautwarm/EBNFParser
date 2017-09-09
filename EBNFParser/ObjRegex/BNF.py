@@ -6,10 +6,58 @@ Created on Sat Sep  9 23:34:03 2017
 @author: misakawa
 """
 
-from .Node import Name,  Number, String,\
-                 Bracket,NEWLINE,END,Comment,Op,\
-                 Liter, ast, mode, redef, recur, Seq, ELiter
+from .Node import   Liter, ast, mode, redef, recur, Seq, ELiter
+L_Number = '\d+|\d*\.\d+'  
+
+L_Name   = '[a-zA-Z_][a-zA-Z0-9]*'
+
+L_String = '[a-z]{0,1}"[\w|\W]*"'
+
+L_Bracket= '\{|\}|\(|\)|\[|\]'
+
+L_END    = ';'
+
+L_NEWLINE= '\n'
+
+L_Comment = '#[\w|\W]*?\n'
+
+L_Op = '|'.join(['//', 
+               '/' ,
+               '\|',
+               '\|\|',
+               '>>','<<',
+               '>=','<=',
+               '<-',
+               '>' ,'<', 
+               '=>','->',
+               '\?', 
+               '--',
+               '\+\+', 
+               '\*\*',
+               '\+','-','\*','==','=','~',
+               '@',
+               '\$',
+               '%',
+               '\^',
+               '&',
+               '\!',
+               '\:\:',
+               '\:',
+               ])
+
+Name   = Liter(L_Name, 'Name')
+String = Liter(L_String,'String')
+Number = Liter(L_Number,'Number')
+Bracket= Liter(L_Bracket,'Bracket')
+NEWLINE= Liter(L_NEWLINE,'NEWLINE')
+END    = Liter(L_END,'END')
+Comment= Liter(L_Comment,'Comment')
+Op     = Liter(L_Op,'Op')
+
+
+
          
+            
 # Error File
 # 左递归未解决。
 
