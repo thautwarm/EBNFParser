@@ -1,0 +1,30 @@
+
+Expr   ::= Closure | BinOp | Factor
+
+Factor ::= Atom [Trailer]  | [Op] Factor
+
+BinOp  ::= [Atom Op Atom]+
+
+Closure::= '{' [Expr [NEWLINE]]* '}' | 'def' [Expr] '(' [tpdef] ')' Closure
+
+Trailer::= '[' [Expr]* ']' | '(' [Expr]* ')' 
+
+
+Op:操作符
+
+Atom: Liter | Expr ['.' NAME]*
+
+tpdef:  (NAME ',')* NAME
+
+
+
+
+
+
+
+ 
+
+
+
+
+ 

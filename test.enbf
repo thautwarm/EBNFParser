@@ -1,0 +1,51 @@
+
+
+Number ::= '\d+' | '\d*\.\d+'
+Name   ::= <省略>
+String ::= '[a-z]{0,1}"[\w|\W]*"'
+
+closure::= '{' (expr NEWLINE)* '}' | ('def' | NAME) [NAME] '(' argdef ')' [':' expr] closure 
+#           匿名闭包                 定义映射  定义宏名
+
+expr   ::= sexpr | '(' ([expr]*| '|' compreh ) ')' |
+		   '[' ([expr]*| '|' compreh ) ']' |
+                   '{' ([expr]*| '|' compreh ) '}' |
+		   closure
+
+
+sexpr   ::= factor | sexpr '(' [sexpr]*, [NAME '=' sexpr]* ')' 
+		   | sexpr '[' [sexpr]  ']'
+                   | sexpr '<' [sexpr]* '>'
+		   | closure
+
+
+factor ::= atom | Op factor | atom Op factor
+
+Op = '!' | '>=' | '>' | '<=' | '<'  | '>>' | '<<' | '%'  | '|'  | '|' '|'    |
+     '*'  | '**' | '+' | '-' | '++' | '--' | '/'  | '//' |
+     '='  | '==' | '^' | '$' |'is' | 'is' 'not'  | 'in' | '=>' | '->' | ':' | '::'
+
+atom   ::= Number | Name | String | None | True | False | expr
+
+
+flow  ::= 'yield' ['from'] expr | 'return' expr
+
+
+compreh ::= (NAME '<-' expr)+
+
+
+c = 1 
+d = 1
+c++
+d++
+f = def (a, b, c) {
+	return a+b+c
+}
+
+
+
+
+
+
+
+
