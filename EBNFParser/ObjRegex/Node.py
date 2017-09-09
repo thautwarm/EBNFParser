@@ -16,8 +16,6 @@ L_String = '[a-z]{0,1}"[\w|\W]*"'
 
 L_Bracket= '\{|\}|\(|\)|\[|\]'
 
-L_Access = '\.'
-
 L_END    = ';'
 
 L_NEWLINE= '\n'
@@ -48,8 +46,9 @@ L_Op = '|'.join(['//',
                '\:',
                ])
 
-def reMatch(x, make = lambda x:x):
-    re_ = re.compile(x)
+def reMatch(x, make = lambda x:x, escape = False):
+    
+    re_ = re.compile( re.escape(x) if escape else x)
     def _1(ys):
         if not ys: return None
         r = re_.match(ys[0])
@@ -70,26 +69,35 @@ class Liter:
             if partial or len(objs) == 1:
                 return r
             return None
+class ELiter:
+    def __init__(self, i):
+        self.f = reMatch(i, escape = True)
+    def match(self, objs, partial = True):
+        r = self.f(objs)
+        if r:
+            if partial or len(objs) == 1:
+                return r
+            return None
+    
 
 Name   = Liter(L_Name)
 String = Liter(L_String)
-Number = Liter(L_Name)
-Access = Liter(L_Access)
+Number = Liter(L_Number)
 Bracket= Liter(L_Bracket)
 NEWLINE= Liter(L_NEWLINE)
 END    = Liter(L_END)
-Comment= Liter(Comment)
-
-
-
-
+Comment= Liter(L_Comment)
+Op     = Liter(L_Op)
 
 class recur:pass
-
+def redef(self, *args, **kwargs):
+    self.__init__(*args, **kwargs)
+    return self
     
 class mode(list):
     def setName(self, name):
         self.name = name
+        return self
 
 
 
@@ -141,12 +149,23 @@ class Seq(ast):
                 return 0 , None
             return None
         count = 0
+        # debug
+        i = 0
         while True:
             
-            r = super(Seq, self).__init__(objs, partial = True)
+            # debug
+            i+=1
+            if i>50:raise
+            # ===
+            
+            
+            r = super(Seq, self).match(objs, partial = True)
             if not r:
                 break
             
+            # debug
+            print(r, objs)
+            # ===
             a , b = r
             res.extend(b)
             

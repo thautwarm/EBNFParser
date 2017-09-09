@@ -7,12 +7,16 @@ BinOp  ::= [Atom Op Atom]+
 
 Closure::= '{' [Expr [NEWLINE]]* '}' | 'def' [Expr] '(' [tpdef] ')' Closure
 
+
+Atom: (Liter | Expr) ['.' Access | Trailer]
+
+Access ::= NAME ['.' Access] 
+
 Trailer::= '[' [Expr]* ']' | '(' [Expr]* ')' 
 
 
 Op:操作符
-
-Atom: Liter | Expr ['.' NAME]*
+Liter : 字面量 [Name, String, Number, True, False, None] 
 
 tpdef:  (NAME ',')* NAME
 
