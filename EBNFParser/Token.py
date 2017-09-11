@@ -16,7 +16,7 @@ String = '[a-z]{0,1}"[\w|\W]*"'
 
 Bracket= '\{|\}|\(|\)|\[|\]'
 
-Access = '\.'
+Access = '\.|,'
 
 END    = ';'
 

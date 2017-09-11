@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Sep 11 01:05:06 2017
+Created on Mon Sep 11 17:50:50 2017
 
 @author: misakawa
 """
 
-# Meta BNF
-
-
-from .NodeBNF import   Liter, ast, recur, Seq, ELiter
+from EBNFParser.ObjectRegex.Node import   Liter, ast, recur, Seq, ELiter,handle_error
 L_Number = '\d+|\d*\.\d+'  
 
 L_Name   = '[a-zA-Z_][a-zA-Z0-9]*'
@@ -70,23 +67,24 @@ Def = Liter('def(?![a-zA-Z_0-9])', name = 'Def')
 
 compile_closure = globals()
 
-Atom = ast(compile_closure,
+Literal = ast(compile_closure,
            [Number],
            [String],
            [Liter('True(?![a-zA-Z_0-9])',name = 'True')],
            [Liter('False(?![a-zA-Z_0-9])',name = 'False')],
            [Liter('None(?![a-zA-Z_0-9])', name = 'None')],
            [Name],
-           name = 'Atom')
+           name = 'Literal')
 
 Closure = ast(compile_closure,
               [LBB, 
-               Seq(compile_closure,
-                   [recur('Expr'),
-                    Seq(compile_closure,
-                        [NEWLINE], 
-                        atleast = 0, name = '(NEWLINE)*')
-                    ],atleast = 0, name = '(Expr (NEWLINE)*)*'),
+               recur("Stmt"),
+#               Seq(compile_closure,
+#                   [recur('Expr'),
+#                    Seq(compile_closure,
+#                        [NEWLINE], 
+#                        atleast = 0, name = '(NEWLINE)*')
+#                    ],atleast = 0, name = '(Expr (NEWLINE)*)*'),
                RBB
                ],
                [Def,  # lambda 
@@ -110,45 +108,62 @@ Closure = ast(compile_closure,
               name = 'Closure'
               )
 
-BinOp = ast(compile_closure,
-            [recur('Expr'), Seq(compile_closure,
-                               [Op, recur('Expr')],
-                               atleast = 0, name = 'Expr (Op Expr)*')],
-            name = 'BinOp'
-            )
+
+
+Atom = ast(compile_closure,
+           [recur("Closure"), recur("Trailer")],
+           [recur("Literal"), recur("Trailer")],
+           name = 'Atom'
+           )
+
 
 Expr = ast(compile_closure,
-           [ast(compile_closure, 
-                [recur("Closure")],
-                [recur("BinOp")], 
-                [recur("Atom")], 
-                
-                name = 'BinOp | Atom | Closure'),
-                
-            recur("Trailer")],
-           name = 'Expr'
-           )
+           [
+            Seq(compile_closure,
+                [Op],
+                name = '(Op)*',
+                atleast = 0),
+            recur('Atom'), 
+            Seq(compile_closure,
+                [Op, recur('Expr')],
+                atleast = 0, name = '(Op Expr)*')],
+            name = 'Expr'
+            )
+
+           
+
+Stmt = ast(compile_closure,
+           [Seq(compile_closure,
+                  [Seq(compile_closure,
+                       [NEWLINE],
+                       name = 'LINESPLIT',
+                       atleast = 0),
+                   recur("Expr")
+                   ],
+                  name = 'AWAIT',
+                  atleast = 0)
+            ],
+           name = 'Stmt')
 
 
                
 
 
 Trailer= Seq(compile_closure,
-            [LB, Seq(compile_closure,[Expr], atleast = 0, name = "(Expr)*"), RB],
-            [LP, Seq(compile_closure,[Expr], atleast = 0, name = "(Expr)*"), RP],
+            [LB, Seq(compile_closure,[recur('Expr')], atleast = 0, name = "(Expr)*"), RB],
+            [LP, Seq(compile_closure,[recur('Expr')], atleast = 0, name = "(Expr)*"), RP],
             [ELiter('.', name = 'ACC'), Name],
             name = 'Trailer', atleast = 0)
              
 
-Atom.compile
+Literal.compile
 Closure.compile
-BinOp.compile
-BinOp.has_recur = True
 Expr.compile
-Expr.has_recur = True
+Atom.compile
 Trailer.compile
+Stmt.compile
 
-
-          
-
-
+Closure.has_recur = True
+Expr.has_recur = True
+Atom.has_recur = True
+Stmt.has_recur = True
