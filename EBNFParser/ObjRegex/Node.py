@@ -155,10 +155,12 @@ class Seq(ast):
                 res.extend(b)
             
             count += a
-            
+        
+        
         if len(res) < self.atleast:
             return  None
         
+        print(res)
         return count, res
                 
                     

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sun Sep 10 22:45:50 2017
+Created on Mon Sep 11 10:56:12 2017
 
 @author: misakawa
 """
@@ -11,21 +11,31 @@ import re
 from copy import deepcopy
 class MetaInfo(dict):
     
-    def __init__(self, count=0 , trace = None):
+    def __init__(self, count=0 , rdx=0, trace = None):
         self['count'] = count
         self['trace'] = trace if trace else []
+        self['rdx']   = rdx
         self['last_count'] = 0
+        self['history'] = []
     
-    def merge(self, meta):
-
-        self['count'] += meta['count']
-        self['trace'] += meta['trace']
-        
-        return self
     
     @property
     def branch(self):
-        return MetaInfo(count = self.count, trace = deepcopy(self['trace']))
+        self['history'].append((self.count, self.rdx, len(self.trace)))
+        return self
+    
+    @property
+    def rollback(self):
+        try:
+            count, rdx, length = self['history'].pop()
+        except IndexError:
+            return None
+        self.count = count
+        self.rdx   = rdx
+        self.trace = self.trace[:length]
+        return self
+    
+        
     
     @property
     def last_count(self):
@@ -36,7 +46,8 @@ class MetaInfo(dict):
         self['last_count'] += v
         return self
     
-        
+
+  
     
     @property
     def count(self):
@@ -57,26 +68,31 @@ class MetaInfo(dict):
         return self
     
     @property
-    def clean(self):
-        self.trace.clear()
-        self.count = 0
+    def rdx(self):
+        return self['rdx']
+    
+    @rdx.setter
+    def rdx(self,v):
+        self['rdx'] = v
         return self
+    
+
 
     
     
     
 def reMatch(x, make = lambda x:x, escape = False):
     
-    re_ = re.compile( re.escape(x) if escape else x)
-    def _1(ys):
-        if not ys: return None
-        r = re_.match(ys[0])
+    re_ = re.compile( re.escape(x) if escape else x )
+    def _1(y):
+        if not y: return None
+        r = re_.match(y)
         if not r : return None
         a, b = r.span()
-        if a!=0 : raise Exception('a is not 0')
-        if b is not len(ys[0]):
+        if a is not 0 : raise Exception('a is not 0')
+        if b != len(y):
             return None
-        return  ys[0]
+        return y
     return _1
 
 class Liter:
@@ -86,16 +102,16 @@ class Liter:
         self.has_recur = False
     def match(self, objs, meta_info = None, partial = True):
         if not meta_info: meta_info = MetaInfo()
-        r = self.f(objs)
-        if r:
-            if partial or len(objs) == 1:
-                meta_info.count += 1
-                if r == '\n':
-                    # for inplementation
-                    pass
-                return meta_info, r
+        if not objs[meta_info.count:]: return None
+        r = self.f(objs[meta_info.count])
+        if r is None or (not partial and len(objs) != 1):
             return None
-        return None
+        
+        if r == '\n':
+            meta_info.rdx += 1
+        meta_info.count += 1
+        
+        return r
     
 class ELiter:
     def __init__(self, i, name = None):
@@ -104,16 +120,16 @@ class ELiter:
         self.has_recur = False
     def match(self, objs, meta_info = None, partial = True):
         if not meta_info: meta_info = MetaInfo()
-        r = self.f(objs)
-        if r:
-            if partial or len(objs) == 1:
-                meta_info.count += 1
-                if r == '\n':
-                    # for inplementation
-                    pass
-                return meta_info, r
+        if not objs[meta_info.count:]: return None
+        r = self.f(objs[meta_info.count])
+        if r is None or (not partial and len(objs) != 1):
             return None
-        return None
+        
+        if r == '\n':
+            meta_info.rdx += 1
+        meta_info.count += 1
+        
+        return r
     
 
 
@@ -160,13 +176,13 @@ class ast:
                 elif isinstance(e, recur):
                     e = self.compile_closure[e.name]
                     self.possibilities[-1].append(e)
-                    if not self.has_recur:
-                        self.has_recur = e.has_recur
+#                    if not self.has_recur:
+#                        self.has_recur = e.has_recur
                 elif isinstance(e, ast):
                     e.compile
                     self.possibilities[-1].append(e)
-                    if not self.has_recur:
-                        self.has_recur = e.has_recur
+#                    if not self.has_recur:
+#                        self.has_recur = e.has_recur
                 else:
                     self.possibilities[-1].append(e)
         del self.cache
@@ -174,79 +190,62 @@ class ast:
         return self
         
     def match(self, objs, meta_info = None, partial = True):
-        if not meta_info : 
-            if self.has_recur:
-                meta_info = MetaInfo() 
-                meta_info.trace.append(self.name)
-            else :
-                meta_info = MetaInfo()
-                                  
-        res   = mode().setName(self.name)
-        meta_info.count = 0 
-        goto = False
+        
+        if not meta_info: 
+            meta_info = MetaInfo()
+        print("   "*meta_info.rdx, self.name, meta_info.trace)
+        try:
+            print(f"ready to parsed-begin:{objs[meta_info.count]}",)
+        except:
+            print(None)
         # debug
 #        for i, possible in enumerate(self.possibilities):
         # ===
         
         for possible in self.possibilities:
-            new_meta = meta_info.branch
-            for i, thing in enumerate(possible):
+            meta_info.branch
+            res   = mode().setName(self.name)
+            for thing in possible:
                 # eliminates the left recursion 
-                
-                print(f"<< {thing.name} >> {new_meta}")
-                if i is 0:
-#                    print(thing.name)
-#                    print(meta_info)
-                    if new_meta.last_count == new_meta.count and thing.name in meta_info.trace:
-                        # debug
+                if thing.has_recur:
+                    history_i = (meta_info.count, thing.name)
+                    if history_i in meta_info.trace:
                         print("Found L-R! Dealed!")
-                        # ===
-                        res.clear()
-                        new_meta = None
-                        goto = True
-                        break
+                        r = None
+                    else:
+                        meta_info.trace.append(history_i)
+                        r = thing.match(objs, meta_info=meta_info, partial = True)
+                else:
+                    r = thing.match(objs, meta_info=meta_info, partial = True)
                 
-                new_meta.last_count = new_meta.count
-                r = thing.match(objs[new_meta.count:], meta_info=new_meta, partial = partial)
                 
                 # debug
-                
-                print(f"{self.name} <=", r[1] if isinstance(r, tuple) else r)
-                print()
+                print(f"{self.name} -- {thing.name} <=", r)
                 # ===
-                
-                
-                if not r:
+            
+                if r is None:
                     # nexr possible
                     res.clear()
-                    new_meta = None
-                    goto = True
+                    meta_info.rollback
                     break
                 
-                a, b = r
+                print()
+                if isinstance(thing, Seq):
+                    res.extend(r)
+                else:
+                    res.append(r)
+                print('Added Seq ', res)
                 
-#                if a.count is not 0:                    
-#                    new_meta.merge(a)
-                    
-                    
-                    
-                
-                if b:
-                    if isinstance(thing, Seq):
-                        res.extend(b)
-                    else:
-                        res.append(b)
             else:
-                goto = False
-                
-            if goto : 
-                # debug
-#                print(f'{self.name} -goto from', thing.name)
-                # ===
-                continue
-#            print(i)   
-                    
-            return (new_meta , res) if new_meta else None
+                break
+            continue
+        else:
+            print('RET')
+            print()
+            return None
+        print('RET')
+        print()
+        return res
                 
                     
 class Seq(ast):
@@ -255,47 +254,48 @@ class Seq(ast):
         self.atleast = atleast
         
     def match(self, objs, meta_info=None, partial = True):
-        if not meta_info : 
-            if self.has_recur:
-                meta_info = MetaInfo() 
-                meta_info.trace.append(self.name)
-            else :
-                meta_info = MetaInfo()
-                
-        res = mode().setName(self.name)
-        if not objs:
+        if not meta_info: 
+            meta_info = MetaInfo()
+            
+#        # eliminates the left recursion 
+#        if self.has_recur and self.name:
+#            history_i = (meta_info.count, self.name)
+#            if history_i in meta_info.trace:
+#                print("Found L-R! Dealed!")
+#                return None
+#            else:
+#                meta_info.trace.append(history_i)
+                                  
+        res   = mode().setName(self.name)
+        
+        
+        if not objs[meta_info.count:]:
             if self.atleast is 0:
-                return meta_info , None
+                return res
             return None
-        meta_info.count = 0
         
         # debug
 #        i = 0
         # ===
-        new_meta = meta_info.branch
+        meta_info.branch
         while True:
             
             # debug
 #            i+=1
 #            if i>20:raise
             # ===
-            print('objs =>', objs[new_meta.count:])
-            r = super(Seq, self).match(objs[new_meta.count:], meta_info = new_meta, partial = True)
-            if not r:
+            r = super(Seq, self).match(objs, meta_info = meta_info, partial = True)
+            print(f' SEQ {self.name} : {res}')
+            if r is None:
                 break
-
-            a, b = r
-            
-            if b:
-                res.extend(b)
-            
-            new_meta.merge(a)
+            res.extend(r)
             
             
         if len(res) < self.atleast:
+            meta_info.rollback
             return  None
-        print('res->',res)
-        return new_meta, res
+
+        return res
                 
                     
                 
