@@ -62,18 +62,6 @@ token = gen_token_group(Number,
                         Comment
                         )
 
-Factor = {
-        0:Number,
-        1:Name,
-        2:String,
-        3:Bracket,
-        4:Access,
-        5:END,
-        6:NEWLINE,
-        7:Op
-        }
-
-Expr = [0,1,2, (1, 4, 1), ()]
 
 
 

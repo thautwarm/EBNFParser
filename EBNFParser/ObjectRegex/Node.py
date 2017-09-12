@@ -9,22 +9,29 @@ Created on Mon Sep 11 17:49:50 2017
 import re
 DEBUG = False
 class MetaInfo(dict):
-    
+    """
+    Meta information when parsing.
+    """
     def __init__(self, count=0 , rdx=0, trace = None):
         self['count'] = count
         self['trace'] = trace if trace else []
         self['rdx']   = rdx
-        self['last_count'] = 0
         self['history'] = []
     
     
     @property
     def branch(self):
+        """
+        Save a record of parsing history in order to trace back. 
+        """
         self['history'].append((self.count, self.rdx, len(self.trace)))
         return self
     
     @property
     def rollback(self):
+        """
+        Trace back.
+        """
         try:
             count, rdx, length = self['history'].pop()
         except IndexError:
@@ -36,28 +43,29 @@ class MetaInfo(dict):
     
     @property
     def pull(self):
+        """
+        Confirm the current parsing results.
+        Pop a record in parsing history.
+        """
         try:
             self['history'].pop()
         except IndexError:
             raise Exception("pull no thing")
         return self
-    
-        
-    
-    @property
-    def last_count(self):
-        return self['last_count']
-    
-    @last_count.setter
-    def last_count(self, v):
-        self['last_count'] += v
-        return self
+
     
 
   
     
     @property
     def count(self):
+        """
+        `count` is a property of MetaInfo.
+        It shows that how many tokenized(words) have been parsed, 
+            which could be used for
+                - Alerting.
+                - Eliminating left recursions.
+        """
         return self['count']
     
     @count.setter
@@ -67,6 +75,13 @@ class MetaInfo(dict):
     
     @property
     def trace(self):
+        """
+        `trace` is a property of MetaInfo.
+        It shows a trace of recursive BNF Nodes,
+            which could be used for
+                - Debugging.
+                - Eliminating left recursions.
+        """
         return self['trace']
     
     @trace.setter
@@ -76,6 +91,14 @@ class MetaInfo(dict):
     
     @property
     def rdx(self):
+        """
+        `rdx` is a property of MetaInfo.
+        It shows how many lines have beeb parsed now.
+            which could be used for
+                - Alerting.
+                - Debugging.
+        
+        """
         return self['rdx']
     
     @rdx.setter
@@ -85,6 +108,9 @@ class MetaInfo(dict):
     
     
 class simple_mode(str):
+    """
+    a `simple_mode` is a `str` which has a name. 
+    """
     def setName(self,name):
         self.name = name
         return self
@@ -92,6 +118,9 @@ class simple_mode(str):
         return f"{self.name} [' {super(simple_mode, self).__str__()} ']"
     
 class mode(list):
+    """
+    a `mode` is a `list` which has a name. 
+    """
     def setName(self, name):
         self.name = name
         return self
@@ -119,6 +148,9 @@ def reMatch(x, make = lambda x:x, escape = False):
 
 
 class Liter:
+    """
+    Literal which can be initialized by an escaped string. 
+    """
     def __init__(self, i, name = None):
         self.token_rule, self.f = reMatch(i)
         self.name = name
@@ -136,6 +168,9 @@ class Liter:
         return simple_mode(r).setName(self.name)
     
 class ELiter:
+    """
+    Literal which can be initialized by a raw string. 
+    """
     def __init__(self, i, name = None):
         self.token_rule, self.f = reMatch(i, escape = True)
         self.name = name
@@ -203,8 +238,6 @@ class ast:
             for e in es:
                 if e is recur:
                     self.possibilities[-1].append(self)
-                    if not self.has_recur:
-                        self.has_recur = True
                 elif isinstance(e, recur):
                     e = self.compile_closure[e.name]
                     self.possibilities[-1].append(e)

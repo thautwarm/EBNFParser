@@ -12,7 +12,9 @@ from EBNFParser.Parser.SelfExamine import *
 with open('selfexamine.ebnf') as f:
     lex = f.read()
 tokens = token.findall(lex)
-res = handle_error(Stmt.match)(tokens, partial=False)
+parser = handle_error(Stmt.match)
+res = parser(tokens, partial=False)
 print(res)
+
 
 
