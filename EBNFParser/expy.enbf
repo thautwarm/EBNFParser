@@ -1,10 +1,10 @@
 
 
-Expr   ::= BinOp  | Factor  | '[' (Expr)* ']' | '(' (Expr)* ',' ')' | '(' ')' 
+Expr   ::= BinOp  | Factor  | '[' (Expr)* ']' | '(' (Expr)* [','] ')' 
 BinOp  ::= Factor (Op Factor)*
 Factor ::= (Op)* Atom 
 
-Atom   ::= (Closure Trailer | BinOp Trailer | Liter Trailer) 
+Atom   ::= (Closure | BinOp | Liter) Trailer 
 
 Closure::= '{' (Expr (NEWLINE)* )* '}' | 'def' [NAME] '(' tpdef ')' Closure
 

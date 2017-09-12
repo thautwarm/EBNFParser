@@ -111,8 +111,17 @@ Closure = ast(compile_closure,
 
 
 Atom = ast(compile_closure,
-           [recur("Closure"), recur("Trailer")],
-           [recur("Literal"), recur("Trailer")],
+           [Seq(compile_closure,
+                [recur('Closure')],
+                [recur('Literal')],
+                name = '(Closure | Literal)',
+                atleast = 1,
+                atmost  = 1
+                ),
+            recur('Trailer')
+            ],
+#           [recur("Closure"), recur("Trailer")],
+#           [recur("Literal"), recur("Trailer")],
            name = 'Atom'
            )
 
@@ -131,8 +140,9 @@ ExprList = ast(compile_closure,
                     atleast = 0),
                Seq(compile_closure,
                     [ELiter(',')],
-                    name    = "(,)*",
-                    atleast = 0),
+                    name    = "[,]",
+                    atleast = 0,
+                    atmost  = 1),
                ],
                name = 'ExprList'
                )

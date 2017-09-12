@@ -83,6 +83,25 @@ class MetaInfo(dict):
         self['rdx'] = v
         return self
     
+    
+class simple_mode(str):
+    def setName(self,name):
+        self.name = name
+        return self
+    def __str__(self, i = 0):
+        return f"{self.name} [' {super(simple_mode, self).__str__()} ']"
+    
+class mode(list):
+    def setName(self, name):
+        self.name = name
+        return self
+    def __str__(self, i = 0):
+        body  = " ".join([ item.__str__(i+1) for item in  self])
+        space = '  '*(i+1) 
+        return f"{self.name}[{body}]\n{space}"
+    
+    
+    
 def reMatch(x, make = lambda x:x, escape = False):
     
     re_ = re.compile( re.escape(x) if escape else x )
@@ -96,6 +115,7 @@ def reMatch(x, make = lambda x:x, escape = False):
             return None
         return y
     return _1
+
 
 class Liter:
     def __init__(self, i, name = None):
@@ -112,8 +132,7 @@ class Liter:
         if r == '\n':
             meta_info.rdx += 1
         meta_info.count += 1
-        
-        return r
+        return simple_mode(r).setName(self.name)
     
 class ELiter:
     def __init__(self, i, name = None):
@@ -130,8 +149,7 @@ class ELiter:
         if r == '\n':
             meta_info.rdx += 1
         meta_info.count += 1
-        
-        return r
+        return simple_mode(r).setName(self.name)
     
 class recur:
     def __init__(self, name):
@@ -142,10 +160,7 @@ def redef(self, *args, **kwargs):
     self.__init__(*args, **kwargs)
     return self
     
-class mode(list):
-    def setName(self, name):
-        self.name = name
-        return self
+
     
 def handle_error(func):
     def _f(objs, meta_info = None, partial = True):
@@ -255,25 +270,39 @@ class ast:
 
     
 class Seq(ast):
-    def __init__(self,compile_closure, *ebnf, name = None, atleast = 1):
+    def __init__(self,compile_closure, *ebnf, name = None, atleast = 1, atmost = None):
         super(Seq, self).__init__(compile_closure, *ebnf, name = name)
         self.atleast = atleast
+        self.atmost  = atmost 
     def match(self, objs, meta_info=None, partial = True):
         if not meta_info: 
             meta_info = MetaInfo()
         if DEBUG:
             print(f'{self.name} WITH {meta_info.trace}')
-        res   = mode().setName(self.name)
+        res     = mode().setName(self.name)
+        atleast = self.atleast
         if not objs[meta_info.count:]:
-            if self.atleast is 0:
+            if atleast is 0:
                 return res
             return None
         meta_info.branch
-        while True:
-            r = super(Seq, self).match(objs, meta_info = meta_info)
-            if r is None:
-                break
-            res.extend(r)
+        atmost = self.atmost
+        if atmost:
+            idx = 0
+            while True:
+                if idx >= atmost:
+                    break
+                r = super(Seq, self).match(objs, meta_info = meta_info)
+                if r is None:
+                    break
+                res.extend(r)
+                idx += 1
+        else:
+            while True:
+                r = super(Seq, self).match(objs, meta_info = meta_info)
+                if r is None:
+                    break
+                res.extend(r)
         if DEBUG:
             print(f"{self.name} <= {r}")
         if len(res) < self.atleast:
