@@ -115,7 +115,9 @@ class simple_mode(str):
         self.name = name
         return self
     def __str__(self, i = 0):
-        return f"{self.name} [' {super(simple_mode, self).__str__()} ']"
+        body = super(simple_mode, self).__str__()
+        body = f"['{body}']" if body != '\n' else r'[\n]'+'\n'+'  '*(i+1)
+        return f"{self.name} {body}"
     
 class mode(list):
     """
@@ -157,9 +159,11 @@ class Liter:
         self.has_recur = False
     def match(self, objs, meta_info = None, partial = True):
         if not meta_info: meta_info = MetaInfo()
-        if not objs[meta_info.count:]: return None
+        
+        left = len(objs) - meta_info.count;
+        if not left: return None
         r = self.f(objs[meta_info.count])
-        if r is None or (not partial and len(objs) != 1):
+        if r is None or (not partial and left != 1):
             return None
         
         if r == '\n':

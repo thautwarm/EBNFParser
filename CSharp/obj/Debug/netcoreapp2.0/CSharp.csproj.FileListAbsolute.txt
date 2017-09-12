@@ -1,0 +1,10 @@
+/home/misakawa/Bench/EBNFParser/CSharp/bin/Debug/netcoreapp2.0/CSharp.deps.json
+/home/misakawa/Bench/EBNFParser/CSharp/bin/Debug/netcoreapp2.0/CSharp.runtimeconfig.json
+/home/misakawa/Bench/EBNFParser/CSharp/bin/Debug/netcoreapp2.0/CSharp.runtimeconfig.dev.json
+/home/misakawa/Bench/EBNFParser/CSharp/bin/Debug/netcoreapp2.0/CSharp.dll
+/home/misakawa/Bench/EBNFParser/CSharp/bin/Debug/netcoreapp2.0/CSharp.pdb
+/home/misakawa/Bench/EBNFParser/CSharp/obj/Debug/netcoreapp2.0/CSharp.csproj.CoreCompileInputs.cache
+/home/misakawa/Bench/EBNFParser/CSharp/obj/Debug/netcoreapp2.0/CSharp.AssemblyInfoInputs.cache
+/home/misakawa/Bench/EBNFParser/CSharp/obj/Debug/netcoreapp2.0/CSharp.AssemblyInfo.cs
+/home/misakawa/Bench/EBNFParser/CSharp/obj/Debug/netcoreapp2.0/CSharp.dll
+/home/misakawa/Bench/EBNFParser/CSharp/obj/Debug/netcoreapp2.0/CSharp.pdb
