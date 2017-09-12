@@ -103,8 +103,9 @@ class mode(list):
     
     
 def reMatch(x, make = lambda x:x, escape = False):
+    token_rule = re.escape(x) if escape else x
+    re_        = re.compile( token_rule )
     
-    re_ = re.compile( re.escape(x) if escape else x )
     def _1(y):
         if not y: return None
         r = re_.match(y)
@@ -114,12 +115,12 @@ def reMatch(x, make = lambda x:x, escape = False):
         if b != len(y):
             return None
         return y
-    return _1
+    return token_rule, _1
 
 
 class Liter:
     def __init__(self, i, name = None):
-        self.f = reMatch(i)
+        self.token_rule, self.f = reMatch(i)
         self.name = name
         self.has_recur = False
     def match(self, objs, meta_info = None, partial = True):
@@ -136,7 +137,7 @@ class Liter:
     
 class ELiter:
     def __init__(self, i, name = None):
-        self.f = reMatch(i, escape = True)
+        self.token_rule, self.f = reMatch(i, escape = True)
         self.name = name
         self.has_recur = False
     def match(self, objs, meta_info = None, partial = True):

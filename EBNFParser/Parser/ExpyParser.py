@@ -11,7 +11,7 @@ L_Number = '\d+|\d*\.\d+'
 
 L_Name   = '[a-zA-Z_][a-zA-Z0-9]*'
 
-L_String = '[a-z]{0,1}"[\w|\W]*"'
+L_String = '[a-z]{0,1}"[\w|\W]*?"'
 
 L_Bracket= '\{|\}|\(|\)|\[|\]'
 

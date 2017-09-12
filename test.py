@@ -13,43 +13,61 @@ sys.setrecursionlimit(300)
 parser = handle_error(Stmt.match)
 
 
+#try:
+#    f = parser(token.findall('(1 2 3)'), partial= False)
+#    print(f'result =>\n{f}')
+#except Exception as e:
+#    raise e
+#    
+#
+#try:
+#    f = parser(token.findall('f(1 2 3)'), partial= False)
+#    print(f'result =>\n{f}')
+#except Exception as e:
+#    raise e
+#    
+#
+#try:
+#    f = parser(token.findall('def (){1 2 3}'), partial= False)
+#    print(f'result =>\n{f}')
+#except Exception as e:
+#    raise e
+#
+#
+#try:
+#    f = parser(token.findall('def (){ (1 2 3) }'), partial= False)
+#    print(f'result =>\n{f}')
+#except Exception as e:
+#    raise e
+#
+#try:
+#    f = parser(token.findall('def f(a b){ (a+b) }'), partial= False)
+#    print(f'result =>\n{f}')
+#except Exception as e:
+#    raise e
+#
+#
+#try:
+#    f = parser(token.findall('def (a){ def (c) {a+c} }'), partial= False)
+#    assert f[0][0][0][0][0].name == 'Closure'
+#    print(f'result =>\n{f}')
+#except Exception as e:
+#    raise e
+#    
 try:
-    f = parser(token.findall('(1 2 3)'), partial= False)
-    print(f'result => {f}')
-except Exception as e:
-    raise Exception("Test Syntax Error. See the index of row is correct or not.") from e
-    
-
-try:
-    f = parser(token.findall('f(1 2 3)'), partial= False)
-    print(f'result => {f}')
+    f = parser(token.findall('f(a(b))'), partial= False)
+    print(f'result =>\n{f}')
 except Exception as e:
     raise e
     
-
 try:
-    f = parser(token.findall('def (){1 2 3}'), partial= False)
-    print(f'result => {f}')
+    f = parser(token.findall('q"123+s"'), partial= False)
+    print(f'result =>\n{f}')
 except Exception as e:
     raise e
-
-
-try:
-    f = parser(token.findall('def (){ (1 2 3) }'), partial= False)
-    print(f'result => {f}')
-except Exception as e:
-    raise e
-
-try:
-    f = parser(token.findall('def f(a b){ (a+b) }'), partial= False)
-    print(f'result => {f}')
-except Exception as e:
-    raise e
-
-
-try:
-    f = parser(token.findall('def (a){ def (c) {a+c} }'), partial= False)
-    assert f[0][0][0][0][0].name == 'Closure'
-    print(f'result => {f}')
-except Exception as e:
-    raise e
+#    
+#try:
+#    f = parser(token.findall('q"123+s"'), partial= False)
+#    print(f'result =>\n{f}')
+#except Exception as e:
+#    raise e

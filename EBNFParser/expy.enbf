@@ -4,7 +4,7 @@ Expr   ::= BinOp  | Factor  | '[' (Expr)* ']' | '(' (Expr)* [','] ')'
 BinOp  ::= Factor (Op Factor)*
 Factor ::= (Op)* Atom 
 
-Atom   ::= (Closure | BinOp | Liter) Trailer 
+Atom   ::= (Closure | Liter) Trailer 
 
 Closure::= '{' (Expr (NEWLINE)* )* '}' | 'def' [NAME] '(' tpdef ')' Closure
 
