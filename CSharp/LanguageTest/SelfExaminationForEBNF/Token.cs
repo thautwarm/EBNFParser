@@ -5,23 +5,23 @@ namespace CSharp.LanguageTest.SelfExaminationForEBNF
     public class DefualtToken
     {
         
-        public static Liter Name  = new Liter("[a-zA-Z_][a-zA-Z0-9]*", "Name");
-        public static Liter Number= new Liter(@"\d+", "Number");
-        public static Liter Str   = new Liter(@"[R]{0,1}'[\w|\W]*?'","Str");
+        public static Liter Name   = new Liter("[a-zA-Z_][a-zA-Z0-9]*", "Name");
+        public static Liter Number = new Liter(@"\d+", "Number");
+        public static Liter Str    = new Liter(@"[R]{0,1}'[\w|\W]*?'","Str");
         public static Liter NEWLINE=new Liter("\n", "NEWLINE");
 
-        public static Liter LBB   = Liter.ELiter("{","LBB");
-        public static Liter LB    = Liter.ELiter("[","LB");
-        public static Liter LP    = Liter.ELiter("(","LP");
+        public static Liter LBB    = Liter.ELiter("{","LBB");
+        public static Liter LB     = Liter.ELiter("[","LB");
+        public static Liter LP     = Liter.ELiter("(","LP");
         
-        public static Liter RBB   = Liter.ELiter("}","RBB");
-        public static Liter RB    = Liter.ELiter("]","RB");
-        public static Liter RP    = Liter.ELiter(")","RP");
+        public static Liter RBB    = Liter.ELiter("}","RBB");
+        public static Liter RB     = Liter.ELiter("]","RB");
+        public static Liter RP     = Liter.ELiter(")","RP");
 
-        public static Liter SeqStar  = Liter.ELiter("*", "SeqStar");
-        public static Liter SeqPlus  = Liter.ELiter("+", "SeqPlus");
-        public static Liter Def   = Liter.ELiter("::=", "Def");
-        public static Liter OrSign= Liter.ELiter("|", "OrSign");
+        public static Liter SeqStar= Liter.ELiter("*", "SeqStar");
+        public static Liter SeqPlus= Liter.ELiter("+", "SeqPlus");
+        public static Liter Def    = Liter.ELiter("::=", "Def");
+        public static Liter OrSign = Liter.ELiter("|", "OrSign");
 
         public static Regex Token(){
             var re = new Regex(
@@ -43,9 +43,7 @@ namespace CSharp.LanguageTest.SelfExaminationForEBNF
                     OrSign.token_rule
                 })
             );
-            
             return re;
-
         }
 
 

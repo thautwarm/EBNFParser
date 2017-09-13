@@ -1,4 +1,4 @@
-#define DEBUG
+
 using System.Text.RegularExpressions;
 using System;
 using System.Runtime.Serialization;
@@ -7,28 +7,24 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace CSharp.ObjectRegex
-{
-    
-
+{using CSharp.ObjectRegex;
+using CSharp.LanguageTest.SelfExaminationForEBNF;
     public class ObjRegexError : Exception
     {
         public ObjRegexError(string info) : base(info)
         {
         }
-        
     }
     public class StackOverFlowError: Exception{
         public StackOverFlowError(string info) : base(info)
         {
         }
     }
-
     public class NameError: Exception{
         public NameError(string info) : base(info)
         {
         }
     }
-
     public class CompileError: Exception{
         public CompileError(string info) : base(info)
         {
@@ -36,21 +32,19 @@ namespace CSharp.ObjectRegex
     }
     public class RegexTool{
          
-        public static Tuple<string, Func<string, string>> reMatch(string a, bool escape = false){
-            var token_rule = escape?Regex.Escape(a):a;
-        
+        public static (string, Func<string, string>) reMatch(string a, bool escape = false){
+            var token_rule = escape?Regex.Escape(a):a;    
             var re_        = new Regex( token_rule );
-           
-            return new Tuple<string, Func<string, string>>
-                    (token_rule,
-                     (string str)=>{
-                        if (str.Length==0)
+    
+            return (token_rule, 
+
+                   (string str)=>{
+                        if (str.Length.Equals(0))
                             return null;
                         var r = re_.Match(str);
-                        if (r.Index !=0)
-                            throw new ObjRegexError("empty tokenized word.");
-                        if (r.Length!=str.Length)
+                        if (r.Index != 0 || r.Length != str.Length){
                             return null;
+                        }
                         return str;
                         }
                     );
@@ -122,10 +116,6 @@ namespace CSharp.ObjectRegex
         protected void historyPush((int, int, int) tp){
             ++history_length;
             history.Push(tp);
-            // history.ToList().ForEach( (x)=> {
-            //     var (a,b,c) = x;
-            //     Console.Write($"I[{a}{b}{c}]");
-            //     } );
         }
 
         public MetaInfo(int count = 0, int rdx = 0, Stack<(int, string)> trace = null){
@@ -166,10 +156,7 @@ namespace CSharp.ObjectRegex
             if (history_length == 0){
                 throw new StackOverFlowError("Pull nothing.");
             }
-            // history.ToList().ForEach( (x)=> {
-            //     var (a,b,c) = x;
-            //     Console.Write($"I[{a}{b}{c}]");
-            //     } );
+
             historyPop();            
             return this;
         }
@@ -311,8 +298,8 @@ namespace CSharp.ObjectRegex
                     
             }
             #if DEBUG
-            if (has_recur)
-                Console.WriteLine("Found Recursive EBNF Node => "+name);
+                if (has_recur)
+                    Console.WriteLine("Found Recursive EBNF Node => "+name);
             #endif
             
             cache = null;
@@ -321,17 +308,23 @@ namespace CSharp.ObjectRegex
         }
 
         public override Mode Match(string[] objs, ref MetaInfo meta, bool partial = true){
-
+            if (meta == null){
+                throw new ArgumentNullException(nameof(meta));
+            }
             #if DEBUG
-                Console.WriteLine($"{this.name} WITH [{@""+meta.DumpTrace()}]");
+                Console.WriteLine($"{this.name} ");
             #endif
+
             var res     = new Mode().setName(name);
             var has_res = false; 
+
             foreach(var possibility in possibilities){
-                meta.branch();
+                meta.branch(); // Make a branch in case of resetting.
                 foreach(var thing in possibility){
                     var history = (meta.count, thing.name);
                     Mode r;
+
+                    
                     if (thing.has_recur){
                         if (meta.trace.Contains(history)){
                             Console.WriteLine("Found Left Recursion. Dealed.");
@@ -343,22 +336,27 @@ namespace CSharp.ObjectRegex
                         }
                     }
                     else{
-                        // DEBUG View
-                        meta.trace.Push(history);
+                        // DEBUG View: the trace of parsing.
+                        #if DEBUG
+                            meta.trace.Push(history);
+                        #endif
                         r = thing.Match(objs, ref meta, true);
                     }
-
-                    if (r == null){
+                    
+                    if (r == null){ 
+                        // Do not match current possibility, then rollback.
                         res.Clear();
                         meta.rollback();
                         goto ContinueForNewPossibility;
                     }
+
                     if (thing is Seq){
                         res.AddRange(r);
                     }
                     else{
                         res.Add(r);
                     }
+
                     #if DEBUG
                         Console.WriteLine($"{thing.name} <= {r.Dump()}");
                     #endif
@@ -407,7 +405,7 @@ namespace CSharp.ObjectRegex
 
         public override Mode Match(string[] objs, ref MetaInfo meta, bool partial = true){
             if (meta == null){
-                meta = new MetaInfo();
+                throw new ArgumentNullException(nameof(meta));
             }
             var res  = new Mode().setName(this.name);
             int left = objs.Length - meta.count;
