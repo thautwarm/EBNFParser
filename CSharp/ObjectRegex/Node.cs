@@ -1,4 +1,4 @@
-
+#undef DEBUG
 using System.Text.RegularExpressions;
 using System;
 using System.Runtime.Serialization;
@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace CSharp.ObjectRegex
-{using CSharp.ObjectRegex;
-using CSharp.LanguageTest.SelfExaminationForEBNF;
+{
+
     public class ObjRegexError : Exception
     {
         public ObjRegexError(string info) : base(info)
@@ -65,16 +65,16 @@ using CSharp.LanguageTest.SelfExaminationForEBNF;
             return this;
         }
   
-        public string Dump(int i=0){
-            var space = "\n"+new String(' ', i);
+        public string Dump(int i=1){
+            var space = "\n"+new String(' ', 4*i);
             var toDump = string.Join("", 
                 this.Select(
                     mode =>{
                         if (mode.value != null){
                             if (mode.value.Equals("\n")){
-                                return $"{mode.name}[{@"\n"}]";
+                                return $"{space}{mode.name}['{@"\n"}']{space}";
                             }
-                            return $"{mode.name}[{mode.value}]";
+                            return $"{mode.name}['{mode.value}']{space}";
                         }
                         else{
                             
@@ -83,7 +83,7 @@ using CSharp.LanguageTest.SelfExaminationForEBNF;
                             
                     }
             ));
-            return $"{this.name}[{toDump+space}]";
+            return $"{this.name}[{toDump}{space}]";
         }
     }
 
