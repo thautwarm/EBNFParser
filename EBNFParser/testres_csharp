@@ -1,0 +1,216 @@
+Stmt[
+    NEWLINE['\n']
+    Eq[Name['Expr']
+        Def['::=']
+        Expr[Or[AtomExpr[Atom[Name['Or']
+                        
+                        ]SeqPlus['+']
+                    
+                    ]
+                ]
+            ]
+        ]
+    NEWLINE['\n']
+    Eq[Name['Or']
+        Def['::=']
+        Expr[Or[AtomExpr[Atom[Name['AtomExpr']
+                        
+                        ]
+                    ]
+                ]Or[AtomExpr[Atom[LP['(']
+                        Expr[Or[AtomExpr[Atom[Str[''|'']
+                                        
+                                        ]
+                                    ]
+                                ]Or[AtomExpr[Atom[Name['AtomExpr']
+                                        
+                                        ]
+                                    ]
+                                ]
+                            ]RP[')']
+                        
+                        ]SeqStar['*']
+                    
+                    ]
+                ]
+            ]
+        ]
+    NEWLINE['\n']
+    
+    NEWLINE['\n']
+    Eq[Name['AtomExpr']
+        Def['::=']
+        Expr[Or[AtomExpr[Atom[Name['Atom']
+                        
+                        ]
+                    ]
+                ]Or[AtomExpr[Atom[Name['Trailer']
+                        
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    NEWLINE['\n']
+    Eq[Name['Atom']
+        Def['::=']
+        Expr[Or[AtomExpr[Atom[Name['Name']
+                        
+                        ]
+                    ]OrSign['|']
+                AtomExpr[Atom[Name['String']
+                        
+                        ]
+                    ]OrSign['|']
+                AtomExpr[Atom[Str[''['']
+                        
+                        ]
+                    ]
+                ]Or[AtomExpr[Atom[Name['Expr']
+                        
+                        ]
+                    ]
+                ]Or[AtomExpr[Atom[Str['']'']
+                        
+                        ]
+                    ]OrSign['|']
+                AtomExpr[Atom[Str[''('']
+                        
+                        ]
+                    ]
+                ]Or[AtomExpr[Atom[Name['Expr']
+                        
+                        ]
+                    ]
+                ]Or[AtomExpr[Atom[Str['')'']
+                        
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    NEWLINE['\n']
+    
+    NEWLINE['\n']
+    
+    NEWLINE['\n']
+    Eq[Name['Def']
+        Def['::=']
+        Expr[Or[AtomExpr[Atom[Str[''::='']
+                        
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    NEWLINE['\n']
+    Eq[Name['Equals']
+        Def['::=']
+        Expr[Or[AtomExpr[Atom[Name['Name']
+                        
+                        ]
+                    ]
+                ]Or[AtomExpr[Atom[Name['Def']
+                        
+                        ]
+                    ]
+                ]Or[AtomExpr[Atom[Name['Expr']
+                        
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    NEWLINE['\n']
+    
+    NEWLINE['\n']
+    Eq[Name['Trailer']
+        Def['::=']
+        Expr[Or[AtomExpr[Atom[LB['[']
+                        Expr[Or[AtomExpr[Atom[Str[''*'']
+                                        
+                                        ]
+                                    ]OrSign['|']
+                                AtomExpr[Atom[Str[''+'']
+                                        
+                                        ]
+                                    ]OrSign['|']
+                                AtomExpr[Atom[Str[''{'']
+                                        
+                                        ]
+                                    ]
+                                ]Or[AtomExpr[Atom[Name['Number']
+                                        
+                                        ]LBB['{']
+                                    Number['1']
+                                    Number['2']
+                                    RBB['}']
+                                    
+                                    ]
+                                ]Or[AtomExpr[Atom[Str[''}'']
+                                        
+                                        ]
+                                    ]
+                                ]
+                            ]RB[']']
+                        
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    NEWLINE['\n']
+    
+    NEWLINE['\n']
+    Eq[Name['Name']
+        Def['::=']
+        Expr[Or[AtomExpr[Atom[Name['R']
+                        
+                        ]
+                    ]
+                ]Or[AtomExpr[Atom[Str[''[a-zA-Z_][a-zA-Z0-9]*'']
+                        
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    NEWLINE['\n']
+    Eq[Name['String']
+        Def['::=']
+        Expr[Or[AtomExpr[Atom[Name['R']
+                        
+                        ]
+                    ]
+                ]Or[AtomExpr[Atom[Str[''[\w|\W]*'']
+                        
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    NEWLINE['\n']
+    Eq[Name['Number']
+        Def['::=']
+        Expr[Or[AtomExpr[Atom[Name['R']
+                        
+                        ]
+                    ]
+                ]Or[AtomExpr[Atom[Str[''\d+'']
+                        
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    NEWLINE['\n']
+    
+    NEWLINE['\n']
+    
+    NEWLINE['\n']
+    
+    NEWLINE['\n']
+    
+    NEWLINE['\n']
+    
+    ]
