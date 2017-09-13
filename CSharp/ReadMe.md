@@ -55,8 +55,9 @@ var Atom = new Ast(
 ### Core Codes
 
 [Node.cs](./ObjectRegex/Node.cs)  
-The results parsed are organized by `CSharp.ObjectRegex.Mode`. 
-If you want to dump the results, just use `CSharp.ObjectRegex.Mode.Dump()`.Here is an example at [testres_csharp](../testres_csharp)
+The results parsed are organized by `CSharp.ObjectRegex.Mode`.   
+If you want to dump the results, just use `CSharp.ObjectRegex.Mode.Dump()`.  
+Here is an example at [testres_csharp](../testres_csharp)
 
 
 
