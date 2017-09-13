@@ -122,13 +122,17 @@ namespace CSharp.ObjectRegex
         protected void historyAppend((int, int, int) tp){
             ++history_length;
             history.Append(tp);
+            // history.ToList().ForEach( (x)=> {
+            //     var (a,b,c) = x;
+            //     Console.Write($"I[{a}{b}{c}]");
+            //     } );
         }
 
         public MetaInfo(int count = 0, int rdx = 0, Stack<(int, string)> trace = null){
             this.count   = count;
             this.rdx     = rdx;
 
-            if (trace ==null )
+            if (trace == null )
             {
                 this.trace = new Stack<(int, string)>();
             }
@@ -144,6 +148,12 @@ namespace CSharp.ObjectRegex
         }
         public MetaInfo branch (){           
             historyAppend((count, rdx, trace_length)); 
+            Console.WriteLine("add history");
+            
+            history.ToList().ForEach( (x)=> {
+                var (a,b,c) = x;
+                Console.Write($"I[{a}{b}{c}]");
+                } );
             return this;
         }
         public MetaInfo rollback(){
@@ -158,9 +168,14 @@ namespace CSharp.ObjectRegex
             return this;
         }
         public MetaInfo pull(){
+
             if (history_length == 0){
                 throw new StackOverFlowError("Pull nothing.");
             }
+            // history.ToList().ForEach( (x)=> {
+            //     var (a,b,c) = x;
+            //     Console.Write($"I[{a}{b}{c}]");
+            //     } );
             historyPop();            
             return this;
         }
@@ -175,13 +190,16 @@ namespace CSharp.ObjectRegex
         public string name;
         public bool   has_recur;
 
-        public abstract Mode Match(string[] objs, MetaInfo meta = null, bool partial = true);
+        public abstract Mode Match(ref string[] objs, ref MetaInfo meta, bool partial = true);
 
     }
 
     public class LazyDef :BaseAst{
 
-        public override Mode Match(string[] objs, MetaInfo meta = null, bool partial = true){
+        public LazyDef(string name){
+            this.name = name;
+        }
+        public override Mode Match(ref string[] objs, ref MetaInfo meta, bool partial = true){
                 throw new  CompileError($"Ast {this.name} Not compiled!");
         }
     
@@ -200,10 +218,8 @@ namespace CSharp.ObjectRegex
             this.token_rule = token_rule;
             this.f = f;
         }
-        public override Mode Match(string[] objs, MetaInfo meta = null, bool partial = true){
-            if (meta==null){
-                meta = new MetaInfo();
-            }
+        public override Mode Match(ref string[] objs, ref MetaInfo meta, bool partial = true){
+
             int left = objs.Length - meta.count ;
             if (left==0) return null;
             var r = f(objs[meta.count]);  
@@ -213,24 +229,31 @@ namespace CSharp.ObjectRegex
             if (r == "\n")
                 meta.rdx += 1;
             meta.count += 1;
+            
             return new Mode().setName(this.name).setValue(r);
         }
-        public Liter ELiter(string i, string name = null){
+        public static Liter ELiter(string i, string name = null){
             
             return new Liter(i, name, true);
         }
     }
-    class Ast : BaseAst{
+    public class Ast : BaseAst{
         public List<List<BaseAst>> possibilities; 
         protected BaseAst[][] cache;
-        protected Dictionary<string, Ast> compile_closure;
-        bool compiled ;
+        public Dictionary<string, Ast> compile_closure;
+        public bool compiled ;
 
-        public Ast(Dictionary<string, Ast> compile_closure,
+        public Ast(){
+
+        }
+        public Ast(ref Dictionary<string, Ast> compile_closure,
                    string name = null,
                    params BaseAst[][] ebnf){
+            
             if (name == null)
                 throw new NameError("Name not found! Each kind of ast should have a identity name.");
+            this.name = name;
+
             cache = ebnf;
             if (compile_closure.Keys.Contains(name)){
                 throw new NameError("Name of Ast should be identified!");
@@ -241,47 +264,72 @@ namespace CSharp.ObjectRegex
             possibilities = new List<List<BaseAst>>();
         }
 
-        public Ast compile(HashSet<string> recur_searcher=null){
-
+        public Ast compile(ref HashSet<string> recur_searcher){
+            
             if (recur_searcher == null){
                 recur_searcher = new HashSet<string>();
-                recur_searcher.Append(name);
+                recur_searcher.Add(name);
+                
             }
             else{
                 if (recur_searcher.Contains(name)){
                     has_recur = true;
+                    compiled  = true;
                 }
                 else{
-                    recur_searcher.Append(name);
+                    recur_searcher.Add(name);
                 }
             }
 
-            if (compiled) 
+            if (compiled) {  
                 return this; 
-
+            }
+            
             foreach(var es in cache){
                 var possibility = new List<BaseAst>();
-                possibilities.Append(possibility);
+                possibilities.Add(possibility);
                 foreach(var e in es){
-                    if(e is LazyDef){
-                        Ast refered = compile_closure[e.name];
-                        possibility.Append(refered.compiled ? refered : refered.compile(recur_searcher: recur_searcher));
+                    if (e is Liter){
+                        possibility.Add(e);
                     }
-                    else if(e is Ast || e is Liter)
-                        possibility.Append(e);
+                    else{
+                        
+                        if (e is LazyDef){
+                            Ast refered = compile_closure[e.name];
+                            refered.compile(ref recur_searcher);
+                            possibility.Add(refered);
+                            if (refered.has_recur)
+                                has_recur = true;
+                        }
+                        else if (e is Seq){
+                            Seq refered = e as Seq;
+                            refered.compile(ref recur_searcher);
+                            possibility.Add(refered);
+                            if (refered.has_recur)
+                                has_recur = true;
+                        }
+                        else{
+                            throw new CompileError("Unsolved Ast Type");
+                        }
+                        
+                    }
                 }
+                    
             }
+            #if DEBUG
+            if (has_recur)
+                Console.WriteLine("Found Recursive EBNF Node => "+name);
+            #endif
+            
             cache = null;
             compiled = true;
             return this;
         }
 
-        public override Mode Match(string[] objs, MetaInfo meta = null, bool partial = true){
-            if (meta == null){
-                meta = new MetaInfo();
-            }
+        public override Mode Match(ref string[] objs, ref MetaInfo meta, bool partial = true){
+
             #if DEBUG
-                Console.WriteLine($"{this.name} WITH {meta.DumpTrace()}");
+                Console.WriteLine($"{this.name} WITH [{@""+meta.DumpTrace()}]");
             #endif
             var res     = new Mode().setName(name);
             var has_res = false; 
@@ -297,13 +345,13 @@ namespace CSharp.ObjectRegex
                         }
                         else{
                             meta.trace.Append(history);
-                            r = thing.Match(objs, meta, true);
+                            r = thing.Match(ref objs, ref meta, true);
                         }
                     }
                     else{
                         // DEBUG View
                         meta.trace.Append(history);
-                        r = thing.Match(objs, meta, true);
+                        r = thing.Match(ref objs, ref meta, true);
                     }
 
                     if (r == null){
@@ -348,19 +396,22 @@ namespace CSharp.ObjectRegex
             return null;
         }
     }
-    class Seq : Ast{
+    public class Seq : Ast{
         int atleast;
         int atmost ;
-        public Seq(Dictionary<string, Ast> compile_closure,
+        public Seq(){
+            
+        }
+        public Seq(ref Dictionary<string, Ast> compile_closure,
                    string name = null,
                    int atleast =   1,
                    int atmost  =  -1,
-                   params BaseAst[][] ebnf):base(compile_closure, name, ebnf){
+                   params BaseAst[][] ebnf):base(ref compile_closure, name, ebnf){
         this.atleast = atleast;
         this.atmost  = atmost;
         }
 
-        public override Mode Match(string[] objs, MetaInfo meta = null, bool partial = true){
+        public override Mode Match(ref string[] objs, ref MetaInfo meta, bool partial = true){
             if (meta == null){
                 meta = new MetaInfo();
             }
@@ -375,7 +426,7 @@ namespace CSharp.ObjectRegex
             if (atmost>0){
                 while (true){
                     if (idx>=atmost) break;
-                    r = base.Match(objs, meta, true);
+                    r = base.Match(ref objs, ref meta, true);
                     if (r == null)
                         break;
                     res.AddRange(r);
@@ -384,7 +435,7 @@ namespace CSharp.ObjectRegex
             }
             else{
                 while (true){
-                    r = base.Match(objs, meta, true);
+                    r = base.Match(ref objs, ref meta, true);
                     if (r == null) break;
                     res.AddRange(r);
                     ++idx;
