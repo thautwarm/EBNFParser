@@ -325,8 +325,9 @@ class Seq(ast):
             return None
         meta_info.branch
         atmost = self.atmost
+        idx = 0
         if atmost:
-            idx = 0
+            
             while True:
                 if idx >= atmost:
                     break
@@ -341,9 +342,10 @@ class Seq(ast):
                 if r is None:
                     break
                 res.extend(r)
+                idx+=1
         if DEBUG:
             print(f"{self.name} <= {r}")
-        if len(res) < self.atleast:
+        if idx < self.atleast:
             meta_info.rollback
             return  None
         meta_info.pull

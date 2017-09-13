@@ -9,14 +9,11 @@ namespace CSharp
     {
         static void Main(string[] args)
         {
-            var a = new Regex(@"\d+|\d*\.\d+");
-            var b = a.Match("23");
-            var c = new List<string>();
-            var s = new Mode().setName("Node1").setValue("Str1");
             
-            var d = new Mode().setName("Root1");
-            d.Add(s);
-            Console.WriteLine(d.Dump());
+            var c = new List<string>();
+            var d = new List<string>{"1","2"};
+            c.AddRange(d);
+            c.ForEach(Console.WriteLine);
         }
     }
 }
