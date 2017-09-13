@@ -109,9 +109,9 @@ namespace CSharp.ObjectRegex
             return trace.Pop();
         }
 
-        public void traceAppend((int, string) tp){
+        public void tracePush((int, string) tp){
             ++trace_length;
-            trace.Append(tp);
+            trace.Push(tp);
         }
 
         protected (int, int, int) historyPop(){
@@ -119,9 +119,9 @@ namespace CSharp.ObjectRegex
             return history.Pop();
         }
 
-        protected void historyAppend((int, int, int) tp){
+        protected void historyPush((int, int, int) tp){
             ++history_length;
-            history.Append(tp);
+            history.Push(tp);
             // history.ToList().ForEach( (x)=> {
             //     var (a,b,c) = x;
             //     Console.Write($"I[{a}{b}{c}]");
@@ -147,13 +147,7 @@ namespace CSharp.ObjectRegex
             this.history = new Stack<(int,int,int)>();
         }
         public MetaInfo branch (){           
-            historyAppend((count, rdx, trace_length)); 
-            Console.WriteLine("add history");
-            
-            history.ToList().ForEach( (x)=> {
-                var (a,b,c) = x;
-                Console.Write($"I[{a}{b}{c}]");
-                } );
+            historyPush((count, rdx, trace_length)); 
             return this;
         }
         public MetaInfo rollback(){
@@ -190,7 +184,7 @@ namespace CSharp.ObjectRegex
         public string name;
         public bool   has_recur;
 
-        public abstract Mode Match(ref string[] objs, ref MetaInfo meta, bool partial = true);
+        public abstract Mode Match(string[] objs, ref MetaInfo meta, bool partial = true);
 
     }
 
@@ -199,7 +193,7 @@ namespace CSharp.ObjectRegex
         public LazyDef(string name){
             this.name = name;
         }
-        public override Mode Match(ref string[] objs, ref MetaInfo meta, bool partial = true){
+        public override Mode Match(string[] objs, ref MetaInfo meta, bool partial = true){
                 throw new  CompileError($"Ast {this.name} Not compiled!");
         }
     
@@ -218,7 +212,7 @@ namespace CSharp.ObjectRegex
             this.token_rule = token_rule;
             this.f = f;
         }
-        public override Mode Match(ref string[] objs, ref MetaInfo meta, bool partial = true){
+        public override Mode Match(string[] objs, ref MetaInfo meta, bool partial = true){
 
             int left = objs.Length - meta.count ;
             if (left==0) return null;
@@ -326,7 +320,7 @@ namespace CSharp.ObjectRegex
             return this;
         }
 
-        public override Mode Match(ref string[] objs, ref MetaInfo meta, bool partial = true){
+        public override Mode Match(string[] objs, ref MetaInfo meta, bool partial = true){
 
             #if DEBUG
                 Console.WriteLine($"{this.name} WITH [{@""+meta.DumpTrace()}]");
@@ -344,14 +338,14 @@ namespace CSharp.ObjectRegex
                             r = null;
                         }
                         else{
-                            meta.trace.Append(history);
-                            r = thing.Match(ref objs, ref meta, true);
+                            meta.trace.Push(history);
+                            r = thing.Match(objs, ref meta, true);
                         }
                     }
                     else{
                         // DEBUG View
-                        meta.trace.Append(history);
-                        r = thing.Match(ref objs, ref meta, true);
+                        meta.trace.Push(history);
+                        r = thing.Match(objs, ref meta, true);
                     }
 
                     if (r == null){
@@ -363,7 +357,7 @@ namespace CSharp.ObjectRegex
                         res.AddRange(r);
                     }
                     else{
-                        res.Append(r);
+                        res.Add(r);
                     }
                     #if DEBUG
                         Console.WriteLine($"{thing.name} <= {r.Dump()}");
@@ -411,7 +405,7 @@ namespace CSharp.ObjectRegex
         this.atmost  = atmost;
         }
 
-        public override Mode Match(ref string[] objs, ref MetaInfo meta, bool partial = true){
+        public override Mode Match(string[] objs, ref MetaInfo meta, bool partial = true){
             if (meta == null){
                 meta = new MetaInfo();
             }
@@ -426,7 +420,7 @@ namespace CSharp.ObjectRegex
             if (atmost>0){
                 while (true){
                     if (idx>=atmost) break;
-                    r = base.Match(ref objs, ref meta, true);
+                    r = base.Match(objs, ref meta, true);
                     if (r == null)
                         break;
                     res.AddRange(r);
@@ -435,7 +429,7 @@ namespace CSharp.ObjectRegex
             }
             else{
                 while (true){
-                    r = base.Match(ref objs, ref meta, true);
+                    r = base.Match(objs, ref meta, true);
                     if (r == null) break;
                     res.AddRange(r);
                     ++idx;

@@ -10,24 +10,18 @@ namespace CSharp
     {
         static void Main(string[] args)
         {
-            
-           var parser = Parser.GenParser();
-           var re = DefualtToken.Token();
-           string s = "b|a b";
-           var ss = re.Matches(s).Select(i=>i.ToString()).ToArray();
-           var meta = new MetaInfo();
-           Console.WriteLine(
-           (parser.compile_closure["Expr"] == parser.Expr)+
-           " "+
-           parser.Eq.possibilities.ToArray().Length+
-              parser.Expr.Match(
-               objs:ref ss,
-               partial:false,
-               meta:ref meta
-           ).Dump()
-          );
-        
-           
+            var parser = Parser.GenParser();
+            var re = DefualtToken.Token();
+            string s = "a ::= b|a b \n";
+            var ss = re.Matches(s).Select(i => i.ToString()).ToArray();
+            var meta = new MetaInfo();
+            Console.WriteLine(parser.Stmt.Match(
+                objs: ss,
+                partial: false,
+                meta: ref meta
+            ).Dump());
+
+
         }
     }
 }
