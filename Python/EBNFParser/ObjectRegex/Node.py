@@ -105,7 +105,7 @@ class mode(list):
         return self
 
     def __str__(self, i=0):
-        body = " ".join([item.__str__(i + 1) for item in self])
+        body  = " ".join([item.__str__(i + 1) for item in self])
         space = '  ' * (i + 1)
         return f'{self.name}[{body}]\n{space}'
 
