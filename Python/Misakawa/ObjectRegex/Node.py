@@ -8,10 +8,11 @@ Created on Sun Sep 17 15:23:36 2017
 """
 
 # CONFIG
-DEBUG = True
+DEBUG = False
 
 
 from .. import ErrorFamily
+from ..ErrorFamily import MetaInfo
 
 class Tools:
     import re
@@ -40,68 +41,6 @@ class Tools:
             return _2
         return _1
 
-class MetaInfo:
-    
-    """
-    Meta information when parsing.
-
-        `count` is a property of MetaInfo.
-        It shows that how many tokenized(words) have been parsed,
-            which could be used for
-                - Alerting.
-                - Eliminating left recursions.
-
-        `trace` is a property of MetaInfo.
-        It shows a trace of recursive BNF Nodes,
-            which could be used for
-                - Debugging.
-                - Eliminating left recursions.
-
-        `rdx` is a property of MetaInfo.
-        It shows how many lines have beeb parsed now.
-            which could be used for
-                - Alerting.
-                - Debugging.
-
-    """
-
-    def __init__(self, count=0, rdx=0, trace=None):
-        """
-
-        :rtype: MetaInfo
-        """
-        self.count   = count
-        self.trace   = trace if trace else []
-        self.rdx     = rdx
-        self.history = []
-
-    def branch(self):
-        """
-        Save a record of parsing history in order to trace back. 
-        """
-        self.history.append((self.count, self.rdx, len(self.trace)))
-
-    def rollback(self):
-        """
-        Trace back.
-        """
-        try:
-            count, rdx, length =self.history.pop()
-        except IndexError:
-            return None
-        self.count = count
-        self.rdx = rdx
-        self.trace = self.trace[:length]
-
-    def pull(self):
-        """
-        Confirm the current parsing results.
-        Pop a record in parsing history.
-        """
-        try:
-            self.history.pop()
-        except IndexError:
-            raise Exception("pull no thing")
 
 
 
@@ -109,12 +48,6 @@ class BaseParser:
     """Abstract Class"""
     name       = None
     has_recur  = None
-    def __init__(self, *args, **kwargs):
-        try:
-            initial_method = getattr(self, eval("self.__class__.__name__"))
-        except AttributeError:
-            raise ErrorFamily.ObjectUsageError(f"No constructor for class `{self.__class__}` has been defined!")
-        initial_method(*args, **kwargs)
     def match(self, objs, meta, partial):
         """Abstract Method"""
         pass
@@ -124,6 +57,7 @@ class Ast:
     
     name = None
     def __init__(self, *v, type = list, name = None):
+        if type not in (list, str): raise ErrorFamily.UnsolvedError("Ast value type must be `list` or `str`.")
         self.value = type(*v)
         self.name  = name
         
@@ -137,39 +71,48 @@ class Ast:
     @Tools.check_obj(lambda self: self.value.__class__ is list)
     def append(self, v):
         self.value.append(v)
+    
+    @Tools.check_obj(lambda self: self.value.__class__ is list)
+    def clear(self):
+        self.value.clear()
+    
+    @Tools.check_obj(lambda self: self.value.__class__ is list)
+    def extend(self, v):
+        self.value.extend(v.value if isinstance(v, Ast) else v)
         
     def dump(self, indent = 0):
-        space = ' '*(4*indent+1)
+        endl = ' '*indent
         if isinstance(self.value, str):
+            
             value = 'NEWLINE' if self.value is '\n' else self.value
-            return f"{self.name}[{value}]\n{space}"
+            return f"{self.name}[{value}]\n{endl}"
         else:
-            body = ''.join(map(lambda x:x.dump(indent+1), self.value))
-            return f"{self.name}[{body}]\n{space}"
+            next_indent  = len(self.name)+indent
+            body = f"\n{' '*(next_indent+1)}".join(map(lambda x:x.dump(next_indent+1), self.value))
+            return f"{self.name}[{body}\n{endl}]"
     def setName(self, name):
         self.name = name
         return self
 
-    def __str__(self, i=0):
-        body  = " ".join([item.__str__(i + 1) for item in self])
-        space = '  ' * (i + 1)
-        return f'{self.name}[{body}]\n{space}'
+    def __str__(self):
+        return self.dump(0)
 
 class LiteralParser(BaseParser):
-    def LiteralParser(self, regex_str, name = None, escape = False):
+    def __init__(self, regex_str, name = None, escape = False):
         self.name      = name
         self.has_recur = False
         self.token_rule,self.match_func = Tools.reMatch(regex_str, escape = escape) 
-
-    def match(self, objs, meta_info, partial=True):
-        left = len(objs) - meta_info.count;
+        self.isRegex   = escape
+        
+    def match(self, objs, meta, partial=True):
+        left = len(objs) - meta.count;
         if not left: return None
-        r = self.f(objs[meta_info.count])
+        r = self.match_func(objs[meta.count])
         if r is None or (not partial and left != 1):
             return None
         if r is '\n':
-            meta_info.rdx += 1
-        meta_info.count += 1
+            meta.rdx += 1
+        meta.count += 1
         return Ast(r, type = str, name = self.name if self.name else r)
     
     @staticmethod
@@ -177,18 +120,18 @@ class LiteralParser(BaseParser):
         return LiteralParser(regex_str, name = name, escape = True)
     
 
-class LazyDefParser(BaseParser):
-    def init(self, name):self.name = name
+class Ref(BaseParser):
+    def __init__(self, name):self.name = name
+
 
 class AstParser(BaseParser):
-    def AstParser(self, *ebnf, name = None): 
-        self.name          = name
-        
+    def __init__(self, *ebnf, name = None):
         # the possibilities for an series of input tokenized words.
         self.possibilities = [] 
-        
         self.has_recur     = False
         self.cache         = ebnf
+        self.name          = name if name is not None else \
+                ' | '.join(' '.join(map(lambda parser : parser.name,ebnf_i)) for ebnf_i in ebnf)
         self.compiled      = False
     
     def compile(self, namespace: dict, recurSearcher: set):
@@ -206,36 +149,131 @@ class AstParser(BaseParser):
             self.possibilities.append([])
             for e in es:
                 if isinstance(e, LiteralParser):
-                    self.possibilities[-1].append(self)
-                elif isinstance(e, LazyDefParser):
+                    self.possibilities[-1].append(e)
+                elif isinstance(e, Ref):
                     e = namespace[e.name]
                     e.compile(namespace, recurSearcher)
                     self.possibilities[-1].append(e)
-                    if self.name and e.has_recur:
+                    if e.has_recur:
                         self.has_recur = True
-                        
                 elif isinstance(e, AstParser):
                     e.compile(namespace, recurSearcher)
                     self.possibilities[-1].append(e)
-                    if self.name and e.has_recur:
+                    if e.has_recur:
                         self.has_recur = True
                 else:
                     raise ErrorFamily.UnsolvedError("Unknown Parser Type.")
                 
-        if DEBUG and self.has_recur: print(f"Found recursive Parser {self.name}")
+        if DEBUG and self.has_recur and self.name: print(f"Found recursive Parser {self.name}")
         
         if hasattr(self, 'cache'):
             del self.cache
         
         if not self.compiled: self.compiled = True
+    def match(self, objs, meta, partial = True):
+        res = Ast(type = list, name = self.name)
+        if DEBUG:
+            print(f"{self.name} WITH {meta.trace}")
+        for possibility in self.possibilities:
+            meta.branch()
+            for ast_struct in possibility:
+                history = (meta.count, ast_struct.name)
+                if ast_struct.has_recur:
+                    if history in meta.trace:
+                        print("Found L-R! Dealed!")
+                        r = None
+                    else:
+                        meta.trace.append(history)
+                        r = ast_struct.match(objs, meta=meta)
+                else:
+                    if DEBUG:
+                        meta.trace.append(history)
+                    r = ast_struct.match(objs, meta=meta)
+                if r is None:
+                    res.clear()
+                    meta.rollback()
+                    break
+                if isinstance(ast_struct, SeqParser):
+                    res.extend(r)
+                else:
+                    res.append(r)
+                if DEBUG:
+                    print(f"{ast_struct.name} << \n{r}")                    
+            else:
+                break
+            # continue
+        else:
+            """ end case 1: no possibility matched.
+                Meta-information has been rollbacked!
+            """
+            return None
+        meta.pull()
+        if partial or meta.count == len(objs):
+            """ end case 2: found a possibility matched and match exactly.
+            """
+            return res
+        
+        """ end case 3: although a possibility matched, do not match exactly.
+            (do not match in partial mode and do not match completely).
+        """
+        return None
+            
+                    
+    
         
 
-def SeqParser(AstParser):
-    def init(self, *ebnf, name=None, atleast=1, atmost=None):
-        AstParser.__init__(self, *ebnf, name = name)
+class SeqParser(AstParser):
+    def __init__(self, *ebnf, name=None, atleast=0, atmost=None):
+        super(SeqParser, self).__init__(*ebnf, name = name)
+        if atmost is None:
+            if atleast is 0:
+                self.name = f"({self.name})*"
+            else:
+                self.name = f"({self.name}){{{atleast}}}"
+        else:
+            self.name = f"({self.name}){{{atleast},{atmost}}}"
         self.atleast = atleast
         self.atmost  = atmost
-    
+
+    def match(self, objs, meta, partial=True):
+        res = Ast(type = list, name = self.name)
+        if meta.count == len(objs):
+            if self.atleast is 0:
+                return res
+            return None
+        meta.branch()
+        idx = 0
+        if self.atmost:
+            """ (ast){a b} """
+            while True:
+                if idx >= self.atmost:
+                    break
+                r = super(SeqParser, self).match(objs, meta=meta)
+                if r is None:
+                    break
+                res.extend(r)
+                idx += 1
+        
+        else:
+            """ ast{a} | [ast] | ast* """
+            
+            while True:
+                r = super(SeqParser, self).match(objs, meta=meta)
+                if r is None:
+                    break
+                res.extend(r)
+                idx += 1
+                
+        if DEBUG:
+            print(f"{self.name} << \n{r}")
+        
+        if idx < self.atleast:
+            meta.rollback()
+            return None
+        meta.pull()
+        return res
+        
+        
     
         
 

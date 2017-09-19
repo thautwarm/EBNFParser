@@ -6,8 +6,9 @@ Created on Tue Sep 12 13:43:26 2017
 @author: misakawa
 """
 
-from EBNFParser.Parser.SelfExamine import handle_error, token,Stmt,String,re,Equals
-from EBNFParser.Parser.SelfExamine import *
+from Misakawa.Bootstrap.Parser import *
+from Misakawa.ObjectRegex.Node import MetaInfo
+from Misakawa.ErrorFamily import handle_error
 
 
 def go():

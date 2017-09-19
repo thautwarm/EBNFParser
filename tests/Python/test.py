@@ -7,11 +7,10 @@ Created on Sat Sep  9 20:24:21 2017
 """
 
 
-from EBNFParser.Parser.ExpyParser import handle_error, Stmt
-import sys
+from EBNFParser.Parser.ExpyParser import *
+from EBNFParser.ObjectRegex.Node import MetaInfo, handle_error
 from EBNFParser.Token import token
-
-
+import sys
 sys.setrecursionlimit(300)
 parser = handle_error(Stmt.match)
 
