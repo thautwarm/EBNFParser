@@ -6,7 +6,7 @@ Created on Tue Sep 19 20:20:59 2017
 @author: misakawa
 """
 
-bootstrap = False
+
 from ..ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser
 lit = LiteralParser
 
@@ -48,6 +48,7 @@ L_Op = '|'.join(['//',
                '\:',
                ])
 
+
 Name   = LiteralParser(L_Name, 'Name')
 String = LiteralParser(L_String,'String')
 Number = LiteralParser(L_Number,'Number')
@@ -58,16 +59,20 @@ Comment= LiteralParser(L_Comment,'Comment')
 Op     = LiteralParser(L_Op,'Op')
 
 
-LBB = LiteralParser.ELiter('{', name = 'LBB')
-LB  = LiteralParser.ELiter('[', name = 'LB')
-LP  = LiteralParser.ELiter('(', name = 'LP')
+LBB = LiteralParser.Eliteral('{', name = 'LBB')
+LB  = LiteralParser.Eliteral('[', name = 'LB')
+LP  = LiteralParser.Eliteral('(', name = 'LP')
 
-RBB = LiteralParser.ELiter('}', name = 'RBB')
-RB  = LiteralParser.ELiter(']', name = 'RB')
-RP  = LiteralParser.ELiter(')', name = 'RP')
+RBB = LiteralParser.Eliteral('}', name = 'RBB')
+RB  = LiteralParser.Eliteral(']', name = 'RB')
+RP  = LiteralParser.Eliteral(')', name = 'RP')
+
+Comma  = LiteralParser.Eliteral(',', 'Comma')
+Access = LiteralParser.Eliteral('.', name = 'Access')
 Def = LiteralParser('def(?![a-zA-Z_0-9])', name = 'Def')
 
-
+namespace     = globals()
+recurSearcher = set()
 
 
 Literal = AstParser(
@@ -78,3 +83,55 @@ Literal = AstParser(
            [LiteralParser('None(?![a-zA-Z_0-9])', name = 'None')],
            [Name],
            name = 'Literal')
+Closure = AstParser(
+              [LBB, Ref("Stmt"), RBB],
+              [     Def, 
+                    SeqParser([Name], atleast = 0), 
+                    SeqParser([LP, SeqParser([Name], atleast = 0), RP], atleast = 0), 
+                    Ref('Closure')],
+              name = 'Closure')
+Atom = AstParser(
+           [SeqParser(
+                   [Ref('Closure')],
+                   [Ref('Literal')],
+
+                   atleast = 1,
+                   atmost  = 1),
+            Ref('Trailer')],
+           name = 'Atom')
+           
+Expr = AstParser(
+           [Ref('BinOp')],
+           [Ref('Factor')],
+           [LP, Ref("ExprList"), RP],
+           [LB, Ref("ExprList"), RB],
+           name = 'Expr')
+
+ExprList = AstParser([SeqParser([Ref('Expr'), SeqParser([Comma])])], name = 'ExprList')
+
+BinOp = AstParser(
+            [Ref('Factor'),
+             SeqParser([Op, Ref('Factor')], atleast = 0)],
+             name = 'BinOp')
+            
+Factor = AstParser([SeqParser([Op]),Ref('Atom')],name = 'Factor')           
+
+Trailer= AstParser(
+            [SeqParser(
+                    [LB, SeqParser([Ref('Expr')]), RB],
+                    [LP, SeqParser([Ref('Expr')]), RP],
+                    [Access, Name])],
+            name = 'Trailer')
+            
+
+Stmt = AstParser(
+           [SeqParser(
+                   [SeqParser([NEWLINE]),
+                    SeqParser([Ref("Expr")]),
+                    SeqParser([NEWLINE])])],
+           name = 'Stmt')
+
+Stmt.compile(namespace, recurSearcher)    
+
+
+              

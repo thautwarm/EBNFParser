@@ -83,7 +83,6 @@ class Ast:
     def dump(self, indent = 0):
         endl = ' '*indent
         if isinstance(self.value, str):
-            
             value = 'NEWLINE' if self.value is '\n' else self.value
             return f"{self.name}[{value}]\n{endl}"
         else:
@@ -135,14 +134,12 @@ class AstParser(BaseParser):
         self.compiled      = False
     
     def compile(self, namespace: dict, recurSearcher: set):
-        
         if self.name:
             if self.name in recurSearcher:
                 self.has_recur = True
                 self.compiled  = True
             else:
                 recurSearcher.add(self.name)
-        
         if self.compiled: return self
         
         for es in self.cache:
@@ -157,6 +154,10 @@ class AstParser(BaseParser):
                     if e.has_recur:
                         self.has_recur = True
                 elif isinstance(e, AstParser):
+                    if e.name not in namespace:
+                        namespace[e.name] = e
+                    else:
+                        e = namespace[e.name]
                     e.compile(namespace, recurSearcher)
                     self.possibilities[-1].append(e)
                     if e.has_recur:
@@ -180,7 +181,8 @@ class AstParser(BaseParser):
                 history = (meta.count, ast_struct.name)
                 if ast_struct.has_recur:
                     if history in meta.trace:
-                        print("Found L-R! Dealed!")
+                        if DEBUG:
+                            print("Found L-R! Dealed!")
                         r = None
                     else:
                         meta.trace.append(history)
@@ -243,7 +245,7 @@ class SeqParser(AstParser):
             return None
         meta.branch()
         idx = 0
-        if self.atmost:
+        if self.atmost is not None:
             """ (ast){a b} """
             while True:
                 if idx >= self.atmost:

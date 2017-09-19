@@ -7,9 +7,10 @@ Created on Sat Sep  9 20:24:21 2017
 """
 
 
-from EBNFParser.Parser.ExpyParser import *
-from EBNFParser.ObjectRegex.Node import MetaInfo, handle_error
-from EBNFParser.Token import token
+from Misakawa.ObjectRegex.Node import MetaInfo
+from Misakawa.ErrorFamily import handle_error
+from Misakawa.ExpyLang.Parser import  *
+from Misakawa.GenericToken import token
 import sys
 sys.setrecursionlimit(300)
 parser = handle_error(Stmt.match)

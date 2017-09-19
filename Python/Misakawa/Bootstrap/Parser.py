@@ -46,8 +46,7 @@ Or = AstParser(
 
 AtomExpr =  AstParser(
     [Ref('Atom'), SeqParser([Ref('Trailer')])],
-    name = 'AtomExpr'
-)
+    name = 'AtomExpr')
 
 Atom = AstParser(
     [Name],
