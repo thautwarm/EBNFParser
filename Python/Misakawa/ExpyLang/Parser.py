@@ -131,7 +131,14 @@ Stmt = AstParser(
                     SeqParser([NEWLINE])])],
            name = 'Stmt')
 
-Stmt.compile(namespace, recurSearcher)    
+analysis = dict(raw = [], regex = [], collect = set())
+Stmt.compile(namespace, recurSearcher, analysis)    
+
+def _genToken():
+    import re
+    return re.compile("|".join(sorted(analysis['raw'])[::-1]+analysis['regex']))
+
+token = _genToken()
 
 
               

@@ -64,6 +64,12 @@ class Ast:
     def __getitem__(self, v):
         return self.value.__getitem__(v)
     
+    def __iter__(self):
+        if self.type is list:
+            yield from self.value
+        else:
+            yield self.value
+    
     @property
     def type(self):
         return self.value.__class__
@@ -82,12 +88,12 @@ class Ast:
         
     def dump(self, indent = 0):
         endl = ' '*indent
-        if isinstance(self.value, str):
+        if self.type is str:
             value = 'NEWLINE' if self.value is '\n' else self.value
             return f"{self.name}[{value}]\n{endl}"
         else:
             next_indent  = len(self.name)+indent
-            body = f"\n{' '*(next_indent+1)}".join(map(lambda x:x.dump(next_indent+1), self.value))
+            body = f"\n{' '*(next_indent+1)}".join(map(lambda x:x.dump(next_indent+1), self))
             return f"{self.name}[{body}\n{endl}]"
     def setName(self, name):
         self.name = name
@@ -101,7 +107,7 @@ class LiteralParser(BaseParser):
         self.name      = name
         self.has_recur = False
         self.token_rule,self.match_func = Tools.reMatch(regex_str, escape = escape) 
-        self.isRegex   = escape
+        self.isRegex   = not escape
         
     def match(self, objs, meta, partial=True):
         left = len(objs) - meta.count;
@@ -133,7 +139,7 @@ class AstParser(BaseParser):
                 ' | '.join(' '.join(map(lambda parser : parser.name,ebnf_i)) for ebnf_i in ebnf)
         self.compiled      = False
     
-    def compile(self, namespace: dict, recurSearcher: set):
+    def compile(self, namespace: dict, recurSearcher: set, analysis : dict = None):
         if self.name:
             if self.name in recurSearcher:
                 self.has_recur = True
@@ -146,10 +152,16 @@ class AstParser(BaseParser):
             self.possibilities.append([])
             for e in es:
                 if isinstance(e, LiteralParser):
+                    if analysis is not None and e.token_rule not in analysis['collect']:
+                        if e.isRegex:
+                            analysis['regex'].append(e.token_rule)
+                        else:
+                            analysis['raw'].append(e.token_rule)
+                        analysis['collect'].add(e.token_rule)
                     self.possibilities[-1].append(e)
                 elif isinstance(e, Ref):
                     e = namespace[e.name]
-                    e.compile(namespace, recurSearcher)
+                    e.compile(namespace, recurSearcher, analysis)
                     self.possibilities[-1].append(e)
                     if e.has_recur:
                         self.has_recur = True
@@ -158,7 +170,7 @@ class AstParser(BaseParser):
                         namespace[e.name] = e
                     else:
                         e = namespace[e.name]
-                    e.compile(namespace, recurSearcher)
+                    e.compile(namespace, recurSearcher, analysis)
                     self.possibilities[-1].append(e)
                     if e.has_recur:
                         self.has_recur = True

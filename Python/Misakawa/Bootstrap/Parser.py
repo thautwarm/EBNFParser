@@ -79,11 +79,14 @@ Stmt  = AstParser(
             ],
             name = 'Stmt')
 
-Stmt.compile(namespace, recurSearcher)
+analysis = dict(raw = [], regex = [], collect = set())
+Stmt.compile(namespace, recurSearcher, analysis)
 
 def _genToken():
-    namespace['aStr'] = namespace['Str']
+    
     import re
+    return re.compile("|".join(sorted(analysis['raw'])[::-1]+analysis['regex']))
+    namespace['aStr'] = namespace['Str']
     tk_reg = []
     tk_raw = []  
     for var in list(namespace.keys()):
