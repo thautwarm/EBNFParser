@@ -12,6 +12,6 @@ Equals ::= Name Def Expr
 Trailer::= ['*' | '+' | '{' Number{1 2} '}']
 
 
-Str    ::= R'"[\w|\W]*?"'
-Name   ::= R'[a-zA-Z_][a-zA-Z0-9]*'
-Number ::= R'\d+'
+Str    := R'"[\w|\W]*?"'
+Name   := R'[a-zA-Z_][a-zA-Z0-9]*'
+Number := R'\d+'

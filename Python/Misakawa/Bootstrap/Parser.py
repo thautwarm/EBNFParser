@@ -27,6 +27,7 @@ SeqStar = lit.Eliteral('*', name = 'SeqStar')
 SeqPlus = lit.Eliteral('+', name = 'SeqPlus')
 
 Def     = lit.Eliteral('::=', name = 'Def')
+LitDef  = lit.Eliteral(':=', name = 'LitDef')
 OrSign  = lit.Eliteral("|",   name = 'OrSign')
 
 namespace     = globals()
@@ -49,16 +50,18 @@ AtomExpr =  AstParser(
     name = 'AtomExpr')
 
 Atom = AstParser(
-    [Name],
     [Str],
+    [Name],
     [LP, Ref("Expr"), RP],
     [LB, Ref("Expr"), RB],
     name = 'Atom')
 
 
 Equals = AstParser(
+    [Name, LitDef, Str],
     [Name, Def, Ref("Expr")],
     name = 'Equals')
+
 
 Trailer = AstParser(
     [SeqStar],
@@ -79,14 +82,12 @@ Stmt  = AstParser(
             ],
             name = 'Stmt')
 
-analysis = dict(raw = [], regex = [], collect = set())
-Stmt.compile(namespace, recurSearcher, analysis)
+Stmt.compile(namespace, recurSearcher)
 
 def _genToken():
-    
     import re
-    return re.compile("|".join(sorted(analysis['raw'])[::-1]+analysis['regex']))
     namespace['aStr'] = namespace['Str']
+    del namespace['Str']
     tk_reg = []
     tk_raw = []  
     for var in list(namespace.keys()):
@@ -96,7 +97,8 @@ def _genToken():
                 tk_reg.append(val.token_rule)
             else:
                 tk_raw.append(val.token_rule)
-
+    namespace['Str'] = namespace['aStr']
+    del namespace['aStr']
     token = re.compile("[R]{0,1}'[\w|\W]*?'"+ '|'+'|'.join(sorted(tk_raw)[::-1]+tk_reg) )
     return token
 token = _genToken()

@@ -86,6 +86,9 @@ class Ast:
     def extend(self, v):
         self.value.extend(v.value if isinstance(v, Ast) else v)
         
+    def len(self, v):
+        return len(self.value)
+        
     def dump(self, indent = 0):
         endl = ' '*indent
         if self.type is str:
@@ -104,11 +107,14 @@ class Ast:
 
 class LiteralParser(BaseParser):
     def __init__(self, regex_str, name = None, escape = False):
-        self.name      = name
         self.has_recur = False
         self.token_rule,self.match_func = Tools.reMatch(regex_str, escape = escape) 
         self.isRegex   = not escape
-        
+        if name is None:
+            self.name = self.token_rule
+        else:
+            self.name = name
+            
     def match(self, objs, meta, partial=True):
         left = len(objs) - meta.count;
         if not left: return None
