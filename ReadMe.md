@@ -17,6 +17,8 @@ It is implemented by using bootstrap EBNF gramamr.
 - [BootstrapParser](./Python/Misakawa/Bootstrap/Parser.py)
 - [BootstrapAst](./Python/Misakawa/Bootstrap/Ast.py)
 - [BootstrapCompile/Code Generator](./Python/Misakawa/Bootstrap/Compile.py)
+
+Will support C# sooner.
     
 -----------------------
 
