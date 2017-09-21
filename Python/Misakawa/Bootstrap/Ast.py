@@ -8,55 +8,147 @@ Created on Wed Sep 20 22:28:51 2017
 Ast.py
 """
 DEBUG = True
-import re
 from ..ObjectRegex.Node import Ast
 from ..scalable.core import groupBy, fn
+from .. import ErrorFamily
+import re
+esc = lambda str: str.replace("'",r"\'").replace('"',r'\"')
 _compose_eq = 0
 _literal_eq = 1
 _newline    = 2
 
-def ast_for_stmts(stmt : Ast, info = None):
-    if DEBUG: assert stmt.name == 'Stmt'
+def ast_for_stmts(stmts : Ast, info = None):
+    if DEBUG: assert stmts.name == 'Stmt'
 #    def grpFunc(stmt : Ast):
 #       return  _newline if stmt.name == 'NEWLINE' else  \
 #               _literal_eq if stmt[2].name == 'Str' else \
 #               _compose_eq
 #    grps = groupBy(grpFunc)(ast)
     row_idx = 0
-    res = []    
-    for eq_or_newline in stmt:
+    res = []
+    regex_tks = []
+    raw_tks   = []     
+    to_compile= []
+    for eq_or_newline in stmts:
         if eq_or_newline.name == 'NEWLINE':
             row_idx += 1
             continue
         else:
-            res.append(ast_for_equal(eq_or_newline, info))  
-    return res
+            define, tp = ast_for_equal(eq_or_newline, info)
+            if tp is None:
+                to_compile.append(eq_or_newline[0].value)
+            else:
+                status, tk = tp
+                if status is 'R':
+                    regex_tks.append(tk)
+                if status is 'L':
+                    raw_tks.append(f"'{re.escape(tk[1:-1])}'")
+
+                
+                
+            res.append(define) 
+                
+    tks = dict(regex = regex_tks + list(info['regex']), raw = raw_tks + list(info['raw']) )
+    return res, tks, to_compile
               
            
 #     groupBy(lambda x : )
 
 
-def ast_for_equal(eq : Ast, info = None):
+def ast_for_equal(eq : Ast, info):
     if DEBUG: assert eq.name == 'Equals'
     case = eq[2].name
     name = eq[0].value
-    
     if case == 'Str':
         value = eq[2].value
         if value.startswith('R'): 
             value = value[1:]
-            return f"{name} = LiteralParser({value}, name = '{name}')"
+            return f"{name} = LiteralParser({value}, name = '{name}')", ('R', value)
         else:
-            return f"{name} = LiteralParser.Eliteral({value}, name = '{name}')"
+            return f"{name} = LiteralParser.Eliteral({value}, name = '{name}')", ('L', value)
     elif case == 'Expr':
         value = ast_for_expr(eq[2], info)
-        return f"{name} = AstParser({value}, name = '{name}')"    
+        return f"{name} = AstParser({','.join(value)}, name = '{name}')", None    
     
-def ast_for_expr(expr : Ast, info = None):
-    return ','.join(ast_for_or(or_expr, info) for or_expr in expr if or_expr.name != 'OrSign')
+def ast_for_expr(expr : Ast, info):
+    return [ast_for_or(or_expr, info) for or_expr in expr if or_expr.name != 'OrSign']
 
-def ast_for_or(or_expr : Ast, info = None):
+def ast_for_or(or_expr : Ast, info):
     return '[{res}]'.format(res = ','.join(ast_for_atomExpr(atomExpr, info) for atomExpr in or_expr))
+
+def ast_for_atomExpr(atomExpr : Ast, info):
+    
+    res =  ast_for_atom(atomExpr[0], info)
+    if len(atomExpr) is 2:
+        case = atomExpr[1][0].name
+        if case == 'SeqStar':
+            res = ast_for_trailer(f"[{res}]", info)
+        elif case == 'SeqPlus':
+            res = ast_for_trailer(f"[{res}]", atleast = 1, info = info)
+        elif case == 'LBB':
+            atleast = atomExpr[1][1].value
+            case    = atomExpr[1][2].name
+            if case == 'RBB':
+                res = ast_for_trailer(f"[{res}]", atleast = atleast, info = info)
+            else:
+                atmost = atomExpr[1][2].value
+                res = ast_for_trailer(f"[{res}]", atleast = atleast, atmost = atmost, info = info)
+    return res
+
+def ast_for_atom(atom : Ast, info):
+    n = len(atom)
+    if n is 1:
+        liter = atom[0]
+        if liter.name == 'Name':
+            return f"Ref('{liter.value}')"
+        elif liter.name == 'Str':
+            string = liter.value
+            if string.startswith('R'):
+                string = string[1:]
+                info['regex'].add(string)
+                return f"LiteralParser({string}, name = '{esc(string)}')"
+            else:
+                info['raw'].add(f"'{re.escape(string[1:-1])}'")
+                return f"LiteralParser.Eliteral({string}, name = '{esc(string)}')"
+        else:
+            raise ErrorFamily.UnsolvedError("Unsolved Literal Parsed Ast.")
+    else:
+        if DEBUG:
+            assert n is 3
+        case = atom[0].name
+        if case == 'LB':
+            value = ','.join(ast_for_expr(atom[1], info = info))
+            return ast_for_trailer(f"{value}", atleast = 0, info = info)
+        elif case == 'LP':
+            or_exprs = ast_for_expr(atom[1], info = info)
+            if len(or_exprs) is 1:
+                return or_exprs[0][1:-1]
+            value = ','.join(or_exprs)
+            return ast_for_trailer(f"{value}", atleast = 1, info = info)
+        else:
+            ErrorFamily.UnsolvedError("Unsolved Atom Parsed Ast.")
+
+
+def ast_for_trailer(series_expr, info, atleast = 0, atmost = None):
+    if atleast is 0:
+        if atmost is None:
+            return f"SeqParser({series_expr})"
+        else:
+            return f"SeqParser({series_expr}, atmost = {atmost})"
+    else:
+        if atmost is None:
+            return f"SeqParser({series_expr}, atleast = {atleast})"
+        else:
+            return f"SeqParser({series_expr}, atleast = {atleast}, atmost = {atmost})"
+
+
+
+
+
+    
+    
+        
+        
 
    
     

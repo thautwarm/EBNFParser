@@ -1,0 +1,20 @@
+
+Expr    ::= Or ( "|" Or)*
+Or      ::= AtomExpr+
+
+AtomExpr::= Atom [Trailer] 
+Atom    ::=  Str | Name | "[" Expr "]" | "(" Expr ")" 
+
+
+
+Equals ::=  Name LitDef Str | Name Def Expr
+
+Trailer::= "*" | "+" | "{" Number{1 2} "}"
+Stmt   ::= ("\n"* Expr* "\n"*)*
+
+LitDef := ":="
+Def    := "::="
+Str    := "[\w|\W]*?"
+Name   := "[a-zA-Z_][a-zA-Z0-9]*"
+Number := "\d+"
+

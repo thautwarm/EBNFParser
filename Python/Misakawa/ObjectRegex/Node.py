@@ -86,7 +86,7 @@ class Ast:
     def extend(self, v):
         self.value.extend(v.value if isinstance(v, Ast) else v)
         
-    def len(self, v):
+    def __len__(self):
         return len(self.value)
         
     def dump(self, indent = 0):
@@ -145,7 +145,7 @@ class AstParser(BaseParser):
                 ' | '.join(' '.join(map(lambda parser : parser.name,ebnf_i)) for ebnf_i in ebnf)
         self.compiled      = False
     
-    def compile(self, namespace: dict, recurSearcher: set, analysis : dict = None):
+    def compile(self, namespace: dict, recurSearcher: set):
         if self.name:
             if self.name in recurSearcher:
                 self.has_recur = True
@@ -158,16 +158,11 @@ class AstParser(BaseParser):
             self.possibilities.append([])
             for e in es:
                 if isinstance(e, LiteralParser):
-                    if analysis is not None and e.token_rule not in analysis['collect']:
-                        if e.isRegex:
-                            analysis['regex'].append(e.token_rule)
-                        else:
-                            analysis['raw'].append(e.token_rule)
-                        analysis['collect'].add(e.token_rule)
                     self.possibilities[-1].append(e)
                 elif isinstance(e, Ref):
                     e = namespace[e.name]
-                    e.compile(namespace, recurSearcher, analysis)
+                    if isinstance(e, AstParser):
+                        e.compile(namespace, recurSearcher)
                     self.possibilities[-1].append(e)
                     if e.has_recur:
                         self.has_recur = True
@@ -176,7 +171,7 @@ class AstParser(BaseParser):
                         namespace[e.name] = e
                     else:
                         e = namespace[e.name]
-                    e.compile(namespace, recurSearcher, analysis)
+                    e.compile(namespace, recurSearcher)
                     self.possibilities[-1].append(e)
                     if e.has_recur:
                         self.has_recur = True
