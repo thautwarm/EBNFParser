@@ -1,0 +1,6 @@
+expr   ::= anystr | lp expr* rp
+anystr := R'[\w|\W]+'
+lp     := '('
+rp     := ')'
+
+
