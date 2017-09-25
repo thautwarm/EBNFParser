@@ -176,8 +176,22 @@ namespace ObjectRegExp
             }
         }
 
-        public class SequenceParser : ComposedAst
+        public class SequenceParser : ComposedParser
         {
+            private int AtLeast = 0;
+            private int AtMost = -1;
+
+            
+            
+            public SequenceParser(
+                int atleast = 0,
+                int atmost = -1,
+                string name = null,
+                params Parser[][] ebnf) : base(name, ebnf)
+            {
+                AtLeast = atleast;
+                AtMost = atmost;
+            }
             
         }
         
