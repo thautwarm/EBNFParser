@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections;
 using Misakawa;
 using System.Collections.Generic;
 using System.Linq;
+
 
 namespace ObjectRegExp
 {
 
     public abstract class Ast
     {
+        
         public string  Name;
 
     }
@@ -41,7 +42,7 @@ namespace ObjectRegExp
     
     public abstract class Parser
     {// Abstract Class for Parser.
-        public string Name = null;
+        public string Name;
         public bool HasRecur = false;
 
         public abstract Ast Match(string[] unparsedObjs,
@@ -94,6 +95,10 @@ namespace ObjectRegExp
             public Parser[][] Cache;
             public bool Compiled = false;
 
+            public void Compile(Dictionary<string, Parser> NameSpace, HashSet<string> recurSearcher)
+            {
+                // incomplete
+            }
             public ComposedParser(string name = null, params Parser[][] ebnf)
             {
                 Cache = ebnf;
@@ -110,7 +115,7 @@ namespace ObjectRegExp
                 var result = new ComposedAst(Name);
                 Ast r;
 #if DEBUG
-                Console.WriteLine($"{Name} With TraceLength {meta.Trace.Count}");
+                Console.WriteLine($"{Name} With TraceLength {meta.Trace.Count}"); // incomplete Trace.print
 #endif
                 foreach (var possibility in Possibilities)
                 {   
@@ -123,7 +128,7 @@ namespace ObjectRegExp
                                 if (meta.Trace.Contains(history))
                                 {
 #if DEBUG
-                                    Console.WriteLine($"Found L-R. Count :{meta.Count}  Name: {astStruct.Name}");
+                                    Console.WriteLine($"Found L-R. Count :{meta.Count}  Name: {astStruct.Name}"); 
 #endif
                                     r = null;
                                 }
@@ -149,14 +154,14 @@ namespace ObjectRegExp
                         }
                         if (astStruct is SequenceParser)
                         {
-                            result.Value.AddRange(((SequenceParser) r).Value);
+                            result.Value.AddRange(((ComposedAst) r).Value);
                         }
                         else
                         {
                             result.Value.Add(r);
                         }
 #if DEBUG
-                        Console.Write($"{astStruct.Name} << \n{r}");
+                        Console.Write($"{astStruct.Name} << \n  r.Dump() "); // incomplete r.Dump()
 #endif
                             
                     }
@@ -178,8 +183,8 @@ namespace ObjectRegExp
 
         public class SequenceParser : ComposedParser
         {
-            private int AtLeast = 0;
-            private int AtMost = -1;
+            private readonly int _atLeast = 0;
+            private readonly int _atMost  = -1;
 
             
             
@@ -189,9 +194,58 @@ namespace ObjectRegExp
                 string name = null,
                 params Parser[][] ebnf) : base(name, ebnf)
             {
-                AtLeast = atleast;
-                AtMost = atmost;
+                _atLeast = atleast;
+                _atMost = atmost;
+                if (_atMost < 0)
+                {
+                    Name = _atLeast == 0 ? $"({Name})*" : $"({Name}){{{_atLeast}}}";
+                }
+                else
+                    Name = $"({Name}){{{_atLeast} {_atMost}}}";
             }
+
+            public override Ast Match(
+                string[] unparsedObjs,
+                ref MetaInfo meta,
+                bool partial = false)
+            {
+                var result = new ComposedAst(Name);
+                var left = unparsedObjs.Length - meta.Count;
+                if (left == 0)
+                    return _atLeast == 0 ? result : null;
+                meta.Branch();
+                Ast r;
+                int sequenceLengthRecord;
+                if (_atMost>0)
+                    while (true)
+                    {
+                        if (sequenceLengthRecord >= _atMost) break;
+                        r = base.Match(unparsedObjs, ref meta);
+                        if (r == null) break;
+                        result.Value.AddRange(((ComposedAst) r).Value);
+                        ++sequenceLengthRecord;
+
+                    }
+                else
+                    while (true)
+                    {
+                        r = base.Match(unparsedObjs, ref meta);
+                        if (r == null) break;
+                        result.Value.AddRange(((ComposedAst) r).Value);
+                        ++sequenceLengthRecord;
+                    }
+#if DEBUG
+                 Console.WriteLine($"{Name} <= res.Dump() //Dump明儿写 ");
+#endif
+                if (sequenceLengthRecord < _atLeast)
+                {
+                    meta.Rollback();
+                    return null;
+                }
+                meta.Pull();
+                return result;
+            }
+            
             
         }
         
