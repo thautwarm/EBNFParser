@@ -95,8 +95,8 @@ class Ast:
             value = 'NEWLINE' if self.value is '\n' else self.value
             return f"{self.name}[{value}]\n{endl}"
         else:
-            next_indent  = len(self.name)+indent
-            body = f"\n{' '*(next_indent+1)}".join(map(lambda x:x.dump(next_indent+1), self))
+            next_indent  = len(self.name)+indent+1
+            body = f"\n{' '*(next_indent)}".join(map(lambda x:x.dump(next_indent), self))
             return f"{self.name}[{body}\n{endl}]"
     def setName(self, name):
         self.name = name

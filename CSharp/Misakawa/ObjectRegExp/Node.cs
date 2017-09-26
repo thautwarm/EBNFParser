@@ -11,12 +11,13 @@ namespace ObjectRegExp
     {
         
         public string  Name;
+        public abstract string Dump(int indent = 0);
 
     }
 
     public class LiteralAst : Ast
     {
-        public string Value;
+        public readonly string Value;
 
         public LiteralAst(string value, string name = null)
         {
@@ -24,19 +25,41 @@ namespace ObjectRegExp
             Name = name ?? Value;
         }
 
+        public override string Dump(int indent = 0)
+        {
+            return Value.Equals("\n")?$@"{Name}[\n]":$"{Name}[Value]";
+        }
 
+        public override string ToString()
+        {
+            return Dump();
+        }
     }
 
     public class ComposedAst : Ast
     {
-        public List<Ast> Value;
+        public readonly List<Ast> Value;
         public ComposedAst(string name)
         {
             Name  = name;
             Value = new List<Ast>(); 
             
         }
-        
+
+        public override string Dump(int indent = 0)
+        {
+            string endl = new string(' ', indent);
+            int nextIndent = indent + Name.Length + 1;
+            string body = string.Join(
+                $"\n{new string(' ', nextIndent)}",
+                Value.Select( it => it.Dump(nextIndent))
+            );
+            return $"{Name}[{body}\n{endl}]";
+        }
+        public override string ToString()
+        {
+            return Dump(0);
+        }
     }
     
     
@@ -48,6 +71,10 @@ namespace ObjectRegExp
         public abstract Ast Match(string[] unparsedObjs,
                             ref MetaInfo meta,
                             bool partial = false);
+
+        public abstract void Compile(
+            ref Dictionary<string, Parser> NameSpace,
+            ref HashSet<string> recurSearcher);
     }
 
     public class RefParser : Parser
@@ -56,6 +83,12 @@ namespace ObjectRegExp
         {
             Name = name;
         }
+
+        public override void Compile(
+            ref Dictionary<string, Parser> NameSpace,
+            ref HashSet<string> recurSearcher)
+        { throw  new ObjectUsageError("ReferenceParser shouldn't be compiled!");}
+        
         public override Ast Match(string[] unparsedObjs, ref MetaInfo meta, bool partial = true) =>
             throw new ObjectUsageError($"Reference of Ast {Name} cannot be used in this way.");
     }
@@ -71,7 +104,10 @@ namespace ObjectRegExp
             isRegex = !escape;
             Name = name ?? tokenRule;
         }
-
+        public override void Compile(
+            ref Dictionary<string, Parser> NameSpace,
+            ref HashSet<string> recurSearcher)
+        { throw  new ObjectUsageError("LiteralParser shouldn't be compiled!");}
         public override Ast Match(string[] unparsedObjs,
                                 ref MetaInfo meta,
                                 bool partial = false)
@@ -93,12 +129,71 @@ namespace ObjectRegExp
         {
             public List<List<Parser>> Possibilities;
             public Parser[][] Cache;
-            public bool Compiled = false;
+            public bool Compiled;
 
-            public void Compile(Dictionary<string, Parser> NameSpace, HashSet<string> recurSearcher)
+            public override void Compile(
+                ref Dictionary<string, Parser> nameSpace,
+                ref HashSet<string> recurSearcher
+                )
             {
-                // incomplete
+                if (nameSpace == null) throw new ArgumentNullException(nameof(nameSpace));
+                if (recurSearcher == null) throw new ArgumentNullException(nameof(recurSearcher));
+                
+                if (recurSearcher.Contains(Name))
+                {
+                    HasRecur = true;
+                    Compiled = true;
+                }
+                else
+                {
+                    recurSearcher.Add(Name);
+                }
+                if (Compiled) return;
+                
+                foreach (var es in Cache)
+                {
+                    var Possibility = new List<Parser>();
+                    foreach (var e in es)
+                    {
+                        switch (e)
+                        {
+                            case LiteralParser _:
+                            {
+                                Possibility.Add(e);
+                                break;
+                            }
+                            case RefParser _:
+                            {
+                                var refered = (ComposedParser) nameSpace[e.Name];
+                                refered.Compile(ref nameSpace,
+                                                ref recurSearcher);
+                                Possibility.Add(refered);
+                                if (refered.HasRecur)
+                                    HasRecur = true;
+                                break;
+                            }
+                            case ComposedParser _:
+                            {
+                                Parser refered = nameSpace.ContainsKey(e.Name) ? nameSpace[e.Name] : e;
+                                refered.Compile(ref nameSpace, ref recurSearcher);
+                                Possibility.Add(refered);
+                                if (refered.HasRecur)
+                                    HasRecur = true;
+                                break;
+                            }
+                             default:
+                                 throw new UnsolvedError("Unknown Parser Type.");
+                        }
+                    }
+                }
+#if DEBUG
+     if (HasRecur) Console.WriteLine($"Found recursive Parser `{Name}`.");    
+#endif
+                Cache = null;
+                if (!Compiled) Compiled = true;
+
             }
+            
             public ComposedParser(string name = null, params Parser[][] ebnf)
             {
                 Cache = ebnf;
@@ -113,7 +208,6 @@ namespace ObjectRegExp
                 bool partial = false)
             {
                 var result = new ComposedAst(Name);
-                Ast r;
 #if DEBUG
                 Console.WriteLine($"{Name} With TraceLength {meta.Trace.Count}"); // incomplete Trace.print
 #endif
@@ -123,6 +217,7 @@ namespace ObjectRegExp
                     foreach (var astStruct in possibility)
                     {
                         var history = (astStruct.Name, meta.Count);
+                        Ast r;
                         if (astStruct.HasRecur)
                         {
                                 if (meta.Trace.Contains(history))
@@ -161,7 +256,7 @@ namespace ObjectRegExp
                             result.Value.Add(r);
                         }
 #if DEBUG
-                        Console.Write($"{astStruct.Name} << \n  r.Dump() "); // incomplete r.Dump()
+                        Console.Write($"{astStruct.Name} << \n {r}  "); 
 #endif
                             
                     }
@@ -183,7 +278,7 @@ namespace ObjectRegExp
 
         public class SequenceParser : ComposedParser
         {
-            private readonly int _atLeast = 0;
+            private readonly int _atLeast;
             private readonly int _atMost  = -1;
 
             
