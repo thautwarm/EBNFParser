@@ -1,0 +1,6 @@
+Expr ::= Liter | Left Expr* Right
+Stmt ::= (NEWLINE* Expr+ NEWLINE*)*
+Liter   := R'[\w\\\+\*\-]+'
+Left    := '('
+Right   := ')'
+NEWLINE := R'\n'

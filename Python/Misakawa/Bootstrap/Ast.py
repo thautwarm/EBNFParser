@@ -40,15 +40,12 @@ def ast_for_stmts(stmts : Ast, info = None):
             else:
                 status, tk = tp
                 if status is 'R':
-                    regex_tks.append(tk)
+                    info['regex'].append(tk)
                 if status is 'L':
-                    raw_tks.append(f"'{re.escape(tk[1:-1])}'")
-
-                
-                
+                    info['raw'].append(f"'{re.escape(tk[1:-1])}'")
             res.append(define) 
                 
-    tks = dict(regex = regex_tks + list(info['regex']), raw = raw_tks + list(info['raw']) )
+    tks = info
     return res, tks, to_compile
               
            
@@ -105,10 +102,13 @@ def ast_for_atom(atom : Ast, info):
             string = liter.value
             if string.startswith('R'):
                 string = string[1:]
-                info['regex'].add(string)
+                if (string) not in info['regex']:
+                    info['regex'].append(string)
                 return f"LiteralParser({string}, name = '{esc(string)}')"
             else:
-                info['raw'].add(f"'{re.escape(string[1:-1])}'")
+                toadd = f"'{re.escape(string[1:-1])}'"
+                if toadd not in info['raw']:
+                    info['raw'].append(toadd)
                 return f"LiteralParser.Eliteral({string}, name = '{esc(string)}')"
         else:
             raise ErrorFamily.UnsolvedError("Unsolved Literal Parsed Ast.")
@@ -118,13 +118,13 @@ def ast_for_atom(atom : Ast, info):
         case = atom[0].name
         if case == 'LB':
             value = ','.join(ast_for_expr(atom[1], info = info))
-            return ast_for_trailer(f"{value}", atleast = 0, info = info)
+            return ast_for_trailer(f"{value}", atleast = 0, atmost = 1, info = info)
         elif case == 'LP':
             or_exprs = ast_for_expr(atom[1], info = info)
             if len(or_exprs) is 1:
                 return or_exprs[0][1:-1]
             value = ','.join(or_exprs)
-            return ast_for_trailer(f"{value}", atleast = 1, info = info)
+            return ast_for_trailer(f"{value}", atleast = 1, atmost = 1, info = info)
         else:
             ErrorFamily.UnsolvedError("Unsolved Atom Parsed Ast.")
 

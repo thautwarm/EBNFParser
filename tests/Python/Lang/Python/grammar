@@ -1,0 +1,32 @@
+Test    ::= Lambdef | OrTest [ R'if(?!\S)' OrTest R'else(?!\S)' Test] 
+Lambdef ::= R'lambda(?!\S)' Argdef ':' Test
+OrTest	::= AndTest (Or AndTest)* 
+AndTest	::= NotTest (And NotTest)*
+NotTest	::= Arith  | Not NotTest
+Arith	::= Term   ( (Add | Sub) Term )* 
+Term	::= Factor ( (Mul | Div | Mod) Factor)* 
+
+
+Factor	::= Expr | (Add | Sub) Factor
+  
+Not	:= R'not(?!\S)'
+Or	:= R'or(?!\S)'
+And	:= R'and(?!\S)'
+
+Mod	:= '%'
+Mul	:= '*'
+Div	:= '/'
+
+Add	:= '+'
+Sub	:= '-'
+
+Expr	::= Test | Number | Const | Name | '(' ListComp ')' | '[' ListComp ']' 
+
+Argdef	::= Name (',' Name)*
+ListComp::= Test [R'for(?!\S)' Argdef R'in(?!\S)' Test] 
+
+
+Number  := R'\d+|\d*\.\d+'
+Const   := R'True(?!\S)|False(?!\S)|None(?!\S)'
+Name    := R'[a-zA-Z_][a-zA-Z0-9]*'
+NEWLINE := '\n'

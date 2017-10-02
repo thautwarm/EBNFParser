@@ -26,14 +26,15 @@ token = {tokendef}
 
 
 def compile(ebnf_text, language_name):
-    info = dict(raw = set(), regex = set())
+    info = dict(raw = [], regex = [])
     stmts = parser(token.findall(ebnf_text), MetaInfo(), partial=False)
     res, tks, to_compile = ast_for_stmts(stmts, info)
-    print(res)
+#    print(res)
     tks = sorted(tks['raw'])[::-1] + tks['regex']
     tokendef = "re.compile('|'.join([{}]))".format(','.join(tks))
     astParser_compile = lambda name : f"{name}.compile(namespace, recurSearcher)"
     parser_compile = '\n'.join(fn.map(astParser_compile)(to_compile))
     define         = '\n'.join(res)
     return template.format(define = define, parser_compile = parser_compile, tokendef = tokendef)
+
       

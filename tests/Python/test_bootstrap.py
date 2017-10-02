@@ -12,7 +12,7 @@ from Misakawa.ErrorFamily import handle_error
 
 
 def go():
-    with open('../bootstrap.ebnf') as f:
+    with open('bootstrap.ebnf') as f:
         lex = f.read()
     tokens = token.findall(lex)
     parser = handle_error(Stmt.match)
