@@ -48,6 +48,11 @@ let f2 : [[i32=>i32]=>i32] = {
 f2 {
    i:auto -> i*20
 }
+struct Some{
+	a:i32
+	f:[i32=>i32]
+	g:[[i32=>i32]=>[i32=>i32]]
+}
 " -testTk True
 
 
