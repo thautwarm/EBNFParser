@@ -7,14 +7,17 @@ cmdparser.add_argument("Parser", type = str,
                        help='What kind of parser do you want to test with?(e.g Stmt, Expr, ...)')
 cmdparser.add_argument("Codes",  metavar = 'lispCodes', type = str,
                        help='Input some codes in your language here.')
+cmdparser.add_argument("-testTk",  default = False, type = bool)
 
 args = cmdparser.parse_args()
 
 parser = handle_error(eval(args.Parser).match)
 
 tokenized = token.findall(args.Codes)
+if args.testTk:
+    print(tokenized)
+print(parser(tokenized,partial=False))
 
-print(parser(tokenized))
 
 
 

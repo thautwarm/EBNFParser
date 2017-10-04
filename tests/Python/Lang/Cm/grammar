@@ -1,0 +1,167 @@
+# each '\n' will be ignored.
+# `ENDL` will be replaced by '\n' when compiling.
+
+# comments
+multilineComment  
+        ::= '/*' multilineComment '*/' 
+            |  
+            R'/\*[\W\w]*?/\*'  
+        ENDL
+
+Comment:= R'//[^\n]*'   
+       ENDL
+
+# basics
+ 
+String  := R'[a-z]*"[\w|\W]*"' 
+        ENDL
+
+numberLiteral 
+        := R'0[XxOoBb][\da-fA-F]+'  
+        ENDL
+
+Decimal := R'\d+(?:\.\d+|)(?:E\-{0,1}\d+|)' 
+        ENDL
+
+Constant:= R'null(?!\S)|false(?!\S)|true(?!\S)' 
+        ENDL
+
+EOL     := R';|\n' 
+        ENDL
+
+Insertable
+        ::= EOL | Comment | multilineComment
+        ENDL
+
+simpleName       
+        := R'[a-zA-Z_][a-z0-9A-Z_]*'
+        ENDL
+
+
+Identity
+        ::= simpleName | '`' simpleName '`'
+        ENDL
+
+labelDef
+        ::= ':' Identity
+        ENDL
+
+block   ::= '{' statements '}' 
+        ENDL
+
+body    ::=  block  | statement | Insertable* body Insertable*
+        ENDL
+
+# statement 
+
+statement        
+        ::= flowControl | declaration | [flowControlSign] expression [EOL] 
+            | Insertable* statement Insertable*
+        ENDL 
+
+flowControlSign 
+        := R'break(?!\S)|return(?!\S)|continue(?!\S)'
+        ENDL
+
+flowControl
+        ::= If | While
+        ENDL
+
+If      ::= R'if(?!\S)' '(' expression ')' 
+                body 
+            [ R'else(?!\S)' 
+                body 
+            ] 
+        ENDL
+
+While   ::= R'while(?!\S)' '(' expression  ')' 
+                body
+        ENDL
+
+# declaration
+
+declaration 
+        ::= structDeclaration | variableDeclaration
+        ENDL
+structDeclaration
+        ::= R'struct(?!\S)' Identity '{' 
+                (Insertable* variableDeclarationEntry Insertable*)* 
+            '}' 
+        ENDL
+
+variableDeclarationEntry
+        ::= Identity [':' Type]
+        ENDL
+
+variableDeclarationEntryList   
+        ::= variableDeclarationEntry (',' variableDeclarationEntry)* 
+        ENDL
+
+variableDeclaration
+        ::= (R'let(?!\S)' | R'var(?!\S)') variableDeclarationEntry [ '=' expression ] 
+        ENDL
+
+Type    ::=  '[' TypeList '=>' Type ']' | Identity
+        ENDL
+TypeList
+        ::= Type (',' Type)*
+        ENDL
+
+# expression
+
+BinaryOperator := R'\/\/|\/|\|\||\||\>\>|\<\<|\>\=|\<\=|\<\-|\>|\<|\=\>|\-\-|\+\+|\*\*|\+|\-|\*|\=\=|\=|\%|\^'
+                ENDL
+UnaryOperator  := R'\?|\!|\&|\$|\@|\+|\-|\~' 
+                ENDL
+
+expression     
+        ::= LambdaDef | BinaryOperation
+        ENDL
+
+LambdaDef       
+        ::= variableDeclarationEntryList '->' body
+            |
+            '{' 
+                Insertable*
+                [variableDeclarationEntryList '->']
+                statements              # 若没有定义形式参数, 则类似kotlin的`it`或者scala的`_`
+            '}' 
+        ENDL
+
+BinaryOperation 
+        ::= UnaryOperation (BinaryOperator UnaryOperation)* 
+        ENDL
+
+UnaryOperation
+        ::= AtomExpr | UnaryOperator UnaryOperation 
+        ENDL
+
+AtomExpr::= Atom Trailer*
+        ENDL
+
+expressionList 
+        ::= expression (',' expression)*
+        ENDL
+
+## call function and get members.
+
+
+
+Trailer ::= '(' expressionList ')' [LambdaDef] | '.' Identity
+        ENDL
+
+Atom    ::= Constant | String | Identity | numberLiteral | Decimal | '(' expression ')'
+        ENDL
+
+# extra
+statements
+        ::= (Insertable* statement* Insertable*)*
+        ENDL
+
+
+
+
+
+
+
+
