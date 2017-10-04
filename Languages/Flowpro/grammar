@@ -1,0 +1,39 @@
+
+
+
+
+
+Argdef	::= Name [ '::' Expr ]
+Argdef	::= Name (',' Name)*
+Argcall	::= Expr (',' Expr)*
+
+
+
+BinOp	  ::= 
+
+Trailer	  ::= Subscript | Call
+Subscript ::= '[' 
+Call	  ::= 
+
+
+
+Acess	  ::= '.' Name
+
+Op      := R'\/\/|\/|\|\||\||\>\>|\<\<|\>\=|\<\=|\<\-|\>|\<|\=\>|\-\>|\?|\-\-|\+\+|\*\*|\+|\-|\*|\=\=|\=|\~|\@|\$|\%|\^|\&|\!|\:'
+
+
+
+Const   := R'None(?!\S)|True(?!\S)|False(?!\S)'
+Name    := R'[a-zA-Z_]{0,1}[0-9a-zA-Z_]*'
+NEWLINE	:= R'\n'
+Str	:= R'"[\w\W]*?"'
+
+
+
+
+
+
+
+
+
+
