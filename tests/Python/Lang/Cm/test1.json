@@ -11,7 +11,7 @@
                             "name": "variableDeclaration",
                             "value": [
                                 {
-                                    "name": "'let(?!\\S)'",
+                                    "name": "'let'",
                                     "value": "let",
                                     "meta": {
                                         "rowIdx": 0,
@@ -23,7 +23,7 @@
                                     "name": "variableDeclarationEntry",
                                     "value": [
                                         {
-                                            "name": "Identity",
+                                            "name": "Identifier",
                                             "value": [
                                                 {
                                                     "name": "simpleName",
@@ -54,7 +54,7 @@
                                             "name": "Type",
                                             "value": [
                                                 {
-                                                    "name": "Identity",
+                                                    "name": "Identifier",
                                                     "value": [
                                                         {
                                                             "name": "simpleName",

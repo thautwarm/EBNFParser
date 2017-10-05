@@ -23,14 +23,18 @@ numberLiteral
 Decimal := R'\d+(?:\.\d+|)(?:E\-{0,1}\d+|)' 
         ENDL
 
-Constant:= R'null(?!\S)|false(?!\S)|true(?!\S)' 
+Constant:= K'null|false|true' 
         ENDL
 
-EOL     := R';|\n' 
+NEWLINE := R'\n'
+        ENDL
+
+
+EOL     := R';' 
         ENDL
 
 Insertable
-        ::= EOL | Comment | multilineComment
+        ::= EOL | NEWLINE | Comment | multilineComment
         ENDL
 
 simpleName       
@@ -38,12 +42,13 @@ simpleName
         ENDL
 
 
-Identity
+
+Identifier
         ::= simpleName | '`' simpleName '`'
         ENDL
 
-labelDef
-        ::= ':' Identity
+labelDeclaration
+        ::= ':' Identifier
         ENDL
 
 block   ::= '{' statements '}' 
@@ -55,26 +60,28 @@ body    ::=  block  | statement | Insertable* body Insertable*
 # statement 
 
 statement        
-        ::= flowControl | declaration | [flowControlSign] expression [EOL] 
+        ::= flowControl | declaration | flowControlSign [Identifier] | expression  
             | Insertable* statement Insertable*
         ENDL 
 
 flowControlSign 
-        := R'break(?!\S)|return(?!\S)|continue(?!\S)'
+        := K'break|return|continue'
         ENDL
 
 flowControl
         ::= If | While
         ENDL
 
-If      ::= R'if(?!\S)' '(' expression ')' 
+If      ::= K'if' '(' expression ')' 
                 body 
-            [ R'else(?!\S)' 
+            [
+            K'else' 
                 body 
             ] 
         ENDL
 
-While   ::= R'while(?!\S)' '(' expression  ')' 
+While   ::=  [labelDeclaration] 
+             K'while' '(' expression  ')' 
                 body
         ENDL
 
@@ -83,28 +90,34 @@ While   ::= R'while(?!\S)' '(' expression  ')'
 declaration 
         ::= structDeclaration | variableDeclaration
         ENDL
+
 structDeclaration
-        ::= R'struct(?!\S)' Identity '{' 
+        ::= K'struct' Identifier '{' 
                 (Insertable* variableDeclarationEntry Insertable*)* 
             '}' 
         ENDL
 
 variableDeclarationEntry
-        ::= Identity [':' Type]
+        ::= Identifier [':' Type]
         ENDL
 
-variableDeclarationEntryList   
+variableDeclarationEntryList  
         ::= variableDeclarationEntry (',' variableDeclarationEntry)* 
         ENDL
 
 variableDeclaration
-        ::= (R'let(?!\S)' | R'var(?!\S)') variableDeclarationEntry [ '=' expression ] 
+        ::= (K'let' | K'var') variableDeclarationEntry [ '=' expression ] 
         ENDL
 
-Type    ::=  '[' TypeList '=>' Type ']' | Identity
+Type    ::=  '[' TypeList '=>' Type ']' | Identifier
         ENDL
+
 TypeList
         ::= Type (',' Type)*
+        ENDL
+
+genericParameters 
+        ::= K'<' Identifier (',' Identifier)* K'>'
         ENDL
 
 # expression
@@ -119,13 +132,15 @@ expression
         ENDL
 
 LambdaDef       
-        ::= variableDeclarationEntryList '->' body
+        ::= variableDeclarationEntry '->' body
             |
-            '{' 
-                Insertable*
+            '(' variableDeclarationEntryList ')' '->' body
+            |
+            '{' Insertable*
                 [variableDeclarationEntryList '->']
                 statements              # 若没有定义形式参数, 则类似kotlin的`it`或者scala的`_`
             '}' 
+            | [genericParameters] [Type] LambdaDef
         ENDL
 
 BinaryOperation 
@@ -147,21 +162,14 @@ expressionList
 
 
 
-Trailer ::= '(' expressionList ')' [LambdaDef] | '.' Identity
+Trailer ::= '(' [expressionList] ')' [LambdaDef] | '.' Identifier
         ENDL
 
-Atom    ::= Constant | String | Identity | numberLiteral | Decimal | '(' expression ')'
+Atom    ::= Constant | String | Identifier | numberLiteral | Decimal | '(' expression ')'
         ENDL
 
 # extra
 statements
         ::= (Insertable* statement* Insertable*)*
         ENDL
-
-
-
-
-
-
-
 

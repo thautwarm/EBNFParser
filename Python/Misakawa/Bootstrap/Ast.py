@@ -61,6 +61,9 @@ def ast_for_equal(eq : Ast, info):
         if value.startswith('R'): 
             value = value[1:]
             return f"{name} = LiteralParser({value}, name = '{name}')", ('R', value)
+        elif value.startswith('K'):
+            value = value[1:]
+            return f"{name} = LiteralParser({value}, name = '{name}')", ('K', value)
         else:
             return f"{name} = LiteralParser.Eliteral({value}, name = '{name}')", ('L', value)
     elif case == 'Expr':
@@ -102,8 +105,11 @@ def ast_for_atom(atom : Ast, info):
             string = liter.value
             if string.startswith('R'):
                 string = string[1:]
-                if (string) not in info['regex']:
+                if string not in info['regex']:
                     info['regex'].append(string)
+                return f"LiteralParser({string}, name = '{esc(string)}')"
+            elif string.startswith('K'):
+                string = string[1:]
                 return f"LiteralParser({string}, name = '{esc(string)}')"
             else:
                 toadd = f"'{re.escape(string[1:-1])}'"

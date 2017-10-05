@@ -1,12 +1,12 @@
-statements[statement[declaration[variableDeclaration['let(?!\S)'[let]
+statements[statement[declaration[variableDeclaration['let'[let]
                                                      
-                                                     variableDeclarationEntry[Identity[simpleName[s]
-                                                                                       
+                                                     variableDeclarationEntry[Identifier[simpleName[s]
+                                                                                         
                                                                               ]
                                                                               ':'[:]
                                                                               
-                                                                              Type[Identity[simpleName[int]
-                                                                                            
+                                                                              Type[Identifier[simpleName[int]
+                                                                                              
                                                                                    ]
                                                                               ]
                                                      ]

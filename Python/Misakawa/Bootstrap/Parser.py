@@ -10,7 +10,7 @@ bootstrap = True
 from ..ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser
 lit = LiteralParser 
 
-Str    = lit("[R]{0,1}'[\w|\W]*?'", name = 'Str')
+Str    = lit("[RK]{0,1}'[\w|\W]*?'", name = 'Str')
 Name   = lit('[a-zA-Z_][a-zA-Z0-9]*', name = 'Name')
 Number = lit('\d+',name = 'Number')
 
@@ -99,7 +99,7 @@ def _genToken():
                 tk_raw.append(val.token_rule)
     namespace['Str'] = namespace['aStr']
     del namespace['aStr']
-    token = re.compile("[R]{0,1}'[\w|\W]*?'"+ '|'+'|'.join(sorted(tk_raw)[::-1]+tk_reg) )
+    token = re.compile("[RK]{0,1}'[\w|\W]*?'"+ '|'+'|'.join(sorted(tk_raw)[::-1]+tk_reg) )
     return token
 token = _genToken()
 
