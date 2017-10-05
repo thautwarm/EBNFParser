@@ -60,7 +60,7 @@ Atom = AstParser(
 
 
 Equals = AstParser(
-    [Name, LitDef, Str],
+    [Name, LitDef, SeqParser([Str], atleast=1)],
     [Name, SeqParser([Throw,SeqParser([Name])],atmost = 1),Def, Ref("Expr")],
     name = 'Equals')
 

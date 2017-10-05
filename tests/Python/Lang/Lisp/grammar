@@ -1,6 +1,5 @@
-Expr ::= Liter | Left Expr* Right
-Stmt ::= (NEWLINE* Expr+ NEWLINE*)*
-Liter   := R'[\w\\\+\*\-]+'
-Left    := '('
-Right   := ')'
+Expr  Throw NEWLINE ::= Atom | Quote | '(' NEWLINE* Expr* NEWLINE* ')' 
+Quote ::= '`' Expr
+Atom    := R'[^\(\)\s]+'
 NEWLINE := R'\n'
+Stmt Throw NEWLINE ::= (NEWLINE* Expr* NEWLINE*)*

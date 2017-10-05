@@ -1,54 +1,54 @@
-Stmt[Expr[Left[(]
+Stmt[Expr['('[(]
           
-          Expr[Liter[set]
+          Expr[Atom[set]
                
           ]
-          Expr[Liter[r]
+          Expr[Atom[r]
                
           ]
-          Expr[Liter[1]
+          Expr[Atom[1]
                
           ]
-          Right[)]
+          ')'[)]
           
      ]
-     Expr[Left[(]
+     Expr['('[(]
           
-          Expr[Liter[define]
+          Expr[Atom[define]
                
           ]
-          Expr[Liter[a]
+          Expr[Atom[a]
                
           ]
-          Expr[Liter[b]
+          Expr[Atom[b]
                
           ]
-          Expr[Left[(]
+          Expr['('[(]
                
-               Expr[Liter[+]
+               Expr[Atom[+]
                     
                ]
-               Expr[Liter[a]
+               Expr[Atom[a]
                     
                ]
-               Expr[Left[(]
+               Expr['('[(]
                     
-                    Expr[Liter[+]
+                    Expr[Atom[+]
                          
                     ]
-                    Expr[Liter[r]
+                    Expr[Atom[r]
                          
                     ]
-                    Expr[Liter[1]
+                    Expr[Atom[1]
                          
                     ]
-                    Right[)]
+                    ')'[)]
                     
                ]
-               Right[)]
+               ')'[)]
                
           ]
-          Right[)]
+          ')'[)]
           
      ]
 ]

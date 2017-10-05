@@ -1,15 +1,84 @@
 [![Build Status](https://travis-ci.org/thautwarm/EBNFParser.svg?branch=master)](https://travis-ci.org/thautwarm/EBNFParser)
+[![GPLv3.0 License](https://img.shields.io/badge/license-GPLv3.0-Green.svg)](https://github.com/thautwarm/EBNFParser/blob/master/LICENSE)
+[![PyPI version](https://img.shields.io/pypi/v/EBNFParser.svg)](https://pypi.python.org/pypi/EBNFParser)
 
 # EBNFParser
 Parse Many, Any, Every
 ---------
 [HomePage](https://github.com/thautwarm/EBNFParser)
 
+
+
 ## Multi-Language-Versions
-- [Python Project](./Python)  
+- [Python Project ](./Python)  (v0.1.1)
 - [C# Project](./CSharp)(unfinished)
+
 --------------------
 
+## An Introduce to EBNFParser
+
+`EBNFParser` seems to be a parser framework for EBNF, however, 
+it's just what I want to do at the beginning, 
+and so far this framework is much more powerful than what I used to expect it to be.   
+
+
+As a result, I prefer to call it `EEBNF`(which means `Extented(Extented Backus-Naur Form)`).    
+
+
+What's more, **tokenizer** is **automatically generated** from EEBNF, as well as the parsers for your DSL. 
+
+
+Here are some grammars for `EEBNF`, and they're quite easy to be learnt.
+
+I'm going to write the parsers for **Lisp** quickly to tell you how to use EBNFParser.  
+
+The reason why I choose Lisp is that its EEBNF codes is very very short.
+
+```BNF
+Atom  := R'[^\(\)\s]+' # use Regex
+# define a literal parser. `Atom::= R'[^\(\)\s]+'` is ok, but the ast parsed from the two is a little different with each other.
+Left  := '('
+Right := ')'
+SExpr ::= Atom | Left SExpr* Right
+```
+Okay, now a parser for Lisp is finished! Let's save this file as `lisp.eebnf`.
+Just 
+- download CPython 3.6(If you're in China, go to[Tsinghua Tuna Mirror](https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/)   
+and choose the corresponding installer for you OS.
+- download EBNFParser `pip install EBNFParser`.
+- type this codes
+    ```
+    parserGenerator.py lisp.eebnf ./lispParser.py -test True -comment True
+    ```
+And now there should be two files(`testLang.py, lispParser.py`) automatically generated near by `lisp.eebnf`.
+- feel free to try any lisp codes as `<Lisp Codes>` with following command.
+
+    ```shell
+    python testLang.py SExpr `<Lisp Codes>` 
+    # python testLang.py SExpr "(+ 1 +(2 3))" -o test1
+    SExpr[Left[(]
+      
+      SExpr[Atom[+]
+            
+      ]
+      SExpr[Atom[1]
+        ...
+    ]
+    # python testLang.py SExpr "(define a x y (+ x y))" -o test2
+    SExpr[Left[(]
+      
+      SExpr[Atom[define]
+            
+      ]
+      SExpr[Atom[a]
+            
+      ]
+        ...
+    ]
+    ```
+    See the results at `test1.json, test1Ast, test2.json, test2Ast`.  
+    A complete EEBNF for Lisp can be found at [Grammar](./tests/Python/Lang/Lisp/grammar).  
+    Here are more examples given at the following sections.
 
 Each example has the same structure like:  
 - `grammar`. The only file you have to write.
@@ -24,12 +93,11 @@ Each example has the same structure like:
     - Grammar
     See `./tests/Python/Lang/Lisp/grammar`.
     ```
-    Expr ::= Liter | Left Expr* Right
-    Stmt ::= (NEWLINE* Expr+ NEWLINE*)*
-    Liter   := R'[\w\\\+\*\-]+'
-    Left    := '('
-    Right   := ')'
+    Expr  Throw NEWLINE ::= Atom | Quote | '(' NEWLINE* Expr* NEWLINE* ')' 
+    Quote   ::= '`' Expr
+    Atom    := R'\S+'
     NEWLINE := R'\n'
+    Stmt Throw NEWLINE  ::= (NEWLINE* Expr* NEWLINE*)*
     ```
     - testCodes
     See `./testpy.sh`.
@@ -44,89 +112,89 @@ Each example has the same structure like:
         ```json
         ...
         {
-                        "name": "Expr",
-                        "value": [
-                            {
-                                "name": "Liter",
-                                "value": "1",
-                                "meta": {
-                                    "rowIdx": 0,
-                                    "hasParsed": 4,
-                                    "fileName": "<input>"
-                                }
+            "name": "Stmt",
+            "value": [
+                {
+                    "name": "Expr",
+                    "value": [
+                        {
+                            "name": "'('",
+                            "value": "(",
+                            "meta": {
+                                "rowIdx": 0,
+                                "hasParsed": 1,
+                                "fileName": "<input>"
                             }
-                        ],
-                        "meta": {
-                            "rowIdx": 0,
-                            "hasParsed": 3,
-                            "fileName": "<input>"
-                        }
-                    },
-                    {
-                        "name": "Right",
-                        "value": ")",
-                        "meta": {
-                            "rowIdx": 0,
-                            "hasParsed": 5,
-                            "fileName": "<input>"
-                        }
-                    }
+                        },
+                        {
+                            "name": "Expr",
+                            "value": [
+                                {
+                                    "name": "Atom",
+                                    "value": "set",
+                                    "meta": {
+                                        "rowIdx": 0,
+                                        "hasParsed": 2,
+                                        "fileName": "<input>"
+                                    }
+                                }
+                            ],
         ...
         ```
         - Ast
         See `./tests/Python/Lang/Lisp/test1Ast`.
         ```
-        Stmt[Expr[Left[(]
+        Stmt[Expr['('[(]
                 
-                Expr[Liter[set]
+                Expr[Atom[set]
                     
                 ]
-                Expr[Liter[r]
+                Expr[Atom[r]
                     
                 ]
-                Expr[Liter[1]
+                Expr[Atom[1]
                     
                 ]
-                Right[)]
+                ')'[)]
                 
             ]
-            Expr[Left[(]
+            Expr['('[(]
                 
-                Expr[Liter[define]
+                Expr[Atom[define]
                     
                 ]
-                Expr[Liter[a]
+                Expr[Atom[a]
                     
                 ]
-                Expr[Liter[b]
+                Expr[Atom[b]
                     
                 ]
-                Expr[Left[(]
+                Expr['('[(]
                     
-                    Expr[Liter[+]
+                    Expr[Atom[+]
                             
                     ]
-                    Expr[Liter[a]
+                    Expr[Atom[a]
                             
                     ]
-                    Expr[Left[(]
+                    Expr['('[(]
                             
-                            Expr[Liter[+]
+                            Expr[Atom[+]
                                 
                             ]
-                            Expr[Liter[r]
+                            Expr[Atom[r]
                                 
                             ]
-                            Expr[Liter[1]
+                            Expr[Atom[1]
                                 
                             ]
-                            Right[)]
+                            ')'[)]
                             
                     ]
-                    Right[)]
+                    ')'[)]
                     
                 ]
-                Right[)]
+                ')'[)]
                 
             ]
         ]

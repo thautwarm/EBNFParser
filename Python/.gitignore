@@ -3,3 +3,5 @@ __pycache__/
 Attempts-which-failed/
 .vscode/
 .idea/
+EBNFParser.egg-info/
+dist/

@@ -5,7 +5,7 @@
             "name": "Expr",
             "value": [
                 {
-                    "name": "Left",
+                    "name": "'('",
                     "value": "(",
                     "meta": {
                         "rowIdx": 0,
@@ -17,7 +17,7 @@
                     "name": "Expr",
                     "value": [
                         {
-                            "name": "Liter",
+                            "name": "Atom",
                             "value": "set",
                             "meta": {
                                 "rowIdx": 0,
@@ -36,7 +36,7 @@
                     "name": "Expr",
                     "value": [
                         {
-                            "name": "Liter",
+                            "name": "Atom",
                             "value": "r",
                             "meta": {
                                 "rowIdx": 0,
@@ -55,7 +55,7 @@
                     "name": "Expr",
                     "value": [
                         {
-                            "name": "Liter",
+                            "name": "Atom",
                             "value": "1",
                             "meta": {
                                 "rowIdx": 0,
@@ -71,7 +71,7 @@
                     }
                 },
                 {
-                    "name": "Right",
+                    "name": "')'",
                     "value": ")",
                     "meta": {
                         "rowIdx": 0,
@@ -90,7 +90,7 @@
             "name": "Expr",
             "value": [
                 {
-                    "name": "Left",
+                    "name": "'('",
                     "value": "(",
                     "meta": {
                         "rowIdx": 0,
@@ -102,7 +102,7 @@
                     "name": "Expr",
                     "value": [
                         {
-                            "name": "Liter",
+                            "name": "Atom",
                             "value": "define",
                             "meta": {
                                 "rowIdx": 0,
@@ -121,7 +121,7 @@
                     "name": "Expr",
                     "value": [
                         {
-                            "name": "Liter",
+                            "name": "Atom",
                             "value": "a",
                             "meta": {
                                 "rowIdx": 0,
@@ -140,7 +140,7 @@
                     "name": "Expr",
                     "value": [
                         {
-                            "name": "Liter",
+                            "name": "Atom",
                             "value": "b",
                             "meta": {
                                 "rowIdx": 0,
@@ -159,7 +159,7 @@
                     "name": "Expr",
                     "value": [
                         {
-                            "name": "Left",
+                            "name": "'('",
                             "value": "(",
                             "meta": {
                                 "rowIdx": 0,
@@ -171,7 +171,7 @@
                             "name": "Expr",
                             "value": [
                                 {
-                                    "name": "Liter",
+                                    "name": "Atom",
                                     "value": "+",
                                     "meta": {
                                         "rowIdx": 0,
@@ -190,7 +190,7 @@
                             "name": "Expr",
                             "value": [
                                 {
-                                    "name": "Liter",
+                                    "name": "Atom",
                                     "value": "a",
                                     "meta": {
                                         "rowIdx": 0,
@@ -209,7 +209,7 @@
                             "name": "Expr",
                             "value": [
                                 {
-                                    "name": "Left",
+                                    "name": "'('",
                                     "value": "(",
                                     "meta": {
                                         "rowIdx": 0,
@@ -221,7 +221,7 @@
                                     "name": "Expr",
                                     "value": [
                                         {
-                                            "name": "Liter",
+                                            "name": "Atom",
                                             "value": "+",
                                             "meta": {
                                                 "rowIdx": 0,
@@ -240,7 +240,7 @@
                                     "name": "Expr",
                                     "value": [
                                         {
-                                            "name": "Liter",
+                                            "name": "Atom",
                                             "value": "r",
                                             "meta": {
                                                 "rowIdx": 0,
@@ -259,7 +259,7 @@
                                     "name": "Expr",
                                     "value": [
                                         {
-                                            "name": "Liter",
+                                            "name": "Atom",
                                             "value": "1",
                                             "meta": {
                                                 "rowIdx": 0,
@@ -275,7 +275,7 @@
                                     }
                                 },
                                 {
-                                    "name": "Right",
+                                    "name": "')'",
                                     "value": ")",
                                     "meta": {
                                         "rowIdx": 0,
@@ -291,7 +291,7 @@
                             }
                         },
                         {
-                            "name": "Right",
+                            "name": "')'",
                             "value": ")",
                             "meta": {
                                 "rowIdx": 0,
@@ -307,7 +307,7 @@
                     }
                 },
                 {
-                    "name": "Right",
+                    "name": "')'",
                     "value": ")",
                     "meta": {
                         "rowIdx": 0,

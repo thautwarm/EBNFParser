@@ -9,7 +9,6 @@ Ast.py
 """
 DEBUG = True
 from ..ObjectRegex.Node import Ast
-from ..scalable.core import groupBy, fn
 from .. import ErrorFamily
 import re
 esc = lambda str: str.replace("'",r"\'").replace('"',r'\"')
@@ -25,9 +24,7 @@ def ast_for_stmts(stmts : Ast, info = None):
 #               _compose_eq
 #    grps = groupBy(grpFunc)(ast)
     row_idx = 0
-    res = []
-    regex_tks = []
-    raw_tks   = []     
+    res = []   
     to_compile= []
     for eq_or_newline in stmts:
         if eq_or_newline.name == 'NEWLINE':
@@ -54,9 +51,9 @@ def ast_for_stmts(stmts : Ast, info = None):
 
 def ast_for_equal(eq : Ast, info):
     if DEBUG: assert eq.name == 'Equals'
-    case = eq[2].name
+    case = eq[1].name
     name = eq[0].value
-    if case == 'Str':
+    if case == 'LitDef':
         value = eq[2].value
         if value.startswith('R'): 
             value = value[1:]
