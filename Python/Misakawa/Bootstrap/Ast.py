@@ -66,9 +66,15 @@ def ast_for_equal(eq : Ast, info):
             return f"{name} = LiteralParser({value}, name = '{name}')", ('K', value)
         else:
             return f"{name} = LiteralParser.Eliteral({value}, name = '{name}')", ('L', value)
-    elif case == 'Expr':
-        value = ast_for_expr(eq[2], info)
-        return f"{name} = AstParser({','.join(value)}, name = '{name}')", None    
+    else:
+        value = ast_for_expr(eq[-1], info)
+        toIgnore = eq[2:-2]
+        if not toIgnore:
+            return f"{name} = AstParser({','.join(value)}, name = '{name}')", None
+        else:
+            toIgnore = {ignore.value for ignore in toIgnore}
+            return f"{name} = AstParser({','.join(value)}, name = '{name}', toIgnore={toIgnore})", None
+            
     
 def ast_for_expr(expr : Ast, info):
     return [ast_for_or(or_expr, info) for or_expr in expr if or_expr.name != 'OrSign']

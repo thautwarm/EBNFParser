@@ -54,6 +54,6 @@ struct Some{
 	g:[[i32=>i32]=>[i32=>i32]]
 }
 <T> int (x:int)->x+1
-" -testTk True -o tests/Python/Lang/Cm/test4
+" -o tests/Python/Lang/Cm/test4
 
 

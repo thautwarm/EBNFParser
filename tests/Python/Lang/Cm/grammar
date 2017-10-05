@@ -57,11 +57,21 @@ block   ::= '{' statements '}'
 body    ::=  block  | statement | Insertable* body Insertable*
         ENDL
 
+# module related
+
+
+module  ::= simpleName (',' simpleName)* 
+        ENDL
+moduleDeclaration 
+        ::= 'module' module 
+        ENDL
+Import  ::= 'import' module
+        ENDL
+
 # statement 
 
-statement        
+statement 
         ::= flowControl | declaration | flowControlSign [Identifier] | expression  
-            | Insertable* statement Insertable*
         ENDL 
 
 flowControlSign 
@@ -91,7 +101,7 @@ declaration
         ::= structDeclaration | variableDeclaration
         ENDL
 
-structDeclaration
+structDeclaration Throw Insertable
         ::= K'struct' Identifier '{' 
                 (Insertable* variableDeclarationEntry Insertable*)* 
             '}' 
@@ -131,7 +141,7 @@ expression
         ::= LambdaDef | BinaryOperation
         ENDL
 
-LambdaDef       
+LambdaDef Throw Insertable     
         ::= variableDeclarationEntry '->' body
             |
             '(' variableDeclarationEntryList ')' '->' body
@@ -169,7 +179,7 @@ Atom    ::= Constant | String | Identifier | numberLiteral | Decimal | '(' expre
         ENDL
 
 # extra
-statements
+statements Throw Insertable
         ::= (Insertable* statement* Insertable*)*
         ENDL
 

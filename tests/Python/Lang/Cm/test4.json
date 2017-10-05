@@ -2,25 +2,6 @@
     "name": "statements",
     "value": [
         {
-            "name": "Insertable",
-            "value": [
-                {
-                    "name": "NEWLINE",
-                    "value": "\n",
-                    "meta": {
-                        "rowIdx": 1,
-                        "hasParsed": 1,
-                        "fileName": "<input>"
-                    }
-                }
-            ],
-            "meta": {
-                "rowIdx": 0,
-                "hasParsed": 0,
-                "fileName": "<input>"
-            }
-        },
-        {
             "name": "statement",
             "value": [
                 {
@@ -649,77 +630,29 @@
             "name": "statement",
             "value": [
                 {
-                    "name": "Insertable",
+                    "name": "expression",
                     "value": [
                         {
-                            "name": "EOL",
-                            "value": ";",
-                            "meta": {
-                                "rowIdx": 1,
-                                "hasParsed": 27,
-                                "fileName": "<input>"
-                            }
-                        }
-                    ],
-                    "meta": {
-                        "rowIdx": 1,
-                        "hasParsed": 26,
-                        "fileName": "<input>"
-                    }
-                },
-                {
-                    "name": "Insertable",
-                    "value": [
-                        {
-                            "name": "NEWLINE",
-                            "value": "\n",
-                            "meta": {
-                                "rowIdx": 2,
-                                "hasParsed": 28,
-                                "fileName": "<input>"
-                            }
-                        }
-                    ],
-                    "meta": {
-                        "rowIdx": 1,
-                        "hasParsed": 27,
-                        "fileName": "<input>"
-                    }
-                },
-                {
-                    "name": "statement",
-                    "value": [
-                        {
-                            "name": "expression",
+                            "name": "BinaryOperation",
                             "value": [
                                 {
-                                    "name": "BinaryOperation",
+                                    "name": "UnaryOperation",
                                     "value": [
                                         {
-                                            "name": "UnaryOperation",
+                                            "name": "AtomExpr",
                                             "value": [
                                                 {
-                                                    "name": "AtomExpr",
+                                                    "name": "Atom",
                                                     "value": [
                                                         {
-                                                            "name": "Atom",
+                                                            "name": "Identifier",
                                                             "value": [
                                                                 {
-                                                                    "name": "Identifier",
-                                                                    "value": [
-                                                                        {
-                                                                            "name": "simpleName",
-                                                                            "value": "f",
-                                                                            "meta": {
-                                                                                "rowIdx": 2,
-                                                                                "hasParsed": 29,
-                                                                                "fileName": "<input>"
-                                                                            }
-                                                                        }
-                                                                    ],
+                                                                    "name": "simpleName",
+                                                                    "value": "f",
                                                                     "meta": {
                                                                         "rowIdx": 2,
-                                                                        "hasParsed": 28,
+                                                                        "hasParsed": 29,
                                                                         "fileName": "<input>"
                                                                     }
                                                                 }
@@ -767,8 +700,8 @@
                 }
             ],
             "meta": {
-                "rowIdx": 1,
-                "hasParsed": 26,
+                "rowIdx": 2,
+                "hasParsed": 28,
                 "fileName": "<input>"
             }
         },
@@ -1126,36 +1059,36 @@
             "name": "statement",
             "value": [
                 {
-                    "name": "Insertable",
+                    "name": "declaration",
                     "value": [
                         {
-                            "name": "NEWLINE",
-                            "value": "\n",
-                            "meta": {
-                                "rowIdx": 3,
-                                "hasParsed": 40,
-                                "fileName": "<input>"
-                            }
-                        }
-                    ],
-                    "meta": {
-                        "rowIdx": 2,
-                        "hasParsed": 39,
-                        "fileName": "<input>"
-                    }
-                },
-                {
-                    "name": "statement",
-                    "value": [
-                        {
-                            "name": "declaration",
+                            "name": "variableDeclaration",
                             "value": [
                                 {
-                                    "name": "variableDeclaration",
+                                    "name": "'let'",
+                                    "value": "let",
+                                    "meta": {
+                                        "rowIdx": 3,
+                                        "hasParsed": 41,
+                                        "fileName": "<input>"
+                                    }
+                                },
+                                {
+                                    "name": "variableDeclarationEntry",
                                     "value": [
                                         {
-                                            "name": "'let'",
-                                            "value": "let",
+                                            "name": "Identifier",
+                                            "value": [
+                                                {
+                                                    "name": "simpleName",
+                                                    "value": "f2",
+                                                    "meta": {
+                                                        "rowIdx": 3,
+                                                        "hasParsed": 42,
+                                                        "fileName": "<input>"
+                                                    }
+                                                }
+                                            ],
                                             "meta": {
                                                 "rowIdx": 3,
                                                 "hasParsed": 41,
@@ -1163,85 +1096,56 @@
                                             }
                                         },
                                         {
-                                            "name": "variableDeclarationEntry",
+                                            "name": "':'",
+                                            "value": ":",
+                                            "meta": {
+                                                "rowIdx": 3,
+                                                "hasParsed": 43,
+                                                "fileName": "<input>"
+                                            }
+                                        },
+                                        {
+                                            "name": "Type",
                                             "value": [
                                                 {
-                                                    "name": "Identifier",
-                                                    "value": [
-                                                        {
-                                                            "name": "simpleName",
-                                                            "value": "f2",
-                                                            "meta": {
-                                                                "rowIdx": 3,
-                                                                "hasParsed": 42,
-                                                                "fileName": "<input>"
-                                                            }
-                                                        }
-                                                    ],
+                                                    "name": "'['",
+                                                    "value": "[",
                                                     "meta": {
                                                         "rowIdx": 3,
-                                                        "hasParsed": 41,
+                                                        "hasParsed": 44,
                                                         "fileName": "<input>"
                                                     }
                                                 },
                                                 {
-                                                    "name": "':'",
-                                                    "value": ":",
-                                                    "meta": {
-                                                        "rowIdx": 3,
-                                                        "hasParsed": 43,
-                                                        "fileName": "<input>"
-                                                    }
-                                                },
-                                                {
-                                                    "name": "Type",
+                                                    "name": "TypeList",
                                                     "value": [
                                                         {
-                                                            "name": "'['",
-                                                            "value": "[",
-                                                            "meta": {
-                                                                "rowIdx": 3,
-                                                                "hasParsed": 44,
-                                                                "fileName": "<input>"
-                                                            }
-                                                        },
-                                                        {
-                                                            "name": "TypeList",
+                                                            "name": "Type",
                                                             "value": [
                                                                 {
-                                                                    "name": "Type",
+                                                                    "name": "'['",
+                                                                    "value": "[",
+                                                                    "meta": {
+                                                                        "rowIdx": 3,
+                                                                        "hasParsed": 45,
+                                                                        "fileName": "<input>"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "TypeList",
                                                                     "value": [
                                                                         {
-                                                                            "name": "'['",
-                                                                            "value": "[",
-                                                                            "meta": {
-                                                                                "rowIdx": 3,
-                                                                                "hasParsed": 45,
-                                                                                "fileName": "<input>"
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            "name": "TypeList",
+                                                                            "name": "Type",
                                                                             "value": [
                                                                                 {
-                                                                                    "name": "Type",
+                                                                                    "name": "Identifier",
                                                                                     "value": [
                                                                                         {
-                                                                                            "name": "Identifier",
-                                                                                            "value": [
-                                                                                                {
-                                                                                                    "name": "simpleName",
-                                                                                                    "value": "i32",
-                                                                                                    "meta": {
-                                                                                                        "rowIdx": 3,
-                                                                                                        "hasParsed": 46,
-                                                                                                        "fileName": "<input>"
-                                                                                                    }
-                                                                                                }
-                                                                                            ],
+                                                                                            "name": "simpleName",
+                                                                                            "value": "i32",
                                                                                             "meta": {
                                                                                                 "rowIdx": 3,
-                                                                                                "hasParsed": 45,
+                                                                                                "hasParsed": 46,
                                                                                                 "fileName": "<input>"
                                                                                             }
                                                                                         }
@@ -1258,35 +1162,35 @@
                                                                                 "hasParsed": 45,
                                                                                 "fileName": "<input>"
                                                                             }
-                                                                        },
+                                                                        }
+                                                                    ],
+                                                                    "meta": {
+                                                                        "rowIdx": 3,
+                                                                        "hasParsed": 45,
+                                                                        "fileName": "<input>"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "'=>'",
+                                                                    "value": "=>",
+                                                                    "meta": {
+                                                                        "rowIdx": 3,
+                                                                        "hasParsed": 47,
+                                                                        "fileName": "<input>"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "Type",
+                                                                    "value": [
                                                                         {
-                                                                            "name": "'=>'",
-                                                                            "value": "=>",
-                                                                            "meta": {
-                                                                                "rowIdx": 3,
-                                                                                "hasParsed": 47,
-                                                                                "fileName": "<input>"
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            "name": "Type",
+                                                                            "name": "Identifier",
                                                                             "value": [
                                                                                 {
-                                                                                    "name": "Identifier",
-                                                                                    "value": [
-                                                                                        {
-                                                                                            "name": "simpleName",
-                                                                                            "value": "i32",
-                                                                                            "meta": {
-                                                                                                "rowIdx": 3,
-                                                                                                "hasParsed": 48,
-                                                                                                "fileName": "<input>"
-                                                                                            }
-                                                                                        }
-                                                                                    ],
+                                                                                    "name": "simpleName",
+                                                                                    "value": "i32",
                                                                                     "meta": {
                                                                                         "rowIdx": 3,
-                                                                                        "hasParsed": 47,
+                                                                                        "hasParsed": 48,
                                                                                         "fileName": "<input>"
                                                                                     }
                                                                                 }
@@ -1296,20 +1200,20 @@
                                                                                 "hasParsed": 47,
                                                                                 "fileName": "<input>"
                                                                             }
-                                                                        },
-                                                                        {
-                                                                            "name": "']'",
-                                                                            "value": "]",
-                                                                            "meta": {
-                                                                                "rowIdx": 3,
-                                                                                "hasParsed": 49,
-                                                                                "fileName": "<input>"
-                                                                            }
                                                                         }
                                                                     ],
                                                                     "meta": {
                                                                         "rowIdx": 3,
-                                                                        "hasParsed": 44,
+                                                                        "hasParsed": 47,
+                                                                        "fileName": "<input>"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "']'",
+                                                                    "value": "]",
+                                                                    "meta": {
+                                                                        "rowIdx": 3,
+                                                                        "hasParsed": 49,
                                                                         "fileName": "<input>"
                                                                     }
                                                                 }
@@ -1319,35 +1223,35 @@
                                                                 "hasParsed": 44,
                                                                 "fileName": "<input>"
                                                             }
-                                                        },
+                                                        }
+                                                    ],
+                                                    "meta": {
+                                                        "rowIdx": 3,
+                                                        "hasParsed": 44,
+                                                        "fileName": "<input>"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "'=>'",
+                                                    "value": "=>",
+                                                    "meta": {
+                                                        "rowIdx": 3,
+                                                        "hasParsed": 50,
+                                                        "fileName": "<input>"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "Type",
+                                                    "value": [
                                                         {
-                                                            "name": "'=>'",
-                                                            "value": "=>",
-                                                            "meta": {
-                                                                "rowIdx": 3,
-                                                                "hasParsed": 50,
-                                                                "fileName": "<input>"
-                                                            }
-                                                        },
-                                                        {
-                                                            "name": "Type",
+                                                            "name": "Identifier",
                                                             "value": [
                                                                 {
-                                                                    "name": "Identifier",
-                                                                    "value": [
-                                                                        {
-                                                                            "name": "simpleName",
-                                                                            "value": "i32",
-                                                                            "meta": {
-                                                                                "rowIdx": 3,
-                                                                                "hasParsed": 51,
-                                                                                "fileName": "<input>"
-                                                                            }
-                                                                        }
-                                                                    ],
+                                                                    "name": "simpleName",
+                                                                    "value": "i32",
                                                                     "meta": {
                                                                         "rowIdx": 3,
-                                                                        "hasParsed": 50,
+                                                                        "hasParsed": 51,
                                                                         "fileName": "<input>"
                                                                     }
                                                                 }
@@ -1355,128 +1259,109 @@
                                                             "meta": {
                                                                 "rowIdx": 3,
                                                                 "hasParsed": 50,
-                                                                "fileName": "<input>"
-                                                            }
-                                                        },
-                                                        {
-                                                            "name": "']'",
-                                                            "value": "]",
-                                                            "meta": {
-                                                                "rowIdx": 3,
-                                                                "hasParsed": 52,
                                                                 "fileName": "<input>"
                                                             }
                                                         }
                                                     ],
                                                     "meta": {
                                                         "rowIdx": 3,
-                                                        "hasParsed": 43,
+                                                        "hasParsed": 50,
+                                                        "fileName": "<input>"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "']'",
+                                                    "value": "]",
+                                                    "meta": {
+                                                        "rowIdx": 3,
+                                                        "hasParsed": 52,
                                                         "fileName": "<input>"
                                                     }
                                                 }
                                             ],
                                             "meta": {
                                                 "rowIdx": 3,
-                                                "hasParsed": 41,
+                                                "hasParsed": 43,
                                                 "fileName": "<input>"
                                             }
-                                        },
+                                        }
+                                    ],
+                                    "meta": {
+                                        "rowIdx": 3,
+                                        "hasParsed": 41,
+                                        "fileName": "<input>"
+                                    }
+                                },
+                                {
+                                    "name": "'='",
+                                    "value": "=",
+                                    "meta": {
+                                        "rowIdx": 3,
+                                        "hasParsed": 53,
+                                        "fileName": "<input>"
+                                    }
+                                },
+                                {
+                                    "name": "expression",
+                                    "value": [
                                         {
-                                            "name": "'='",
-                                            "value": "=",
-                                            "meta": {
-                                                "rowIdx": 3,
-                                                "hasParsed": 53,
-                                                "fileName": "<input>"
-                                            }
-                                        },
-                                        {
-                                            "name": "expression",
+                                            "name": "LambdaDef",
                                             "value": [
                                                 {
-                                                    "name": "LambdaDef",
+                                                    "name": "'{'",
+                                                    "value": "{",
+                                                    "meta": {
+                                                        "rowIdx": 3,
+                                                        "hasParsed": 54,
+                                                        "fileName": "<input>"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "variableDeclarationEntryList",
                                                     "value": [
                                                         {
-                                                            "name": "'{'",
-                                                            "value": "{",
-                                                            "meta": {
-                                                                "rowIdx": 3,
-                                                                "hasParsed": 54,
-                                                                "fileName": "<input>"
-                                                            }
-                                                        },
-                                                        {
-                                                            "name": "Insertable",
+                                                            "name": "variableDeclarationEntry",
                                                             "value": [
                                                                 {
-                                                                    "name": "NEWLINE",
-                                                                    "value": "\n",
+                                                                    "name": "Identifier",
+                                                                    "value": [
+                                                                        {
+                                                                            "name": "simpleName",
+                                                                            "value": "g",
+                                                                            "meta": {
+                                                                                "rowIdx": 4,
+                                                                                "hasParsed": 56,
+                                                                                "fileName": "<input>"
+                                                                            }
+                                                                        }
+                                                                    ],
                                                                     "meta": {
                                                                         "rowIdx": 4,
                                                                         "hasParsed": 55,
                                                                         "fileName": "<input>"
                                                                     }
-                                                                }
-                                                            ],
-                                                            "meta": {
-                                                                "rowIdx": 3,
-                                                                "hasParsed": 54,
-                                                                "fileName": "<input>"
-                                                            }
-                                                        },
-                                                        {
-                                                            "name": "variableDeclarationEntryList",
-                                                            "value": [
+                                                                },
                                                                 {
-                                                                    "name": "variableDeclarationEntry",
+                                                                    "name": "':'",
+                                                                    "value": ":",
+                                                                    "meta": {
+                                                                        "rowIdx": 4,
+                                                                        "hasParsed": 57,
+                                                                        "fileName": "<input>"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "Type",
                                                                     "value": [
                                                                         {
                                                                             "name": "Identifier",
                                                                             "value": [
                                                                                 {
                                                                                     "name": "simpleName",
-                                                                                    "value": "g",
+                                                                                    "value": "auto",
                                                                                     "meta": {
                                                                                         "rowIdx": 4,
-                                                                                        "hasParsed": 56,
-                                                                                        "fileName": "<input>"
-                                                                                    }
-                                                                                }
-                                                                            ],
-                                                                            "meta": {
-                                                                                "rowIdx": 4,
-                                                                                "hasParsed": 55,
-                                                                                "fileName": "<input>"
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            "name": "':'",
-                                                                            "value": ":",
-                                                                            "meta": {
-                                                                                "rowIdx": 4,
-                                                                                "hasParsed": 57,
-                                                                                "fileName": "<input>"
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            "name": "Type",
-                                                                            "value": [
-                                                                                {
-                                                                                    "name": "Identifier",
-                                                                                    "value": [
-                                                                                        {
-                                                                                            "name": "simpleName",
-                                                                                            "value": "auto",
-                                                                                            "meta": {
-                                                                                                "rowIdx": 4,
-                                                                                                "hasParsed": 58,
-                                                                                                "fileName": "<input>"
-                                                                                            }
-                                                                                        }
-                                                                                    ],
-                                                                                    "meta": {
-                                                                                        "rowIdx": 4,
-                                                                                        "hasParsed": 57,
+                                                                                        "hasParsed": 58,
                                                                                         "fileName": "<input>"
                                                                                     }
                                                                                 }
@@ -1490,7 +1375,7 @@
                                                                     ],
                                                                     "meta": {
                                                                         "rowIdx": 4,
-                                                                        "hasParsed": 55,
+                                                                        "hasParsed": 57,
                                                                         "fileName": "<input>"
                                                                     }
                                                                 }
@@ -1500,69 +1385,50 @@
                                                                 "hasParsed": 55,
                                                                 "fileName": "<input>"
                                                             }
-                                                        },
+                                                        }
+                                                    ],
+                                                    "meta": {
+                                                        "rowIdx": 4,
+                                                        "hasParsed": 55,
+                                                        "fileName": "<input>"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "'->'",
+                                                    "value": "->",
+                                                    "meta": {
+                                                        "rowIdx": 4,
+                                                        "hasParsed": 59,
+                                                        "fileName": "<input>"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "statements",
+                                                    "value": [
                                                         {
-                                                            "name": "'->'",
-                                                            "value": "->",
-                                                            "meta": {
-                                                                "rowIdx": 4,
-                                                                "hasParsed": 59,
-                                                                "fileName": "<input>"
-                                                            }
-                                                        },
-                                                        {
-                                                            "name": "statements",
+                                                            "name": "statement",
                                                             "value": [
                                                                 {
-                                                                    "name": "Insertable",
+                                                                    "name": "expression",
                                                                     "value": [
                                                                         {
-                                                                            "name": "NEWLINE",
-                                                                            "value": "\n",
-                                                                            "meta": {
-                                                                                "rowIdx": 5,
-                                                                                "hasParsed": 60,
-                                                                                "fileName": "<input>"
-                                                                            }
-                                                                        }
-                                                                    ],
-                                                                    "meta": {
-                                                                        "rowIdx": 4,
-                                                                        "hasParsed": 59,
-                                                                        "fileName": "<input>"
-                                                                    }
-                                                                },
-                                                                {
-                                                                    "name": "statement",
-                                                                    "value": [
-                                                                        {
-                                                                            "name": "expression",
+                                                                            "name": "BinaryOperation",
                                                                             "value": [
                                                                                 {
-                                                                                    "name": "BinaryOperation",
+                                                                                    "name": "UnaryOperation",
                                                                                     "value": [
                                                                                         {
-                                                                                            "name": "UnaryOperation",
+                                                                                            "name": "AtomExpr",
                                                                                             "value": [
                                                                                                 {
-                                                                                                    "name": "AtomExpr",
+                                                                                                    "name": "Atom",
                                                                                                     "value": [
                                                                                                         {
-                                                                                                            "name": "Atom",
-                                                                                                            "value": [
-                                                                                                                {
-                                                                                                                    "name": "Decimal",
-                                                                                                                    "value": "2",
-                                                                                                                    "meta": {
-                                                                                                                        "rowIdx": 5,
-                                                                                                                        "hasParsed": 61,
-                                                                                                                        "fileName": "<input>"
-                                                                                                                    }
-                                                                                                                }
-                                                                                                            ],
+                                                                                                            "name": "Decimal",
+                                                                                                            "value": "2",
                                                                                                             "meta": {
                                                                                                                 "rowIdx": 5,
-                                                                                                                "hasParsed": 60,
+                                                                                                                "hasParsed": 61,
                                                                                                                 "fileName": "<input>"
                                                                                                             }
                                                                                                         }
@@ -1579,41 +1445,41 @@
                                                                                                 "hasParsed": 60,
                                                                                                 "fileName": "<input>"
                                                                                             }
-                                                                                        },
+                                                                                        }
+                                                                                    ],
+                                                                                    "meta": {
+                                                                                        "rowIdx": 5,
+                                                                                        "hasParsed": 60,
+                                                                                        "fileName": "<input>"
+                                                                                    }
+                                                                                },
+                                                                                {
+                                                                                    "name": "BinaryOperator",
+                                                                                    "value": "*",
+                                                                                    "meta": {
+                                                                                        "rowIdx": 5,
+                                                                                        "hasParsed": 62,
+                                                                                        "fileName": "<input>"
+                                                                                    }
+                                                                                },
+                                                                                {
+                                                                                    "name": "UnaryOperation",
+                                                                                    "value": [
                                                                                         {
-                                                                                            "name": "BinaryOperator",
-                                                                                            "value": "*",
-                                                                                            "meta": {
-                                                                                                "rowIdx": 5,
-                                                                                                "hasParsed": 62,
-                                                                                                "fileName": "<input>"
-                                                                                            }
-                                                                                        },
-                                                                                        {
-                                                                                            "name": "UnaryOperation",
+                                                                                            "name": "AtomExpr",
                                                                                             "value": [
                                                                                                 {
-                                                                                                    "name": "AtomExpr",
+                                                                                                    "name": "Atom",
                                                                                                     "value": [
                                                                                                         {
-                                                                                                            "name": "Atom",
+                                                                                                            "name": "Identifier",
                                                                                                             "value": [
                                                                                                                 {
-                                                                                                                    "name": "Identifier",
-                                                                                                                    "value": [
-                                                                                                                        {
-                                                                                                                            "name": "simpleName",
-                                                                                                                            "value": "g",
-                                                                                                                            "meta": {
-                                                                                                                                "rowIdx": 5,
-                                                                                                                                "hasParsed": 63,
-                                                                                                                                "fileName": "<input>"
-                                                                                                                            }
-                                                                                                                        }
-                                                                                                                    ],
+                                                                                                                    "name": "simpleName",
+                                                                                                                    "value": "g",
                                                                                                                     "meta": {
                                                                                                                         "rowIdx": 5,
-                                                                                                                        "hasParsed": 62,
+                                                                                                                        "hasParsed": 63,
                                                                                                                         "fileName": "<input>"
                                                                                                                     }
                                                                                                                 }
@@ -1623,50 +1489,50 @@
                                                                                                                 "hasParsed": 62,
                                                                                                                 "fileName": "<input>"
                                                                                                             }
+                                                                                                        }
+                                                                                                    ],
+                                                                                                    "meta": {
+                                                                                                        "rowIdx": 5,
+                                                                                                        "hasParsed": 62,
+                                                                                                        "fileName": "<input>"
+                                                                                                    }
+                                                                                                },
+                                                                                                {
+                                                                                                    "name": "Trailer",
+                                                                                                    "value": [
+                                                                                                        {
+                                                                                                            "name": "'('",
+                                                                                                            "value": "(",
+                                                                                                            "meta": {
+                                                                                                                "rowIdx": 5,
+                                                                                                                "hasParsed": 64,
+                                                                                                                "fileName": "<input>"
+                                                                                                            }
                                                                                                         },
                                                                                                         {
-                                                                                                            "name": "Trailer",
+                                                                                                            "name": "expressionList",
                                                                                                             "value": [
                                                                                                                 {
-                                                                                                                    "name": "'('",
-                                                                                                                    "value": "(",
-                                                                                                                    "meta": {
-                                                                                                                        "rowIdx": 5,
-                                                                                                                        "hasParsed": 64,
-                                                                                                                        "fileName": "<input>"
-                                                                                                                    }
-                                                                                                                },
-                                                                                                                {
-                                                                                                                    "name": "expressionList",
+                                                                                                                    "name": "expression",
                                                                                                                     "value": [
                                                                                                                         {
-                                                                                                                            "name": "expression",
+                                                                                                                            "name": "BinaryOperation",
                                                                                                                             "value": [
                                                                                                                                 {
-                                                                                                                                    "name": "BinaryOperation",
+                                                                                                                                    "name": "UnaryOperation",
                                                                                                                                     "value": [
                                                                                                                                         {
-                                                                                                                                            "name": "UnaryOperation",
+                                                                                                                                            "name": "AtomExpr",
                                                                                                                                             "value": [
                                                                                                                                                 {
-                                                                                                                                                    "name": "AtomExpr",
+                                                                                                                                                    "name": "Atom",
                                                                                                                                                     "value": [
                                                                                                                                                         {
-                                                                                                                                                            "name": "Atom",
-                                                                                                                                                            "value": [
-                                                                                                                                                                {
-                                                                                                                                                                    "name": "Decimal",
-                                                                                                                                                                    "value": "10",
-                                                                                                                                                                    "meta": {
-                                                                                                                                                                        "rowIdx": 5,
-                                                                                                                                                                        "hasParsed": 65,
-                                                                                                                                                                        "fileName": "<input>"
-                                                                                                                                                                    }
-                                                                                                                                                                }
-                                                                                                                                                            ],
+                                                                                                                                                            "name": "Decimal",
+                                                                                                                                                            "value": "10",
                                                                                                                                                             "meta": {
                                                                                                                                                                 "rowIdx": 5,
-                                                                                                                                                                "hasParsed": 64,
+                                                                                                                                                                "hasParsed": 65,
                                                                                                                                                                 "fileName": "<input>"
                                                                                                                                                             }
                                                                                                                                                         }
@@ -1704,27 +1570,27 @@
                                                                                                                         "hasParsed": 64,
                                                                                                                         "fileName": "<input>"
                                                                                                                     }
-                                                                                                                },
-                                                                                                                {
-                                                                                                                    "name": "')'",
-                                                                                                                    "value": ")",
-                                                                                                                    "meta": {
-                                                                                                                        "rowIdx": 5,
-                                                                                                                        "hasParsed": 66,
-                                                                                                                        "fileName": "<input>"
-                                                                                                                    }
                                                                                                                 }
                                                                                                             ],
                                                                                                             "meta": {
                                                                                                                 "rowIdx": 5,
-                                                                                                                "hasParsed": 63,
+                                                                                                                "hasParsed": 64,
+                                                                                                                "fileName": "<input>"
+                                                                                                            }
+                                                                                                        },
+                                                                                                        {
+                                                                                                            "name": "')'",
+                                                                                                            "value": ")",
+                                                                                                            "meta": {
+                                                                                                                "rowIdx": 5,
+                                                                                                                "hasParsed": 66,
                                                                                                                 "fileName": "<input>"
                                                                                                             }
                                                                                                         }
                                                                                                     ],
                                                                                                     "meta": {
                                                                                                         "rowIdx": 5,
-                                                                                                        "hasParsed": 62,
+                                                                                                        "hasParsed": 63,
                                                                                                         "fileName": "<input>"
                                                                                                     }
                                                                                                 }
@@ -1738,7 +1604,7 @@
                                                                                     ],
                                                                                     "meta": {
                                                                                         "rowIdx": 5,
-                                                                                        "hasParsed": 60,
+                                                                                        "hasParsed": 62,
                                                                                         "fileName": "<input>"
                                                                                     }
                                                                                 }
@@ -1755,46 +1621,27 @@
                                                                         "hasParsed": 60,
                                                                         "fileName": "<input>"
                                                                     }
-                                                                },
-                                                                {
-                                                                    "name": "Insertable",
-                                                                    "value": [
-                                                                        {
-                                                                            "name": "NEWLINE",
-                                                                            "value": "\n",
-                                                                            "meta": {
-                                                                                "rowIdx": 6,
-                                                                                "hasParsed": 67,
-                                                                                "fileName": "<input>"
-                                                                            }
-                                                                        }
-                                                                    ],
-                                                                    "meta": {
-                                                                        "rowIdx": 5,
-                                                                        "hasParsed": 66,
-                                                                        "fileName": "<input>"
-                                                                    }
                                                                 }
                                                             ],
                                                             "meta": {
-                                                                "rowIdx": 4,
-                                                                "hasParsed": 59,
-                                                                "fileName": "<input>"
-                                                            }
-                                                        },
-                                                        {
-                                                            "name": "'}'",
-                                                            "value": "}",
-                                                            "meta": {
-                                                                "rowIdx": 6,
-                                                                "hasParsed": 68,
+                                                                "rowIdx": 5,
+                                                                "hasParsed": 60,
                                                                 "fileName": "<input>"
                                                             }
                                                         }
                                                     ],
                                                     "meta": {
-                                                        "rowIdx": 3,
-                                                        "hasParsed": 53,
+                                                        "rowIdx": 4,
+                                                        "hasParsed": 59,
+                                                        "fileName": "<input>"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "'}'",
+                                                    "value": "}",
+                                                    "meta": {
+                                                        "rowIdx": 6,
+                                                        "hasParsed": 68,
                                                         "fileName": "<input>"
                                                     }
                                                 }
@@ -1808,7 +1655,7 @@
                                     ],
                                     "meta": {
                                         "rowIdx": 3,
-                                        "hasParsed": 40,
+                                        "hasParsed": 53,
                                         "fileName": "<input>"
                                     }
                                 }
@@ -1825,49 +1672,11 @@
                         "hasParsed": 40,
                         "fileName": "<input>"
                     }
-                },
-                {
-                    "name": "Insertable",
-                    "value": [
-                        {
-                            "name": "EOL",
-                            "value": ";",
-                            "meta": {
-                                "rowIdx": 6,
-                                "hasParsed": 69,
-                                "fileName": "<input>"
-                            }
-                        }
-                    ],
-                    "meta": {
-                        "rowIdx": 6,
-                        "hasParsed": 68,
-                        "fileName": "<input>"
-                    }
-                },
-                {
-                    "name": "Insertable",
-                    "value": [
-                        {
-                            "name": "NEWLINE",
-                            "value": "\n",
-                            "meta": {
-                                "rowIdx": 7,
-                                "hasParsed": 70,
-                                "fileName": "<input>"
-                            }
-                        }
-                    ],
-                    "meta": {
-                        "rowIdx": 6,
-                        "hasParsed": 69,
-                        "fileName": "<input>"
-                    }
                 }
             ],
             "meta": {
-                "rowIdx": 2,
-                "hasParsed": 39,
+                "rowIdx": 3,
+                "hasParsed": 40,
                 "fileName": "<input>"
             }
         },
@@ -1915,25 +1724,6 @@
                                         {
                                             "name": "'{'",
                                             "value": "{",
-                                            "meta": {
-                                                "rowIdx": 7,
-                                                "hasParsed": 72,
-                                                "fileName": "<input>"
-                                            }
-                                        },
-                                        {
-                                            "name": "Insertable",
-                                            "value": [
-                                                {
-                                                    "name": "NEWLINE",
-                                                    "value": "\n",
-                                                    "meta": {
-                                                        "rowIdx": 8,
-                                                        "hasParsed": 73,
-                                                        "fileName": "<input>"
-                                                    }
-                                                }
-                                            ],
                                             "meta": {
                                                 "rowIdx": 7,
                                                 "hasParsed": 72,
@@ -2155,25 +1945,6 @@
                                                         "hasParsed": 77,
                                                         "fileName": "<input>"
                                                     }
-                                                },
-                                                {
-                                                    "name": "Insertable",
-                                                    "value": [
-                                                        {
-                                                            "name": "NEWLINE",
-                                                            "value": "\n",
-                                                            "meta": {
-                                                                "rowIdx": 9,
-                                                                "hasParsed": 81,
-                                                                "fileName": "<input>"
-                                                            }
-                                                        }
-                                                    ],
-                                                    "meta": {
-                                                        "rowIdx": 8,
-                                                        "hasParsed": 80,
-                                                        "fileName": "<input>"
-                                                    }
                                                 }
                                             ],
                                             "meta": {
@@ -2223,146 +1994,60 @@
             "name": "statement",
             "value": [
                 {
-                    "name": "Insertable",
+                    "name": "declaration",
                     "value": [
                         {
-                            "name": "NEWLINE",
-                            "value": "\n",
-                            "meta": {
-                                "rowIdx": 10,
-                                "hasParsed": 83,
-                                "fileName": "<input>"
-                            }
-                        }
-                    ],
-                    "meta": {
-                        "rowIdx": 9,
-                        "hasParsed": 82,
-                        "fileName": "<input>"
-                    }
-                },
-                {
-                    "name": "statement",
-                    "value": [
-                        {
-                            "name": "declaration",
+                            "name": "structDeclaration",
                             "value": [
                                 {
-                                    "name": "structDeclaration",
+                                    "name": "'struct'",
+                                    "value": "struct",
+                                    "meta": {
+                                        "rowIdx": 10,
+                                        "hasParsed": 84,
+                                        "fileName": "<input>"
+                                    }
+                                },
+                                {
+                                    "name": "Identifier",
                                     "value": [
                                         {
-                                            "name": "'struct'",
-                                            "value": "struct",
+                                            "name": "simpleName",
+                                            "value": "Some",
                                             "meta": {
                                                 "rowIdx": 10,
-                                                "hasParsed": 84,
+                                                "hasParsed": 85,
                                                 "fileName": "<input>"
                                             }
-                                        },
+                                        }
+                                    ],
+                                    "meta": {
+                                        "rowIdx": 10,
+                                        "hasParsed": 84,
+                                        "fileName": "<input>"
+                                    }
+                                },
+                                {
+                                    "name": "'{'",
+                                    "value": "{",
+                                    "meta": {
+                                        "rowIdx": 10,
+                                        "hasParsed": 86,
+                                        "fileName": "<input>"
+                                    }
+                                },
+                                {
+                                    "name": "variableDeclarationEntry",
+                                    "value": [
                                         {
                                             "name": "Identifier",
                                             "value": [
                                                 {
                                                     "name": "simpleName",
-                                                    "value": "Some",
-                                                    "meta": {
-                                                        "rowIdx": 10,
-                                                        "hasParsed": 85,
-                                                        "fileName": "<input>"
-                                                    }
-                                                }
-                                            ],
-                                            "meta": {
-                                                "rowIdx": 10,
-                                                "hasParsed": 84,
-                                                "fileName": "<input>"
-                                            }
-                                        },
-                                        {
-                                            "name": "'{'",
-                                            "value": "{",
-                                            "meta": {
-                                                "rowIdx": 10,
-                                                "hasParsed": 86,
-                                                "fileName": "<input>"
-                                            }
-                                        },
-                                        {
-                                            "name": "Insertable",
-                                            "value": [
-                                                {
-                                                    "name": "NEWLINE",
-                                                    "value": "\n",
+                                                    "value": "a",
                                                     "meta": {
                                                         "rowIdx": 11,
-                                                        "hasParsed": 87,
-                                                        "fileName": "<input>"
-                                                    }
-                                                }
-                                            ],
-                                            "meta": {
-                                                "rowIdx": 10,
-                                                "hasParsed": 86,
-                                                "fileName": "<input>"
-                                            }
-                                        },
-                                        {
-                                            "name": "variableDeclarationEntry",
-                                            "value": [
-                                                {
-                                                    "name": "Identifier",
-                                                    "value": [
-                                                        {
-                                                            "name": "simpleName",
-                                                            "value": "a",
-                                                            "meta": {
-                                                                "rowIdx": 11,
-                                                                "hasParsed": 88,
-                                                                "fileName": "<input>"
-                                                            }
-                                                        }
-                                                    ],
-                                                    "meta": {
-                                                        "rowIdx": 11,
-                                                        "hasParsed": 87,
-                                                        "fileName": "<input>"
-                                                    }
-                                                },
-                                                {
-                                                    "name": "':'",
-                                                    "value": ":",
-                                                    "meta": {
-                                                        "rowIdx": 11,
-                                                        "hasParsed": 89,
-                                                        "fileName": "<input>"
-                                                    }
-                                                },
-                                                {
-                                                    "name": "Type",
-                                                    "value": [
-                                                        {
-                                                            "name": "Identifier",
-                                                            "value": [
-                                                                {
-                                                                    "name": "simpleName",
-                                                                    "value": "i32",
-                                                                    "meta": {
-                                                                        "rowIdx": 11,
-                                                                        "hasParsed": 90,
-                                                                        "fileName": "<input>"
-                                                                    }
-                                                                }
-                                                            ],
-                                                            "meta": {
-                                                                "rowIdx": 11,
-                                                                "hasParsed": 89,
-                                                                "fileName": "<input>"
-                                                            }
-                                                        }
-                                                    ],
-                                                    "meta": {
-                                                        "rowIdx": 11,
-                                                        "hasParsed": 89,
+                                                        "hasParsed": 88,
                                                         "fileName": "<input>"
                                                     }
                                                 }
@@ -2374,89 +2059,108 @@
                                             }
                                         },
                                         {
-                                            "name": "Insertable",
-                                            "value": [
-                                                {
-                                                    "name": "NEWLINE",
-                                                    "value": "\n",
-                                                    "meta": {
-                                                        "rowIdx": 12,
-                                                        "hasParsed": 91,
-                                                        "fileName": "<input>"
-                                                    }
-                                                }
-                                            ],
+                                            "name": "':'",
+                                            "value": ":",
                                             "meta": {
                                                 "rowIdx": 11,
-                                                "hasParsed": 90,
+                                                "hasParsed": 89,
                                                 "fileName": "<input>"
                                             }
                                         },
                                         {
-                                            "name": "variableDeclarationEntry",
+                                            "name": "Type",
                                             "value": [
                                                 {
                                                     "name": "Identifier",
                                                     "value": [
                                                         {
                                                             "name": "simpleName",
-                                                            "value": "f",
+                                                            "value": "i32",
                                                             "meta": {
-                                                                "rowIdx": 12,
-                                                                "hasParsed": 92,
+                                                                "rowIdx": 11,
+                                                                "hasParsed": 90,
                                                                 "fileName": "<input>"
                                                             }
                                                         }
                                                     ],
                                                     "meta": {
-                                                        "rowIdx": 12,
-                                                        "hasParsed": 91,
+                                                        "rowIdx": 11,
+                                                        "hasParsed": 89,
                                                         "fileName": "<input>"
                                                     }
-                                                },
+                                                }
+                                            ],
+                                            "meta": {
+                                                "rowIdx": 11,
+                                                "hasParsed": 89,
+                                                "fileName": "<input>"
+                                            }
+                                        }
+                                    ],
+                                    "meta": {
+                                        "rowIdx": 11,
+                                        "hasParsed": 87,
+                                        "fileName": "<input>"
+                                    }
+                                },
+                                {
+                                    "name": "variableDeclarationEntry",
+                                    "value": [
+                                        {
+                                            "name": "Identifier",
+                                            "value": [
                                                 {
-                                                    "name": "':'",
-                                                    "value": ":",
+                                                    "name": "simpleName",
+                                                    "value": "f",
                                                     "meta": {
                                                         "rowIdx": 12,
-                                                        "hasParsed": 93,
+                                                        "hasParsed": 92,
+                                                        "fileName": "<input>"
+                                                    }
+                                                }
+                                            ],
+                                            "meta": {
+                                                "rowIdx": 12,
+                                                "hasParsed": 91,
+                                                "fileName": "<input>"
+                                            }
+                                        },
+                                        {
+                                            "name": "':'",
+                                            "value": ":",
+                                            "meta": {
+                                                "rowIdx": 12,
+                                                "hasParsed": 93,
+                                                "fileName": "<input>"
+                                            }
+                                        },
+                                        {
+                                            "name": "Type",
+                                            "value": [
+                                                {
+                                                    "name": "'['",
+                                                    "value": "[",
+                                                    "meta": {
+                                                        "rowIdx": 12,
+                                                        "hasParsed": 94,
                                                         "fileName": "<input>"
                                                     }
                                                 },
                                                 {
-                                                    "name": "Type",
+                                                    "name": "TypeList",
                                                     "value": [
                                                         {
-                                                            "name": "'['",
-                                                            "value": "[",
-                                                            "meta": {
-                                                                "rowIdx": 12,
-                                                                "hasParsed": 94,
-                                                                "fileName": "<input>"
-                                                            }
-                                                        },
-                                                        {
-                                                            "name": "TypeList",
+                                                            "name": "Type",
                                                             "value": [
                                                                 {
-                                                                    "name": "Type",
+                                                                    "name": "Identifier",
                                                                     "value": [
                                                                         {
-                                                                            "name": "Identifier",
-                                                                            "value": [
-                                                                                {
-                                                                                    "name": "simpleName",
-                                                                                    "value": "i32",
-                                                                                    "meta": {
-                                                                                        "rowIdx": 12,
-                                                                                        "hasParsed": 95,
-                                                                                        "fileName": "<input>"
-                                                                                    }
-                                                                                }
-                                                                            ],
+                                                                            "name": "simpleName",
+                                                                            "value": "i32",
                                                                             "meta": {
                                                                                 "rowIdx": 12,
-                                                                                "hasParsed": 94,
+                                                                                "hasParsed": 95,
                                                                                 "fileName": "<input>"
                                                                             }
                                                                         }
@@ -2473,115 +2177,20 @@
                                                                 "hasParsed": 94,
                                                                 "fileName": "<input>"
                                                             }
-                                                        },
-                                                        {
-                                                            "name": "'=>'",
-                                                            "value": "=>",
-                                                            "meta": {
-                                                                "rowIdx": 12,
-                                                                "hasParsed": 96,
-                                                                "fileName": "<input>"
-                                                            }
-                                                        },
-                                                        {
-                                                            "name": "Type",
-                                                            "value": [
-                                                                {
-                                                                    "name": "Identifier",
-                                                                    "value": [
-                                                                        {
-                                                                            "name": "simpleName",
-                                                                            "value": "i32",
-                                                                            "meta": {
-                                                                                "rowIdx": 12,
-                                                                                "hasParsed": 97,
-                                                                                "fileName": "<input>"
-                                                                            }
-                                                                        }
-                                                                    ],
-                                                                    "meta": {
-                                                                        "rowIdx": 12,
-                                                                        "hasParsed": 96,
-                                                                        "fileName": "<input>"
-                                                                    }
-                                                                }
-                                                            ],
-                                                            "meta": {
-                                                                "rowIdx": 12,
-                                                                "hasParsed": 96,
-                                                                "fileName": "<input>"
-                                                            }
-                                                        },
-                                                        {
-                                                            "name": "']'",
-                                                            "value": "]",
-                                                            "meta": {
-                                                                "rowIdx": 12,
-                                                                "hasParsed": 98,
-                                                                "fileName": "<input>"
-                                                            }
                                                         }
                                                     ],
                                                     "meta": {
                                                         "rowIdx": 12,
-                                                        "hasParsed": 93,
-                                                        "fileName": "<input>"
-                                                    }
-                                                }
-                                            ],
-                                            "meta": {
-                                                "rowIdx": 12,
-                                                "hasParsed": 91,
-                                                "fileName": "<input>"
-                                            }
-                                        },
-                                        {
-                                            "name": "Insertable",
-                                            "value": [
-                                                {
-                                                    "name": "NEWLINE",
-                                                    "value": "\n",
-                                                    "meta": {
-                                                        "rowIdx": 13,
-                                                        "hasParsed": 99,
-                                                        "fileName": "<input>"
-                                                    }
-                                                }
-                                            ],
-                                            "meta": {
-                                                "rowIdx": 12,
-                                                "hasParsed": 98,
-                                                "fileName": "<input>"
-                                            }
-                                        },
-                                        {
-                                            "name": "variableDeclarationEntry",
-                                            "value": [
-                                                {
-                                                    "name": "Identifier",
-                                                    "value": [
-                                                        {
-                                                            "name": "simpleName",
-                                                            "value": "g",
-                                                            "meta": {
-                                                                "rowIdx": 13,
-                                                                "hasParsed": 100,
-                                                                "fileName": "<input>"
-                                                            }
-                                                        }
-                                                    ],
-                                                    "meta": {
-                                                        "rowIdx": 13,
-                                                        "hasParsed": 99,
+                                                        "hasParsed": 94,
                                                         "fileName": "<input>"
                                                     }
                                                 },
                                                 {
-                                                    "name": "':'",
-                                                    "value": ":",
+                                                    "name": "'=>'",
+                                                    "value": "=>",
                                                     "meta": {
-                                                        "rowIdx": 13,
-                                                        "hasParsed": 101,
+                                                        "rowIdx": 12,
+                                                        "hasParsed": 96,
                                                         "fileName": "<input>"
                                                     }
                                                 },
@@ -2589,138 +2198,100 @@
                                                     "name": "Type",
                                                     "value": [
                                                         {
-                                                            "name": "'['",
-                                                            "value": "[",
-                                                            "meta": {
-                                                                "rowIdx": 13,
-                                                                "hasParsed": 102,
-                                                                "fileName": "<input>"
-                                                            }
-                                                        },
-                                                        {
-                                                            "name": "TypeList",
+                                                            "name": "Identifier",
                                                             "value": [
                                                                 {
-                                                                    "name": "Type",
-                                                                    "value": [
-                                                                        {
-                                                                            "name": "'['",
-                                                                            "value": "[",
-                                                                            "meta": {
-                                                                                "rowIdx": 13,
-                                                                                "hasParsed": 103,
-                                                                                "fileName": "<input>"
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            "name": "TypeList",
-                                                                            "value": [
-                                                                                {
-                                                                                    "name": "Type",
-                                                                                    "value": [
-                                                                                        {
-                                                                                            "name": "Identifier",
-                                                                                            "value": [
-                                                                                                {
-                                                                                                    "name": "simpleName",
-                                                                                                    "value": "i32",
-                                                                                                    "meta": {
-                                                                                                        "rowIdx": 13,
-                                                                                                        "hasParsed": 104,
-                                                                                                        "fileName": "<input>"
-                                                                                                    }
-                                                                                                }
-                                                                                            ],
-                                                                                            "meta": {
-                                                                                                "rowIdx": 13,
-                                                                                                "hasParsed": 103,
-                                                                                                "fileName": "<input>"
-                                                                                            }
-                                                                                        }
-                                                                                    ],
-                                                                                    "meta": {
-                                                                                        "rowIdx": 13,
-                                                                                        "hasParsed": 103,
-                                                                                        "fileName": "<input>"
-                                                                                    }
-                                                                                }
-                                                                            ],
-                                                                            "meta": {
-                                                                                "rowIdx": 13,
-                                                                                "hasParsed": 103,
-                                                                                "fileName": "<input>"
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            "name": "'=>'",
-                                                                            "value": "=>",
-                                                                            "meta": {
-                                                                                "rowIdx": 13,
-                                                                                "hasParsed": 105,
-                                                                                "fileName": "<input>"
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            "name": "Type",
-                                                                            "value": [
-                                                                                {
-                                                                                    "name": "Identifier",
-                                                                                    "value": [
-                                                                                        {
-                                                                                            "name": "simpleName",
-                                                                                            "value": "i32",
-                                                                                            "meta": {
-                                                                                                "rowIdx": 13,
-                                                                                                "hasParsed": 106,
-                                                                                                "fileName": "<input>"
-                                                                                            }
-                                                                                        }
-                                                                                    ],
-                                                                                    "meta": {
-                                                                                        "rowIdx": 13,
-                                                                                        "hasParsed": 105,
-                                                                                        "fileName": "<input>"
-                                                                                    }
-                                                                                }
-                                                                            ],
-                                                                            "meta": {
-                                                                                "rowIdx": 13,
-                                                                                "hasParsed": 105,
-                                                                                "fileName": "<input>"
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            "name": "']'",
-                                                                            "value": "]",
-                                                                            "meta": {
-                                                                                "rowIdx": 13,
-                                                                                "hasParsed": 107,
-                                                                                "fileName": "<input>"
-                                                                            }
-                                                                        }
-                                                                    ],
+                                                                    "name": "simpleName",
+                                                                    "value": "i32",
                                                                     "meta": {
-                                                                        "rowIdx": 13,
-                                                                        "hasParsed": 102,
+                                                                        "rowIdx": 12,
+                                                                        "hasParsed": 97,
                                                                         "fileName": "<input>"
                                                                     }
                                                                 }
                                                             ],
                                                             "meta": {
-                                                                "rowIdx": 13,
-                                                                "hasParsed": 102,
+                                                                "rowIdx": 12,
+                                                                "hasParsed": 96,
                                                                 "fileName": "<input>"
                                                             }
-                                                        },
-                                                        {
-                                                            "name": "'=>'",
-                                                            "value": "=>",
-                                                            "meta": {
-                                                                "rowIdx": 13,
-                                                                "hasParsed": 108,
-                                                                "fileName": "<input>"
-                                                            }
-                                                        },
+                                                        }
+                                                    ],
+                                                    "meta": {
+                                                        "rowIdx": 12,
+                                                        "hasParsed": 96,
+                                                        "fileName": "<input>"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "']'",
+                                                    "value": "]",
+                                                    "meta": {
+                                                        "rowIdx": 12,
+                                                        "hasParsed": 98,
+                                                        "fileName": "<input>"
+                                                    }
+                                                }
+                                            ],
+                                            "meta": {
+                                                "rowIdx": 12,
+                                                "hasParsed": 93,
+                                                "fileName": "<input>"
+                                            }
+                                        }
+                                    ],
+                                    "meta": {
+                                        "rowIdx": 12,
+                                        "hasParsed": 91,
+                                        "fileName": "<input>"
+                                    }
+                                },
+                                {
+                                    "name": "variableDeclarationEntry",
+                                    "value": [
+                                        {
+                                            "name": "Identifier",
+                                            "value": [
+                                                {
+                                                    "name": "simpleName",
+                                                    "value": "g",
+                                                    "meta": {
+                                                        "rowIdx": 13,
+                                                        "hasParsed": 100,
+                                                        "fileName": "<input>"
+                                                    }
+                                                }
+                                            ],
+                                            "meta": {
+                                                "rowIdx": 13,
+                                                "hasParsed": 99,
+                                                "fileName": "<input>"
+                                            }
+                                        },
+                                        {
+                                            "name": "':'",
+                                            "value": ":",
+                                            "meta": {
+                                                "rowIdx": 13,
+                                                "hasParsed": 101,
+                                                "fileName": "<input>"
+                                            }
+                                        },
+                                        {
+                                            "name": "Type",
+                                            "value": [
+                                                {
+                                                    "name": "'['",
+                                                    "value": "[",
+                                                    "meta": {
+                                                        "rowIdx": 13,
+                                                        "hasParsed": 102,
+                                                        "fileName": "<input>"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "TypeList",
+                                                    "value": [
                                                         {
                                                             "name": "Type",
                                                             "value": [
@@ -2729,7 +2300,7 @@
                                                                     "value": "[",
                                                                     "meta": {
                                                                         "rowIdx": 13,
-                                                                        "hasParsed": 109,
+                                                                        "hasParsed": 103,
                                                                         "fileName": "<input>"
                                                                     }
                                                                 },
@@ -2747,14 +2318,128 @@
                                                                                             "value": "i32",
                                                                                             "meta": {
                                                                                                 "rowIdx": 13,
-                                                                                                "hasParsed": 110,
+                                                                                                "hasParsed": 104,
                                                                                                 "fileName": "<input>"
                                                                                             }
                                                                                         }
                                                                                     ],
                                                                                     "meta": {
                                                                                         "rowIdx": 13,
-                                                                                        "hasParsed": 109,
+                                                                                        "hasParsed": 103,
+                                                                                        "fileName": "<input>"
+                                                                                    }
+                                                                                }
+                                                                            ],
+                                                                            "meta": {
+                                                                                "rowIdx": 13,
+                                                                                "hasParsed": 103,
+                                                                                "fileName": "<input>"
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "meta": {
+                                                                        "rowIdx": 13,
+                                                                        "hasParsed": 103,
+                                                                        "fileName": "<input>"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "'=>'",
+                                                                    "value": "=>",
+                                                                    "meta": {
+                                                                        "rowIdx": 13,
+                                                                        "hasParsed": 105,
+                                                                        "fileName": "<input>"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "Type",
+                                                                    "value": [
+                                                                        {
+                                                                            "name": "Identifier",
+                                                                            "value": [
+                                                                                {
+                                                                                    "name": "simpleName",
+                                                                                    "value": "i32",
+                                                                                    "meta": {
+                                                                                        "rowIdx": 13,
+                                                                                        "hasParsed": 106,
+                                                                                        "fileName": "<input>"
+                                                                                    }
+                                                                                }
+                                                                            ],
+                                                                            "meta": {
+                                                                                "rowIdx": 13,
+                                                                                "hasParsed": 105,
+                                                                                "fileName": "<input>"
+                                                                            }
+                                                                        }
+                                                                    ],
+                                                                    "meta": {
+                                                                        "rowIdx": 13,
+                                                                        "hasParsed": 105,
+                                                                        "fileName": "<input>"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "']'",
+                                                                    "value": "]",
+                                                                    "meta": {
+                                                                        "rowIdx": 13,
+                                                                        "hasParsed": 107,
+                                                                        "fileName": "<input>"
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "meta": {
+                                                                "rowIdx": 13,
+                                                                "hasParsed": 102,
+                                                                "fileName": "<input>"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "meta": {
+                                                        "rowIdx": 13,
+                                                        "hasParsed": 102,
+                                                        "fileName": "<input>"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "'=>'",
+                                                    "value": "=>",
+                                                    "meta": {
+                                                        "rowIdx": 13,
+                                                        "hasParsed": 108,
+                                                        "fileName": "<input>"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "Type",
+                                                    "value": [
+                                                        {
+                                                            "name": "'['",
+                                                            "value": "[",
+                                                            "meta": {
+                                                                "rowIdx": 13,
+                                                                "hasParsed": 109,
+                                                                "fileName": "<input>"
+                                                            }
+                                                        },
+                                                        {
+                                                            "name": "TypeList",
+                                                            "value": [
+                                                                {
+                                                                    "name": "Type",
+                                                                    "value": [
+                                                                        {
+                                                                            "name": "Identifier",
+                                                                            "value": [
+                                                                                {
+                                                                                    "name": "simpleName",
+                                                                                    "value": "i32",
+                                                                                    "meta": {
+                                                                                        "rowIdx": 13,
+                                                                                        "hasParsed": 110,
                                                                                         "fileName": "<input>"
                                                                                     }
                                                                                 }
@@ -2771,35 +2456,35 @@
                                                                         "hasParsed": 109,
                                                                         "fileName": "<input>"
                                                                     }
-                                                                },
+                                                                }
+                                                            ],
+                                                            "meta": {
+                                                                "rowIdx": 13,
+                                                                "hasParsed": 109,
+                                                                "fileName": "<input>"
+                                                            }
+                                                        },
+                                                        {
+                                                            "name": "'=>'",
+                                                            "value": "=>",
+                                                            "meta": {
+                                                                "rowIdx": 13,
+                                                                "hasParsed": 111,
+                                                                "fileName": "<input>"
+                                                            }
+                                                        },
+                                                        {
+                                                            "name": "Type",
+                                                            "value": [
                                                                 {
-                                                                    "name": "'=>'",
-                                                                    "value": "=>",
-                                                                    "meta": {
-                                                                        "rowIdx": 13,
-                                                                        "hasParsed": 111,
-                                                                        "fileName": "<input>"
-                                                                    }
-                                                                },
-                                                                {
-                                                                    "name": "Type",
+                                                                    "name": "Identifier",
                                                                     "value": [
                                                                         {
-                                                                            "name": "Identifier",
-                                                                            "value": [
-                                                                                {
-                                                                                    "name": "simpleName",
-                                                                                    "value": "i32",
-                                                                                    "meta": {
-                                                                                        "rowIdx": 13,
-                                                                                        "hasParsed": 112,
-                                                                                        "fileName": "<input>"
-                                                                                    }
-                                                                                }
-                                                                            ],
+                                                                            "name": "simpleName",
+                                                                            "value": "i32",
                                                                             "meta": {
                                                                                 "rowIdx": 13,
-                                                                                "hasParsed": 111,
+                                                                                "hasParsed": 112,
                                                                                 "fileName": "<input>"
                                                                             }
                                                                         }
@@ -2809,20 +2494,11 @@
                                                                         "hasParsed": 111,
                                                                         "fileName": "<input>"
                                                                     }
-                                                                },
-                                                                {
-                                                                    "name": "']'",
-                                                                    "value": "]",
-                                                                    "meta": {
-                                                                        "rowIdx": 13,
-                                                                        "hasParsed": 113,
-                                                                        "fileName": "<input>"
-                                                                    }
                                                                 }
                                                             ],
                                                             "meta": {
                                                                 "rowIdx": 13,
-                                                                "hasParsed": 108,
+                                                                "hasParsed": 111,
                                                                 "fileName": "<input>"
                                                             }
                                                         },
@@ -2831,56 +2507,46 @@
                                                             "value": "]",
                                                             "meta": {
                                                                 "rowIdx": 13,
-                                                                "hasParsed": 114,
+                                                                "hasParsed": 113,
                                                                 "fileName": "<input>"
                                                             }
                                                         }
                                                     ],
                                                     "meta": {
                                                         "rowIdx": 13,
-                                                        "hasParsed": 101,
+                                                        "hasParsed": 108,
                                                         "fileName": "<input>"
                                                     }
-                                                }
-                                            ],
-                                            "meta": {
-                                                "rowIdx": 13,
-                                                "hasParsed": 99,
-                                                "fileName": "<input>"
-                                            }
-                                        },
-                                        {
-                                            "name": "Insertable",
-                                            "value": [
+                                                },
                                                 {
-                                                    "name": "NEWLINE",
-                                                    "value": "\n",
+                                                    "name": "']'",
+                                                    "value": "]",
                                                     "meta": {
-                                                        "rowIdx": 14,
-                                                        "hasParsed": 115,
+                                                        "rowIdx": 13,
+                                                        "hasParsed": 114,
                                                         "fileName": "<input>"
                                                     }
                                                 }
                                             ],
                                             "meta": {
                                                 "rowIdx": 13,
-                                                "hasParsed": 114,
-                                                "fileName": "<input>"
-                                            }
-                                        },
-                                        {
-                                            "name": "'}'",
-                                            "value": "}",
-                                            "meta": {
-                                                "rowIdx": 14,
-                                                "hasParsed": 116,
+                                                "hasParsed": 101,
                                                 "fileName": "<input>"
                                             }
                                         }
                                     ],
                                     "meta": {
-                                        "rowIdx": 10,
-                                        "hasParsed": 83,
+                                        "rowIdx": 13,
+                                        "hasParsed": 99,
+                                        "fileName": "<input>"
+                                    }
+                                },
+                                {
+                                    "name": "'}'",
+                                    "value": "}",
+                                    "meta": {
+                                        "rowIdx": 14,
+                                        "hasParsed": 116,
                                         "fileName": "<input>"
                                     }
                                 }
@@ -2897,30 +2563,11 @@
                         "hasParsed": 83,
                         "fileName": "<input>"
                     }
-                },
-                {
-                    "name": "Insertable",
-                    "value": [
-                        {
-                            "name": "NEWLINE",
-                            "value": "\n",
-                            "meta": {
-                                "rowIdx": 15,
-                                "hasParsed": 117,
-                                "fileName": "<input>"
-                            }
-                        }
-                    ],
-                    "meta": {
-                        "rowIdx": 14,
-                        "hasParsed": 116,
-                        "fileName": "<input>"
-                    }
                 }
             ],
             "meta": {
-                "rowIdx": 9,
-                "hasParsed": 82,
+                "rowIdx": 10,
+                "hasParsed": 83,
                 "fileName": "<input>"
             }
         },
@@ -3278,25 +2925,6 @@
             "meta": {
                 "rowIdx": 15,
                 "hasParsed": 117,
-                "fileName": "<input>"
-            }
-        },
-        {
-            "name": "Insertable",
-            "value": [
-                {
-                    "name": "NEWLINE",
-                    "value": "\n",
-                    "meta": {
-                        "rowIdx": 16,
-                        "hasParsed": 131,
-                        "fileName": "<input>"
-                    }
-                }
-            ],
-            "meta": {
-                "rowIdx": 15,
-                "hasParsed": 130,
                 "fileName": "<input>"
             }
         }

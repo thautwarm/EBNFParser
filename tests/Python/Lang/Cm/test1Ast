@@ -22,7 +22,4 @@ statements[statement[declaration[variableDeclaration['let'[let]
                                  ]
                      ]
            ]
-           Insertable[EOL[;]
-                      
-           ]
 ]

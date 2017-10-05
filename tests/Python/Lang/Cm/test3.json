@@ -2,25 +2,6 @@
     "name": "statements",
     "value": [
         {
-            "name": "Insertable",
-            "value": [
-                {
-                    "name": "NEWLINE",
-                    "value": "\n",
-                    "meta": {
-                        "rowIdx": 1,
-                        "hasParsed": 1,
-                        "fileName": "<input>"
-                    }
-                }
-            ],
-            "meta": {
-                "rowIdx": 0,
-                "hasParsed": 0,
-                "fileName": "<input>"
-            }
-        },
-        {
             "name": "statement",
             "value": [
                 {
@@ -649,77 +630,29 @@
             "name": "statement",
             "value": [
                 {
-                    "name": "Insertable",
+                    "name": "expression",
                     "value": [
                         {
-                            "name": "EOL",
-                            "value": ";",
-                            "meta": {
-                                "rowIdx": 1,
-                                "hasParsed": 27,
-                                "fileName": "<input>"
-                            }
-                        }
-                    ],
-                    "meta": {
-                        "rowIdx": 1,
-                        "hasParsed": 26,
-                        "fileName": "<input>"
-                    }
-                },
-                {
-                    "name": "Insertable",
-                    "value": [
-                        {
-                            "name": "NEWLINE",
-                            "value": "\n",
-                            "meta": {
-                                "rowIdx": 2,
-                                "hasParsed": 28,
-                                "fileName": "<input>"
-                            }
-                        }
-                    ],
-                    "meta": {
-                        "rowIdx": 1,
-                        "hasParsed": 27,
-                        "fileName": "<input>"
-                    }
-                },
-                {
-                    "name": "statement",
-                    "value": [
-                        {
-                            "name": "expression",
+                            "name": "BinaryOperation",
                             "value": [
                                 {
-                                    "name": "BinaryOperation",
+                                    "name": "UnaryOperation",
                                     "value": [
                                         {
-                                            "name": "UnaryOperation",
+                                            "name": "AtomExpr",
                                             "value": [
                                                 {
-                                                    "name": "AtomExpr",
+                                                    "name": "Atom",
                                                     "value": [
                                                         {
-                                                            "name": "Atom",
+                                                            "name": "Identifier",
                                                             "value": [
                                                                 {
-                                                                    "name": "Identifier",
-                                                                    "value": [
-                                                                        {
-                                                                            "name": "simpleName",
-                                                                            "value": "f",
-                                                                            "meta": {
-                                                                                "rowIdx": 2,
-                                                                                "hasParsed": 29,
-                                                                                "fileName": "<input>"
-                                                                            }
-                                                                        }
-                                                                    ],
+                                                                    "name": "simpleName",
+                                                                    "value": "f",
                                                                     "meta": {
                                                                         "rowIdx": 2,
-                                                                        "hasParsed": 28,
+                                                                        "hasParsed": 29,
                                                                         "fileName": "<input>"
                                                                     }
                                                                 }
@@ -767,8 +700,8 @@
                 }
             ],
             "meta": {
-                "rowIdx": 1,
-                "hasParsed": 26,
+                "rowIdx": 2,
+                "hasParsed": 28,
                 "fileName": "<input>"
             }
         },
@@ -1119,25 +1052,6 @@
             "meta": {
                 "rowIdx": 2,
                 "hasParsed": 32,
-                "fileName": "<input>"
-            }
-        },
-        {
-            "name": "Insertable",
-            "value": [
-                {
-                    "name": "NEWLINE",
-                    "value": "\n",
-                    "meta": {
-                        "rowIdx": 3,
-                        "hasParsed": 40,
-                        "fileName": "<input>"
-                    }
-                }
-            ],
-            "meta": {
-                "rowIdx": 2,
-                "hasParsed": 39,
                 "fileName": "<input>"
             }
         }

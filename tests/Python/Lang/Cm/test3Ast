@@ -1,7 +1,4 @@
-statements[Insertable[NEWLINE[NEWLINE]
-                      
-           ]
-           statement[declaration[variableDeclaration['var'[var]
+statements[statement[declaration[variableDeclaration['var'[var]
                                                      
                                                      variableDeclarationEntry[Identifier[simpleName[f]
                                                                                          
@@ -91,20 +88,13 @@ statements[Insertable[NEWLINE[NEWLINE]
                                  ]
                      ]
            ]
-           statement[Insertable[EOL[;]
-                                
-                     ]
-                     Insertable[NEWLINE[NEWLINE]
-                                
-                     ]
-                     statement[expression[BinaryOperation[UnaryOperation[AtomExpr[Atom[Identifier[simpleName[f]
-                                                                                                  
-                                                                                       ]
-                                                                                  ]
-                                                                         ]
-                                                          ]
-                                          ]
-                               ]
+           statement[expression[BinaryOperation[UnaryOperation[AtomExpr[Atom[Identifier[simpleName[f]
+                                                                                        
+                                                                             ]
+                                                                        ]
+                                                               ]
+                                                ]
+                                ]
                      ]
            ]
            statement[expression[BinaryOperation[UnaryOperation[AtomExpr[Atom[Decimal[2]
@@ -152,8 +142,5 @@ statements[Insertable[NEWLINE[NEWLINE]
                                           ]
                                 ]
                      ]
-           ]
-           Insertable[NEWLINE[NEWLINE]
-                      
            ]
 ]

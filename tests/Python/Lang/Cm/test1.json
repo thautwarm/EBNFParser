@@ -174,25 +174,6 @@
                 "hasParsed": 0,
                 "fileName": "<input>"
             }
-        },
-        {
-            "name": "Insertable",
-            "value": [
-                {
-                    "name": "EOL",
-                    "value": ";",
-                    "meta": {
-                        "rowIdx": 0,
-                        "hasParsed": 7,
-                        "fileName": "<input>"
-                    }
-                }
-            ],
-            "meta": {
-                "rowIdx": 0,
-                "hasParsed": 6,
-                "fileName": "<input>"
-            }
         }
     ],
     "meta": {

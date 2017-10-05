@@ -144,7 +144,7 @@ class Ref(BaseParser):
 
 
 class AstParser(BaseParser):
-    def __init__(self, *ebnf, name = None):
+    def __init__(self, *ebnf, name = None, toIgnore=None):
         # the possibilities for an series of input tokenized words.
         self.possibilities = [] 
         self.has_recur     = False
@@ -152,6 +152,7 @@ class AstParser(BaseParser):
         self.name          = name if name is not None else \
                 ' | '.join(' '.join(map(lambda parser : parser.name,ebnf_i)) for ebnf_i in ebnf)
         self.compiled      = False
+        self.toIgnore      = toIgnore
     
     def compile(self, namespace: dict, recurSearcher: set):
         if self.name:
@@ -218,9 +219,15 @@ class AstParser(BaseParser):
                     meta.rollback()
                     break
                 if isinstance(ast_struct, SeqParser):
-                    res.extend(r)
+                    if not self.toIgnore:
+                        res.extend(r)
+                    else:
+                        for _r in r:
+                            if _r.name not in self.toIgnore:
+                                res.append(_r)
                 else:
-                    res.append(r)
+                    if not self.toIgnore or r.name not in self.toIgnore:
+                        res.append(r)
                 if DEBUG:
                     print(f"{ast_struct.name} << \n{r}")                    
             else:

@@ -30,6 +30,8 @@ Def     = lit.Eliteral('::=', name = 'Def')
 LitDef  = lit.Eliteral(':=', name = 'LitDef')
 OrSign  = lit.Eliteral("|",   name = 'OrSign')
 
+Throw   = lit.Eliteral('Throw', name = 'Throw') 
+
 namespace     = globals()
 recurSearcher = set()
 
@@ -59,7 +61,7 @@ Atom = AstParser(
 
 Equals = AstParser(
     [Name, LitDef, Str],
-    [Name, Def, Ref("Expr")],
+    [Name, SeqParser([Throw,SeqParser([Name])],atmost = 1),Def, Ref("Expr")],
     name = 'Equals')
 
 
