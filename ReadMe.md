@@ -43,7 +43,7 @@ SExpr ::= Atom | Left SExpr* Right
 ```
 Okay, now a parser for Lisp is finished! Let's save this file as `lisp.eebnf`.
 Just 
-- download CPython 3.6(If you're in China, go to[Tsinghua Tuna Mirror](https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/)   
+- download CPython 3.6(If you're in China, go to  [Tsinghua Tuna Mirror](https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/)   
 and choose the corresponding installer for you OS.
 - download EBNFParser `pip install EBNFParser`.
 - type this codes
