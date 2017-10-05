@@ -46,8 +46,8 @@ The reason why I choose Lisp is that its EEBNF codes is very very short.
     SExpr ::= Atom | Left SExpr* Right
 
 | Okay, now a parser for Lisp is finished! Let's save this file as
-  ``lisp.eebnf``. Just - download CPython 3.6(If you're in China, go
-  to\ `Tsinghua Tuna
+  ``lisp.eebnf``. Just - download CPython 3.6(If you're in China, go to
+  `Tsinghua Tuna
   Mirror <https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/>`__
 | and choose the corresponding installer for you OS. - download
   EBNFParser ``pip install EBNFParser``. - type this codes
@@ -230,6 +230,9 @@ own language. 4. see the following codes. Also, you can find out more
 details in each example listed above. Or you can see
 `testpy.sh <./testpy.sh>`__.
 ``shell     python parserGenerator.py <EBNF filename> <outputParser.py filename> -test True     python <outputParser.py filename> "<codes of your language>" -o <JSON filename>``
+However, if you download EBNFParser with ``pip``, you can use it more
+conveniently. - Command
+``shell     pip install EBNFParser     parserGenerator.py <EBNF filename> <outputParser.py filename>     python <outputParser.py filename> "<codes of your language>" -o <JSON filename>``
 
 Parser-Generator
 ----------------

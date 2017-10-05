@@ -218,6 +218,13 @@ Feel free to clone this project and make parsers for your own language quickly a
     python parserGenerator.py <EBNF filename> <outputParser.py filename> -test True
     python <outputParser.py filename> "<codes of your language>" -o <JSON filename>
     ```
+However, if you download EBNFParser with `pip`, you can use it more conveniently.
+- Command
+    ```shell
+    pip install EBNFParser
+    parserGenerator.py <EBNF filename> <outputParser.py filename>
+    python <outputParser.py filename> "<codes of your language>" -o <JSON filename>
+    ```
 
 ## Parser-Generator
 - [Python](./Python/Misakawa)
