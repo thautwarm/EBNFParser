@@ -1,0 +1,28 @@
+statements[statement[declaration[variableDeclaration['let(?!\S)'[let]
+                                                     
+                                                     variableDeclarationEntry[Identity[simpleName[s]
+                                                                                       
+                                                                              ]
+                                                                              ':'[:]
+                                                                              
+                                                                              Type[Identity[simpleName[int]
+                                                                                            
+                                                                                   ]
+                                                                              ]
+                                                     ]
+                                                     '='[=]
+                                                     
+                                                     expression[BinaryOperation[UnaryOperation[AtomExpr[Atom[Decimal[1]
+                                                                                                             
+                                                                                                        ]
+                                                                                               ]
+                                                                                ]
+                                                                ]
+                                                     ]
+                                 ]
+                     ]
+           ]
+           Insertable[EOL[;]
+                      
+           ]
+]

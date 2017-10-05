@@ -1,0 +1,205 @@
+Stmt[NEWLINE[NEWLINE]
+     
+     Expr[BinOp[Factor[AtomExpr[Closure['def(?!\S)'[def]
+                                        
+                                        Name[f1]
+                                        
+                                        '('[(]
+                                        
+                                        tpdef[
+                                        ]
+                                        ')'[)]
+                                        
+                                        Closure['{'[{]
+                                                
+                                                Expr[BinOp[Factor[AtomExpr[Atom[Number[1]
+                                                                                
+                                                                           ]
+                                                                  ]
+                                                           ]
+                                                           Op[+]
+                                                           
+                                                           Factor[AtomExpr[Atom[Number[2]
+                                                                                
+                                                                           ]
+                                                                  ]
+                                                           ]
+                                                     ]
+                                                ]
+                                                Expr[BinOp[Factor[AtomExpr[Atom[Name[f2]
+                                                                                
+                                                                           ]
+                                                                           '('[(]
+                                                                           
+                                                                           Expr[BinOp[Factor[AtomExpr[Atom[Number[2]
+                                                                                                           
+                                                                                                      ]
+                                                                                             ]
+                                                                                      ]
+                                                                                      Op[+]
+                                                                                      
+                                                                                      Factor[AtomExpr[Atom[Number[3]
+                                                                                                           
+                                                                                                      ]
+                                                                                             ]
+                                                                                      ]
+                                                                                ]
+                                                                           ]
+                                                                           ')'[)]
+                                                                           
+                                                                  ]
+                                                           ]
+                                                     ]
+                                                ]
+                                                '}'[}]
+                                                
+                                        ]
+                                ]
+                       ]
+                ]
+          ]
+     ]
+     NEWLINE[NEWLINE]
+     
+     Expr[BinOp[Factor[AtomExpr[Closure['def(?!\S)'[def]
+                                        
+                                        Name[f2]
+                                        
+                                        '('[(]
+                                        
+                                        tpdef[
+                                        ]
+                                        ')'[)]
+                                        
+                                        Closure['{'[{]
+                                                
+                                                Expr[BinOp[Factor[AtomExpr[Atom[Number[1]
+                                                                                
+                                                                           ]
+                                                                  ]
+                                                           ]
+                                                     ]
+                                                ]
+                                                '}'[}]
+                                                
+                                        ]
+                                ]
+                       ]
+                ]
+          ]
+     ]
+     NEWLINE[NEWLINE]
+     
+     Expr[BinOp[Factor[AtomExpr[Atom[Name[tp]
+                                     
+                                ]
+                       ]
+                ]
+                Op[=]
+                
+                Factor[AtomExpr[Atom['('[(]
+                                     
+                                     Expr[BinOp[Factor[AtomExpr[Atom[Number[1]
+                                                                     
+                                                                ]
+                                                       ]
+                                                ]
+                                          ]
+                                     ]
+                                     ','[,]
+                                     
+                                     ')'[)]
+                                     
+                                ]
+                       ]
+                ]
+          ]
+     ]
+     NEWLINE[NEWLINE]
+     
+     Expr[BinOp[Factor[AtomExpr[Atom[Name[tp]
+                                     
+                                ]
+                       ]
+                ]
+                Op[=]
+                
+                Factor[AtomExpr[Atom['('[(]
+                                     
+                                     Expr[BinOp[Factor[AtomExpr[Atom[Number[1]
+                                                                     
+                                                                ]
+                                                       ]
+                                                ]
+                                          ]
+                                     ]
+                                     ','[,]
+                                     
+                                     Expr[BinOp[Factor[AtomExpr[Atom[Name[tp]
+                                                                     
+                                                                ]
+                                                       ]
+                                                ]
+                                          ]
+                                     ]
+                                     ','[,]
+                                     
+                                     Expr[BinOp[Factor[AtomExpr[Atom[Name[tp]
+                                                                     
+                                                                ]
+                                                       ]
+                                                ]
+                                          ]
+                                     ]
+                                     ')'[)]
+                                     
+                                ]
+                       ]
+                ]
+          ]
+     ]
+     NEWLINE[NEWLINE]
+     
+     Expr[BinOp[Factor[AtomExpr[Atom[Name[s]
+                                     
+                                ]
+                       ]
+                ]
+                Op[=]
+                
+                Factor[AtomExpr[Closure['def(?!\S)'[def]
+                                        
+                                        '('[(]
+                                        
+                                        tpdef[Name[x]
+                                              
+                                        ]
+                                        ')'[)]
+                                        
+                                        Closure['{'[{]
+                                                
+                                                Expr[BinOp[Factor[AtomExpr[Atom[Name[x]
+                                                                                
+                                                                           ]
+                                                                  ]
+                                                           ]
+                                                           Op[+]
+                                                           
+                                                           Factor[AtomExpr[Atom[Number[1]
+                                                                                
+                                                                           ]
+                                                                  ]
+                                                           ]
+                                                     ]
+                                                ]
+                                                '}'[}]
+                                                
+                                        ]
+                                ]
+                       ]
+                ]
+          ]
+     ]
+     NEWLINE[NEWLINE]
+     
+]

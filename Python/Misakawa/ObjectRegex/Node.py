@@ -56,10 +56,11 @@ class Ast:
     """To Store Ast Structures(Parsed)."""
     
     name = None
-    def __init__(self, *v, type = list, name = None):
+    def __init__(self, meta, *v, type = list, name = None):
         if type not in (list, str): raise ErrorFamily.UnsolvedError("Ast value type must be `list` or `str`.")
         self.value = type(*v)
         self.name  = name
+        self.meta  = meta # (count, row_idx)
         
     def __getitem__(self, v):
         return self.value.__getitem__(v)
@@ -101,6 +102,12 @@ class Ast:
     def setName(self, name):
         self.name = name
         return self
+    def dumpToJSON(self):
+        JSON = dict(name  = self.name,
+                    value = self.value if self.type is str else [value.dumpToJSON() for value in self.value],
+                    meta  = self.meta
+                    )
+        return JSON
 
     def __str__(self):
         return self.dump(0)
@@ -124,7 +131,8 @@ class LiteralParser(BaseParser):
         if r is '\n':
             meta.rdx += 1
         meta.count += 1
-        return Ast(r, type = str, name = self.name if self.name else r)
+        metaForAst = dict(rowIdx = meta.rdx, hasParsed = meta.count, fileName = meta.fileName)
+        return Ast(metaForAst, r, type = str, name = self.name if self.name else r)
     
     @staticmethod
     def Eliteral(regex_str, name):
@@ -185,7 +193,8 @@ class AstParser(BaseParser):
         
         if not self.compiled: self.compiled = True
     def match(self, objs, meta, partial = True):
-        res = Ast(type = list, name = self.name)
+        metaForAst = dict(rowIdx = meta.rdx, hasParsed = meta.count, fileName = meta.fileName)
+        res = Ast(metaForAst, type = list, name = self.name)
         if DEBUG:
             print(f"{self.name} WITH {meta.trace}")
         for possibility in self.possibilities:
@@ -251,7 +260,8 @@ class SeqParser(AstParser):
         self.atmost  = atmost
 
     def match(self, objs, meta, partial=True):
-        res = Ast(type = list, name = self.name)
+        metaForAst = dict(rowIdx = meta.rdx, hasParsed = meta.count, fileName = meta.fileName)
+        res = Ast(metaForAst, type = list, name = self.name)
         if meta.count == len(objs):
             if self.atleast is 0:
                 return res

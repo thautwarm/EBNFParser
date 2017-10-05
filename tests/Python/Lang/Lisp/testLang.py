@@ -8,6 +8,7 @@ cmdparser.add_argument("Parser", type = str,
 cmdparser.add_argument("Codes",  metavar = 'lispCodes', type = str,
                        help='Input some codes in your language here.')
 cmdparser.add_argument("-testTk",  default = False, type = bool)
+cmdparser.add_argument("-o",  default = "", type = str)
 
 args = cmdparser.parse_args()
 
@@ -16,7 +17,16 @@ parser = handle_error(eval(args.Parser).match)
 tokenized = token.findall(args.Codes)
 if args.testTk:
     print(tokenized)
-print(parser(tokenized,partial=False))
+result = parser(tokenized,partial=False)
+print(result)
+if args.o:
+    import json
+    with open(f"{args.o}.json", 'w', encoding = 'utf8') as JSONFile:
+        json.dump(result.dumpToJSON(), JSONFile, indent = 4)
+    with open(f"{args.o}Ast", 'w', encoding = 'utf8') as OriginAstFile:
+        OriginAstFile.write(result.dump())
+    
+
 
 
 

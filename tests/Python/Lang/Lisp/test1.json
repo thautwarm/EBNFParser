@@ -1,0 +1,331 @@
+{
+    "name": "Stmt",
+    "value": [
+        {
+            "name": "Expr",
+            "value": [
+                {
+                    "name": "Left",
+                    "value": "(",
+                    "meta": {
+                        "rowIdx": 0,
+                        "hasParsed": 1,
+                        "fileName": "<input>"
+                    }
+                },
+                {
+                    "name": "Expr",
+                    "value": [
+                        {
+                            "name": "Liter",
+                            "value": "set",
+                            "meta": {
+                                "rowIdx": 0,
+                                "hasParsed": 2,
+                                "fileName": "<input>"
+                            }
+                        }
+                    ],
+                    "meta": {
+                        "rowIdx": 0,
+                        "hasParsed": 1,
+                        "fileName": "<input>"
+                    }
+                },
+                {
+                    "name": "Expr",
+                    "value": [
+                        {
+                            "name": "Liter",
+                            "value": "r",
+                            "meta": {
+                                "rowIdx": 0,
+                                "hasParsed": 3,
+                                "fileName": "<input>"
+                            }
+                        }
+                    ],
+                    "meta": {
+                        "rowIdx": 0,
+                        "hasParsed": 2,
+                        "fileName": "<input>"
+                    }
+                },
+                {
+                    "name": "Expr",
+                    "value": [
+                        {
+                            "name": "Liter",
+                            "value": "1",
+                            "meta": {
+                                "rowIdx": 0,
+                                "hasParsed": 4,
+                                "fileName": "<input>"
+                            }
+                        }
+                    ],
+                    "meta": {
+                        "rowIdx": 0,
+                        "hasParsed": 3,
+                        "fileName": "<input>"
+                    }
+                },
+                {
+                    "name": "Right",
+                    "value": ")",
+                    "meta": {
+                        "rowIdx": 0,
+                        "hasParsed": 5,
+                        "fileName": "<input>"
+                    }
+                }
+            ],
+            "meta": {
+                "rowIdx": 0,
+                "hasParsed": 0,
+                "fileName": "<input>"
+            }
+        },
+        {
+            "name": "Expr",
+            "value": [
+                {
+                    "name": "Left",
+                    "value": "(",
+                    "meta": {
+                        "rowIdx": 0,
+                        "hasParsed": 6,
+                        "fileName": "<input>"
+                    }
+                },
+                {
+                    "name": "Expr",
+                    "value": [
+                        {
+                            "name": "Liter",
+                            "value": "define",
+                            "meta": {
+                                "rowIdx": 0,
+                                "hasParsed": 7,
+                                "fileName": "<input>"
+                            }
+                        }
+                    ],
+                    "meta": {
+                        "rowIdx": 0,
+                        "hasParsed": 6,
+                        "fileName": "<input>"
+                    }
+                },
+                {
+                    "name": "Expr",
+                    "value": [
+                        {
+                            "name": "Liter",
+                            "value": "a",
+                            "meta": {
+                                "rowIdx": 0,
+                                "hasParsed": 8,
+                                "fileName": "<input>"
+                            }
+                        }
+                    ],
+                    "meta": {
+                        "rowIdx": 0,
+                        "hasParsed": 7,
+                        "fileName": "<input>"
+                    }
+                },
+                {
+                    "name": "Expr",
+                    "value": [
+                        {
+                            "name": "Liter",
+                            "value": "b",
+                            "meta": {
+                                "rowIdx": 0,
+                                "hasParsed": 9,
+                                "fileName": "<input>"
+                            }
+                        }
+                    ],
+                    "meta": {
+                        "rowIdx": 0,
+                        "hasParsed": 8,
+                        "fileName": "<input>"
+                    }
+                },
+                {
+                    "name": "Expr",
+                    "value": [
+                        {
+                            "name": "Left",
+                            "value": "(",
+                            "meta": {
+                                "rowIdx": 0,
+                                "hasParsed": 10,
+                                "fileName": "<input>"
+                            }
+                        },
+                        {
+                            "name": "Expr",
+                            "value": [
+                                {
+                                    "name": "Liter",
+                                    "value": "+",
+                                    "meta": {
+                                        "rowIdx": 0,
+                                        "hasParsed": 11,
+                                        "fileName": "<input>"
+                                    }
+                                }
+                            ],
+                            "meta": {
+                                "rowIdx": 0,
+                                "hasParsed": 10,
+                                "fileName": "<input>"
+                            }
+                        },
+                        {
+                            "name": "Expr",
+                            "value": [
+                                {
+                                    "name": "Liter",
+                                    "value": "a",
+                                    "meta": {
+                                        "rowIdx": 0,
+                                        "hasParsed": 12,
+                                        "fileName": "<input>"
+                                    }
+                                }
+                            ],
+                            "meta": {
+                                "rowIdx": 0,
+                                "hasParsed": 11,
+                                "fileName": "<input>"
+                            }
+                        },
+                        {
+                            "name": "Expr",
+                            "value": [
+                                {
+                                    "name": "Left",
+                                    "value": "(",
+                                    "meta": {
+                                        "rowIdx": 0,
+                                        "hasParsed": 13,
+                                        "fileName": "<input>"
+                                    }
+                                },
+                                {
+                                    "name": "Expr",
+                                    "value": [
+                                        {
+                                            "name": "Liter",
+                                            "value": "+",
+                                            "meta": {
+                                                "rowIdx": 0,
+                                                "hasParsed": 14,
+                                                "fileName": "<input>"
+                                            }
+                                        }
+                                    ],
+                                    "meta": {
+                                        "rowIdx": 0,
+                                        "hasParsed": 13,
+                                        "fileName": "<input>"
+                                    }
+                                },
+                                {
+                                    "name": "Expr",
+                                    "value": [
+                                        {
+                                            "name": "Liter",
+                                            "value": "r",
+                                            "meta": {
+                                                "rowIdx": 0,
+                                                "hasParsed": 15,
+                                                "fileName": "<input>"
+                                            }
+                                        }
+                                    ],
+                                    "meta": {
+                                        "rowIdx": 0,
+                                        "hasParsed": 14,
+                                        "fileName": "<input>"
+                                    }
+                                },
+                                {
+                                    "name": "Expr",
+                                    "value": [
+                                        {
+                                            "name": "Liter",
+                                            "value": "1",
+                                            "meta": {
+                                                "rowIdx": 0,
+                                                "hasParsed": 16,
+                                                "fileName": "<input>"
+                                            }
+                                        }
+                                    ],
+                                    "meta": {
+                                        "rowIdx": 0,
+                                        "hasParsed": 15,
+                                        "fileName": "<input>"
+                                    }
+                                },
+                                {
+                                    "name": "Right",
+                                    "value": ")",
+                                    "meta": {
+                                        "rowIdx": 0,
+                                        "hasParsed": 17,
+                                        "fileName": "<input>"
+                                    }
+                                }
+                            ],
+                            "meta": {
+                                "rowIdx": 0,
+                                "hasParsed": 12,
+                                "fileName": "<input>"
+                            }
+                        },
+                        {
+                            "name": "Right",
+                            "value": ")",
+                            "meta": {
+                                "rowIdx": 0,
+                                "hasParsed": 18,
+                                "fileName": "<input>"
+                            }
+                        }
+                    ],
+                    "meta": {
+                        "rowIdx": 0,
+                        "hasParsed": 9,
+                        "fileName": "<input>"
+                    }
+                },
+                {
+                    "name": "Right",
+                    "value": ")",
+                    "meta": {
+                        "rowIdx": 0,
+                        "hasParsed": 19,
+                        "fileName": "<input>"
+                    }
+                }
+            ],
+            "meta": {
+                "rowIdx": 0,
+                "hasParsed": 5,
+                "fileName": "<input>"
+            }
+        }
+    ],
+    "meta": {
+        "rowIdx": 0,
+        "hasParsed": 0,
+        "fileName": "<input>"
+    }
+}

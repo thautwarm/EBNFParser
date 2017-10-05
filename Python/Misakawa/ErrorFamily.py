@@ -43,7 +43,7 @@ class MetaInfo:
 
     """
 
-    def __init__(self, count=0, rdx=0, trace=None):
+    def __init__(self, count=0, rdx=0, trace=None, fileName = None):
         """
 
         :rtype: MetaInfo
@@ -52,6 +52,7 @@ class MetaInfo:
         self.trace   = trace if trace else []
         self.rdx     = rdx
         self.history = []
+        self.fileName= fileName if fileName else "<input>"
 
     def branch(self):
         """

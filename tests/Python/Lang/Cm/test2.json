@@ -1,0 +1,67 @@
+{
+    "name": "statements",
+    "value": [
+        {
+            "name": "statement",
+            "value": [
+                {
+                    "name": "expression",
+                    "value": [
+                        {
+                            "name": "LambdaDef",
+                            "value": [
+                                {
+                                    "name": "'{'",
+                                    "value": "{",
+                                    "meta": {
+                                        "rowIdx": 0,
+                                        "hasParsed": 1,
+                                        "fileName": "<input>"
+                                    }
+                                },
+                                {
+                                    "name": "statements",
+                                    "value": [],
+                                    "meta": {
+                                        "rowIdx": 0,
+                                        "hasParsed": 1,
+                                        "fileName": "<input>"
+                                    }
+                                },
+                                {
+                                    "name": "'}'",
+                                    "value": "}",
+                                    "meta": {
+                                        "rowIdx": 0,
+                                        "hasParsed": 2,
+                                        "fileName": "<input>"
+                                    }
+                                }
+                            ],
+                            "meta": {
+                                "rowIdx": 0,
+                                "hasParsed": 0,
+                                "fileName": "<input>"
+                            }
+                        }
+                    ],
+                    "meta": {
+                        "rowIdx": 0,
+                        "hasParsed": 0,
+                        "fileName": "<input>"
+                    }
+                }
+            ],
+            "meta": {
+                "rowIdx": 0,
+                "hasParsed": 0,
+                "fileName": "<input>"
+            }
+        }
+    ],
+    "meta": {
+        "rowIdx": 0,
+        "hasParsed": 0,
+        "fileName": "<input>"
+    }
+}

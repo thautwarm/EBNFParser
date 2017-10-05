@@ -1,0 +1,54 @@
+Stmt[Expr[Left[(]
+          
+          Expr[Liter[set]
+               
+          ]
+          Expr[Liter[r]
+               
+          ]
+          Expr[Liter[1]
+               
+          ]
+          Right[)]
+          
+     ]
+     Expr[Left[(]
+          
+          Expr[Liter[define]
+               
+          ]
+          Expr[Liter[a]
+               
+          ]
+          Expr[Liter[b]
+               
+          ]
+          Expr[Left[(]
+               
+               Expr[Liter[+]
+                    
+               ]
+               Expr[Liter[a]
+                    
+               ]
+               Expr[Left[(]
+                    
+                    Expr[Liter[+]
+                         
+                    ]
+                    Expr[Liter[r]
+                         
+                    ]
+                    Expr[Liter[1]
+                         
+                    ]
+                    Right[)]
+                    
+               ]
+               Right[)]
+               
+          ]
+          Right[)]
+          
+     ]
+]
