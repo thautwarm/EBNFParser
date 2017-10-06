@@ -54,7 +54,7 @@ struct Some{
 	f:[i32=>i32]
 	g:[[i32=>i32]=>[i32=>i32]]
 }
-<T> int (x:int)->x+1
+<T> (x:i32)=>i32->x+1
 " -o tests/Python/Lang/Cm/test4
 
 

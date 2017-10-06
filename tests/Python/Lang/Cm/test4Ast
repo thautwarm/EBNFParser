@@ -435,7 +435,7 @@ statements[I[NEWLINE[NEWLINE]
                                                                                                           ]
                                                                                                           ':'[:]
                                                                                                           
-                                                                                                          Type[Identifier[simpleName[int]
+                                                                                                          Type[Identifier[simpleName[i32]
                                                                                                                           
                                                                                                                ]
                                                                                                           ]
@@ -443,6 +443,12 @@ statements[I[NEWLINE[NEWLINE]
                                                     ]
                                                     ')'[)]
                                                     
+                                                    '=>'[=>]
+                                                    
+                                                    Type[Identifier[simpleName[i32]
+                                                                    
+                                                         ]
+                                                    ]
                                                     '->'[->]
                                                     
                                                     body[statement[expression[BinaryOperation[UnaryOperation[AtomExpr[Atom[Identifier[simpleName[x]
