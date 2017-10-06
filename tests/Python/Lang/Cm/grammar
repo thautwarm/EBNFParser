@@ -2,10 +2,10 @@
 # `ENDL` will be replaced by '\n' when compiling.
 
 # comments
+Any := K'^((?!/\*|\*/|\n)[\s\S])*$'
+
 multilineComment  
-        ::= '/*' multilineComment '*/' 
-            |  
-            R'/\*[\W\w]*?/\*'  
+        ::= '/*' (Any | NEWLINE | multilineComment)* '*/' 
         ENDL
 
 Comment:= R'//[^\n]*'   
@@ -33,8 +33,8 @@ NEWLINE := R'\n'
 EOL     := R';' 
         ENDL
 
-Insertable
-        ::= EOL | NEWLINE | Comment | multilineComment
+
+I       ::=  NEWLINE | Comment | multilineComment
         ENDL
 
 simpleName       
@@ -54,27 +54,31 @@ labelDeclaration
 block   ::= '{' statements '}' 
         ENDL
 
-body    ::=  block  | statement | Insertable* body Insertable*
+body    ::=  block  | statement 
         ENDL
 
 # module related
 
 
-module  ::= simpleName (',' simpleName)* 
+module  ::= simpleName (',' simpleName)*
         ENDL
-moduleDeclaration 
-        ::= 'module' module 
+moduleDeclaration
+        ::= 'module' module
         ENDL
 Import  ::= 'import' module
         ENDL
 
 # statement 
 
-statement 
-        ::= flowControl | declaration | flowControlSign [Identifier] | expression  
-        ENDL 
+statement
+        ::= ( flowControl  |
+              declaration  |
+              flowControlSign [Identifier] |
+              expression
+            ) [EOL]
+        ENDL
 
-flowControlSign 
+flowControlSign
         := K'break|return|continue'
         ENDL
 
@@ -82,51 +86,55 @@ flowControl
         ::= If | While
         ENDL
 
-If      ::= K'if' '(' expression ')' 
-                body 
+If      ::= K'if' '(' expression ')'
+                body
             [
-            K'else' 
-                body 
-            ] 
+            K'else'
+                body
+            ]
         ENDL
 
-While   ::=  [labelDeclaration] 
-             K'while' '(' expression  ')' 
+While   ::=  [labelDeclaration]
+             K'while' '(' expression  ')'
                 body
         ENDL
 
 # declaration
 
-declaration 
-        ::= structDeclaration | variableDeclaration
+declaration
+        ::= structDeclaration | moduleDeclaration | Import | variableDeclaration
         ENDL
 
-structDeclaration Throw Insertable
-        ::= K'struct' Identifier '{' 
-                (Insertable* variableDeclarationEntry Insertable*)* 
-            '}' 
+structDeclaration # Throw I
+        ::= K'struct' Identifier '{'
+                (I* variableDeclarationEntry [','] I*)*
+            '}'
         ENDL
 
 variableDeclarationEntry
         ::= Identifier [':' Type]
         ENDL
 
-variableDeclarationEntryList  
-        ::= variableDeclarationEntry (',' variableDeclarationEntry)* 
+
+variableDeclarationEntryList # Throw I
+        ::= I* variableDeclarationEntry
+                (I* ','
+                 I* variableDeclarationEntry)*
+                 I*
         ENDL
 
-variableDeclaration
-        ::= (K'let' | K'var') variableDeclarationEntry [ '=' expression ] 
+variableDeclaration # Throw I
+        ::= (K'let' | K'var') variableDeclarationEntry [ '=' I* expression ]
         ENDL
 
-Type    ::=  '[' TypeList '=>' Type ']' | Identifier
+Type    ::=  '[' [TypeList] '=>' Type ']' | Identifier
         ENDL
 
 TypeList
         ::= Type (',' Type)*
         ENDL
 
-genericParameters 
+genericParameters
         ::= K'<' Identifier (',' Identifier)* K'>'
         ENDL
 
@@ -134,52 +142,62 @@ genericParameters
 
 BinaryOperator := R'\/\/|\/|\|\||\||\>\>|\<\<|\>\=|\<\=|\<\-|\>|\<|\=\>|\-\-|\+\+|\*\*|\+|\-|\*|\=\=|\=|\%|\^'
                 ENDL
-UnaryOperator  := R'\?|\!|\&|\$|\@|\+|\-|\~' 
+UnaryOperator  := R'\?|\!|\&|\$|\@|\+|\-|\~'
                 ENDL
 
-expression     
+expression
         ::= LambdaDef | BinaryOperation
         ENDL
 
-LambdaDef Throw Insertable     
+LambdaDef # Throw I     
         ::= variableDeclarationEntry '->' body
             |
-            '(' variableDeclarationEntryList ')' '->' body
+            '(' variableDeclarationEntryList ')' [':' Type | '=>' Type ] '->' body
             |
-            '{' Insertable*
-                [variableDeclarationEntryList '->']
+            '{' [variableDeclarationEntryList [':' Type | '=>' Type] '->']
                 statements              # 若没有定义形式参数, 则类似kotlin的`it`或者scala的`_`
-            '}' 
-            | [genericParameters] [Type] LambdaDef
+            '}' [':' Type]
+            | [genericParameters] LambdaDef
         ENDL
 
-BinaryOperation 
-        ::= UnaryOperation (BinaryOperator UnaryOperation)* 
+BinaryOperation
+        ::= UnaryOperation (BinaryOperator UnaryOperation)*
         ENDL
 
 UnaryOperation
-        ::= AtomExpr | UnaryOperator UnaryOperation 
+        ::= AtomExpr | UnaryOperator UnaryOperation
         ENDL
 
 AtomExpr::= Atom Trailer*
         ENDL
 
-expressionList 
-        ::= expression (',' expression)*
+expressionList # Throw I
+        ::= I* expression
+                (I* ','
+                 I* expression)*
+                 I*
         ENDL
 
 ## call function and get members.
 
 
 
-Trailer ::= '(' [expressionList] ')' [LambdaDef] | '.' Identifier
+Trailer ::=  Call | Access
         ENDL
+Call # Throw I
+        ::= '(' [expressionList] ')' 
+            [LambdaDef]
+        ENDL
+Access # Throw I
+        ::= I* '.' Identifier
+        ENDL
+
 
 Atom    ::= Constant | String | Identifier | numberLiteral | Decimal | '(' expression ')'
         ENDL
 
 # extra
-statements Throw Insertable
-        ::= (Insertable* statement* Insertable*)*
+statements # Throw I
+        ::= (I* statement* I*)*
         ENDL
 
