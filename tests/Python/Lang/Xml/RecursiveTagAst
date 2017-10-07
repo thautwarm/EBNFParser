@@ -16,8 +16,6 @@ Module[Block[TagHead[<top>]
              
              Block[TagHead[<d>]
                    
-                   Cell[ ]
-                   
                    TagEnd[</d>]
                    
              ]

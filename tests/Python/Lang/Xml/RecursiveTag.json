@@ -100,15 +100,6 @@
                             }
                         },
                         {
-                            "name": "Cell",
-                            "value": " ",
-                            "meta": {
-                                "rowIdx": 9,
-                                "hasParsed": 18,
-                                "fileName": "<input>"
-                            }
-                        },
-                        {
                             "name": "TagEnd",
                             "value": "</d>",
                             "meta": {
