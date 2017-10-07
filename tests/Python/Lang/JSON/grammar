@@ -1,0 +1,13 @@
+NEWLINE    := R'\n'
+Space      := K'\s+'
+S          := R'[^\n"\\\\]'
+Escape     := R'\\\\' 
+EscapeStr  ::= Escape '"' 
+Str        ::= '"' (S|Space|EscapeStr)* '"'
+KeyValue Throw Space::=  Atom ':' Space* Atom 
+Dict     Throw Space::= '{' Space* [KeyValue (Space* ',' Space*, KeyValue)*] Space* '}'
+List     Throw Space::= '[' Space* [Atom (Space* ','  Space* Atom)*]  Space* ']'
+Atom     Throw Space::= Str | Dict | List | Space* Atom Space*
+
+
+

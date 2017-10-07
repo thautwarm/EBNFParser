@@ -1,0 +1,22 @@
+
+from Misakawa.ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser, MetaInfo
+import re
+namespace     = globals()
+recurSearcher = set()
+token = re.compile('|'.join(['\}','\{','\]','\[','\:','\,','\"','\n','[^\n"\\\\]','\\\\']))
+NEWLINE = LiteralParser('\n', name = 'NEWLINE')
+Space = LiteralParser('\s+', name = 'Space')
+S = LiteralParser('[^\n"\\\\]', name = 'S')
+Escape = LiteralParser('\\\\', name = 'Escape')
+EscapeStr = AstParser([Ref('Escape'),LiteralParser.Eliteral('"', name = '\'\"\'')], name = 'EscapeStr')
+Str = AstParser([LiteralParser.Eliteral('"', name = '\'\"\''),SeqParser([SeqParser([Ref('S')],[Ref('Space')],[Ref('EscapeStr')], atleast = 1, atmost = 1)]),LiteralParser.Eliteral('"', name = '\'\"\'')], name = 'Str')
+KeyValue = AstParser([Ref('Atom'),LiteralParser.Eliteral(':', name = '\':\''),SeqParser([Ref('Space')]),Ref('Atom')], name = 'KeyValue', toIgnore={'Space'})
+Dict = AstParser([LiteralParser.Eliteral('{', name = '\'{\''),SeqParser([Ref('Space')]),SeqParser([Ref('KeyValue'),SeqParser([SeqParser([Ref('Space')]),LiteralParser.Eliteral(',', name = '\',\''),SeqParser([Ref('Space')]),Ref('KeyValue')])], atmost = 1),SeqParser([Ref('Space')]),LiteralParser.Eliteral('}', name = '\'}\'')], name = 'Dict', toIgnore={'Space'})
+List = AstParser([LiteralParser.Eliteral('[', name = '\'[\''),SeqParser([Ref('Space')]),SeqParser([Ref('Atom'),SeqParser([SeqParser([Ref('Space')]),LiteralParser.Eliteral(',', name = '\',\''),SeqParser([Ref('Space')]),Ref('Atom')])], atmost = 1),SeqParser([Ref('Space')]),LiteralParser.Eliteral(']', name = '\']\'')], name = 'List', toIgnore={'Space'})
+Atom = AstParser([Ref('Str')],[Ref('Dict')],[Ref('List')],[SeqParser([Ref('Space')]),Ref('Atom'),SeqParser([Ref('Space')])], name = 'Atom', toIgnore={'Space'})
+EscapeStr.compile(namespace, recurSearcher)
+Str.compile(namespace, recurSearcher)
+KeyValue.compile(namespace, recurSearcher)
+Dict.compile(namespace, recurSearcher)
+List.compile(namespace, recurSearcher)
+Atom.compile(namespace, recurSearcher)

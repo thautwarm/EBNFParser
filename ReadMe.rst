@@ -220,6 +220,8 @@ Some Examples
 -  `ExtraPy Language <./tests/Python/Lang/Expy>`__
 -  `EBNF(bootstrap) <./tests/Python/Lang/EBNF>`__
 -  `CmLang <./tests/Python/Lang/Cm>`__
+-  `JSON <./tests/Python/Lang/JSON>`__
+-  `XML <./tests/Python/Lang/Xml>`__
 
 Usage
 -----

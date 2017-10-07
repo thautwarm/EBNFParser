@@ -1,0 +1,8 @@
+Module[Block[TagHead[<html>]
+             
+             Cell[ x+1 ]
+             
+             TagEnd[</html>]
+             
+       ]
+]

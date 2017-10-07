@@ -203,6 +203,8 @@ Each example has the same structure like:
 - [ExtraPy Language](./tests/Python/Lang/Expy)
 - [EBNF(bootstrap)](./tests/Python/Lang/EBNF)
 - [CmLang](./tests/Python/Lang/Cm)
+- [JSON](./tests/Python/Lang/JSON)
+- [XML](./tests/Python/Lang/Xml)
 
 ## Usage
 - Requirement(for Python version)

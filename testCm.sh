@@ -4,7 +4,7 @@ python Python/parserGenerator.py tests/Python/Lang/Cm/grammar tests/Python/Lang/
 python tests/Python/Lang/Cm/testLang.py statements "let s:int = 1;" -testTk True -o tests/Python/Lang/Cm/test1
 python tests/Python/Lang/Cm/testLang.py statements "{}" -testTk True -o tests/Python/Lang/Cm/test2
 python tests/Python/Lang/Cm/testLang.py statements "
-<T> (x:i32, y:i8):[i32,i8=>i32]->x+y
+
 var f : auto = (i:i32, inner:[i32 => i32])->{inner(i)}
 f 2+1 i:auto-> 1+2
 " -testTk True -o tests/Python/Lang/Cm/test3
@@ -25,7 +25,7 @@ struct Some{
 	f:[i32=>i32]
 	g:[[i32=>i32]=>[i32=>i32]]
 }
-<T> (x:int)->x+1
+<T> (x:i32)=>i32->x+1
 " -o tests/Python/Lang/Cm/test4
 
 
