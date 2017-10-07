@@ -6,7 +6,7 @@ python tests/Python/Lang/JSON/testLang.py Atom '
 "a":"b",
 "escapeStr":"\"I am the bone of my sword.\""
 }
-' -o tests/Python/Lang/JSON/EscapeStr -testTk True
+' -o tests/Python/Lang/JSON/EscapeStr 
 
 python tests/Python/Lang/JSON/testLang.py Atom '
 [ {        "a":"b", 
@@ -15,6 +15,6 @@ python tests/Python/Lang/JSON/testLang.py Atom '
          "Ice1000":[{"Glavo":"Yutong"}]
   }
 ]
-' -o Complex -testTk tests/Python/Lang/JSON/Complex
+' -o tests/Python/Lang/JSON/Complex
 
 
