@@ -48,9 +48,9 @@ and choose the corresponding installer for you OS.
 - download EBNFParser `pip install EBNFParser`.
 - type this codes
     ```
-    parserGenerator.py lisp.eebnf ./lispParser.py -test True -comment True
+    parserGenerator.py lisp.eebnf ./parser.py -test True -comment True
     ```
-And now there should be two files(`testLang.py, lispParser.py`) automatically generated near by `lisp.eebnf`.
+And now there should be two files(`testLang.py, parser.py`) automatically generated near by `lisp.eebnf`.
 - feel free to try any lisp codes as `<Lisp Codes>` with following command.
 
     ```shell
