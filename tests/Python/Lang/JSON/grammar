@@ -1,4 +1,9 @@
 NEWLINE    := R'\n'
+true       ::= K't' K'r' K'u' K'e'
+false      ::= K'f' K'a' K'l' K's' K'e'
+null       ::= K'n' K'u' K'l' K'l'
+Number     ::= K'\d'+ [K'\.' K'\d'+] 
+Const      ::= true | false | null | Number
 Space      := K'\s+'
 S          := R'[^\n"\\\\]'
 Escape     := R'\\\\' 
@@ -7,7 +12,7 @@ Str        ::= '"' (S|Space|EscapeStr)* '"'
 KeyValue Throw Space::=  Atom ':' Space* Atom 
 Dict     Throw Space::= '{' Space* [KeyValue (Space* ',' Space*, KeyValue)*] Space* '}'
 List     Throw Space::= '[' Space* [Atom (Space* ','  Space* Atom)*]  Space* ']'
-Atom     Throw Space::= Str | Dict | List | Space* Atom Space*
+Atom     Throw Space::=  Const | Str | Dict | List | Space* Atom Space*
 
 
 

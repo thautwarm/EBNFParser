@@ -16,5 +16,12 @@ python tests/Python/Lang/JSON/testLang.py Atom '
   }
 ]
 ' -o tests/Python/Lang/JSON/Complex
-
+python tests/Python/Lang/JSON/testLang.py Atom '
+[ {     "x":true, 
+   	123:"\"I am the bone of my sword.\""}, 
+  {     1.2:[3.14159, null],
+         false:[{"Glavo":"Yutong"}]
+  }
+]
+' -o tests/Python/Lang/JSON/Const -testTk True
 

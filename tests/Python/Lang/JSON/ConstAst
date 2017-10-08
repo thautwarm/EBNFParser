@@ -1,0 +1,240 @@
+Atom[Atom[List['['[[]
+               
+               Atom[Dict['{'[{]
+                         
+                         KeyValue[Atom[Str['"'["]
+                                           
+                                           S[x]
+                                           
+                                           '"'["]
+                                           
+                                       ]
+                                  ]
+                                  ':'[:]
+                                  
+                                  Atom[Const[true['t'[t]
+                                                  
+                                                  'r'[r]
+                                                  
+                                                  'u'[u]
+                                                  
+                                                  'e'[e]
+                                                  
+                                             ]
+                                       ]
+                                  ]
+                         ]
+                         ','[,]
+                         
+                         KeyValue[Atom[Const[Number['\d'[1]
+                                                    
+                                                    '\d'[2]
+                                                    
+                                                    '\d'[3]
+                                                    
+                                             ]
+                                       ]
+                                  ]
+                                  ':'[:]
+                                  
+                                  Atom[Str['"'["]
+                                           
+                                           EscapeStr[Escape[\]
+                                                     
+                                                     '"'["]
+                                                     
+                                           ]
+                                           S[I]
+                                           
+                                           S[ ]
+                                           
+                                           S[a]
+                                           
+                                           S[m]
+                                           
+                                           S[ ]
+                                           
+                                           S[t]
+                                           
+                                           S[h]
+                                           
+                                           S[e]
+                                           
+                                           S[ ]
+                                           
+                                           S[b]
+                                           
+                                           S[o]
+                                           
+                                           S[n]
+                                           
+                                           S[e]
+                                           
+                                           S[ ]
+                                           
+                                           S[o]
+                                           
+                                           S[f]
+                                           
+                                           S[ ]
+                                           
+                                           S[m]
+                                           
+                                           S[y]
+                                           
+                                           S[ ]
+                                           
+                                           S[s]
+                                           
+                                           S[w]
+                                           
+                                           S[o]
+                                           
+                                           S[r]
+                                           
+                                           S[d]
+                                           
+                                           S[.]
+                                           
+                                           EscapeStr[Escape[\]
+                                                     
+                                                     '"'["]
+                                                     
+                                           ]
+                                           '"'["]
+                                           
+                                       ]
+                                  ]
+                         ]
+                         '}'[}]
+                         
+                    ]
+               ]
+               ','[,]
+               
+               Atom[Dict['{'[{]
+                         
+                         KeyValue[Atom[Const[Number['\d'[1]
+                                                    
+                                                    '\.'[.]
+                                                    
+                                                    '\d'[2]
+                                                    
+                                             ]
+                                       ]
+                                  ]
+                                  ':'[:]
+                                  
+                                  Atom[List['['[[]
+                                            
+                                            Atom[Const[Number['\d'[3]
+                                                              
+                                                              '\.'[.]
+                                                              
+                                                              '\d'[1]
+                                                              
+                                                              '\d'[4]
+                                                              
+                                                              '\d'[1]
+                                                              
+                                                              '\d'[5]
+                                                              
+                                                              '\d'[9]
+                                                              
+                                                       ]
+                                                 ]
+                                            ]
+                                            ','[,]
+                                            
+                                            Atom[Const[null['n'[n]
+                                                            
+                                                            'u'[u]
+                                                            
+                                                            'l'[l]
+                                                            
+                                                            'l'[l]
+                                                            
+                                                       ]
+                                                 ]
+                                            ]
+                                            ']'[]]
+                                            
+                                       ]
+                                  ]
+                         ]
+                         ','[,]
+                         
+                         KeyValue[Atom[Const[false['f'[f]
+                                                   
+                                                   'a'[a]
+                                                   
+                                                   'l'[l]
+                                                   
+                                                   's'[s]
+                                                   
+                                                   'e'[e]
+                                                   
+                                             ]
+                                       ]
+                                  ]
+                                  ':'[:]
+                                  
+                                  Atom[List['['[[]
+                                            
+                                            Atom[Dict['{'[{]
+                                                      
+                                                      KeyValue[Atom[Str['"'["]
+                                                                        
+                                                                        S[G]
+                                                                        
+                                                                        S[l]
+                                                                        
+                                                                        S[a]
+                                                                        
+                                                                        S[v]
+                                                                        
+                                                                        S[o]
+                                                                        
+                                                                        '"'["]
+                                                                        
+                                                                    ]
+                                                               ]
+                                                               ':'[:]
+                                                               
+                                                               Atom[Str['"'["]
+                                                                        
+                                                                        S[Y]
+                                                                        
+                                                                        S[u]
+                                                                        
+                                                                        S[t]
+                                                                        
+                                                                        S[o]
+                                                                        
+                                                                        S[n]
+                                                                        
+                                                                        S[g]
+                                                                        
+                                                                        '"'["]
+                                                                        
+                                                                    ]
+                                                               ]
+                                                      ]
+                                                      '}'[}]
+                                                      
+                                                 ]
+                                            ]
+                                            ']'[]]
+                                            
+                                       ]
+                                  ]
+                         ]
+                         '}'[}]
+                         
+                    ]
+               ]
+               ']'[]]
+               
+          ]
+     ]
+]
