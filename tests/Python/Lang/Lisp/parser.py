@@ -4,7 +4,7 @@ import re
 namespace     = globals()
 recurSearcher = set()
 token = re.compile('|'.join(['\`','\)','\(','[^\(\)\s]+','\n']))
-Expr = AstParser([Ref('Atom')],[Ref('Quote')],[LiteralParser.Eliteral('(', name = '\'(\''),SeqParser([Ref('NEWLINE')]),SeqParser([Ref('Expr')]),SeqParser([Ref('NEWLINE')]),LiteralParser.Eliteral(')', name = '\')\'')], name = 'Expr', toIgnore={'NEWLINE'})
+Expr = AstParser([Ref('Atom')],[Ref('Quote')],[LiteralParser.Eliteral('(', name = '\'(\''),SeqParser([SeqParser([Ref('NEWLINE')]),SeqParser([Ref('Expr')]),SeqParser([Ref('NEWLINE')])]),LiteralParser.Eliteral(')', name = '\')\'')], name = 'Expr', toIgnore={'NEWLINE'})
 Quote = AstParser([LiteralParser.Eliteral('`', name = '\'`\''),Ref('Expr')], name = 'Quote')
 Atom = LiteralParser('[^\(\)\s]+', name = 'Atom')
 NEWLINE = LiteralParser('\n', name = 'NEWLINE')
