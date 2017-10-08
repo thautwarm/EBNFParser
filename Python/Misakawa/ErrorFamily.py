@@ -40,6 +40,9 @@ class MetaInfo:
             which could be used for
                 - Alerting.
                 - Debugging.
+                
+        `fileName` is also a property of MetaInfo.
+        It suggests which file the parser works on.  
 
     """
 
@@ -81,6 +84,17 @@ class MetaInfo:
             self.history.pop()
         except IndexError:
             raise Exception("pull no thing")
+        
+    def clone(self):
+        """
+        Get a copy of 
+                    (RowIdx, 
+                     NumberOfParsedWords, 
+                     FileName) 
+                    from current meta information.
+        """
+        return (self.rdx, self.count, self.fileName)
+        
 
 
 
@@ -104,6 +118,10 @@ def handle_error(func):
             info = " ".join(objs[c:c + 10])
             if len(objs) > c + 10:
                 info += '...'
-            raise SyntaxError(f'Syntax Error at row {r} :\n     {info}')
+            raise SyntaxError(f'''
+Syntax Error at row {r}
+   Error startswith :
+{info}
+''')
         return res
     return _f

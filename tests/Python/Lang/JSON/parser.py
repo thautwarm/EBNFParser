@@ -1,13 +1,13 @@
 
 from Misakawa.ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser, MetaInfo
+from token import token 
 import re
 namespace     = globals()
 recurSearcher = set()
-token = re.compile('|'.join(['\}','\{','\]','\[','\:','\,','\"','\n','[^\n"\\\\]','\\\\']))
 NEWLINE = LiteralParser('\n', name = 'NEWLINE')
-true = AstParser([LiteralParser('t', name = '\'t\''),LiteralParser('r', name = '\'r\''),LiteralParser('u', name = '\'u\''),LiteralParser('e', name = '\'e\'')], name = 'true')
-false = AstParser([LiteralParser('f', name = '\'f\''),LiteralParser('a', name = '\'a\''),LiteralParser('l', name = '\'l\''),LiteralParser('s', name = '\'s\''),LiteralParser('e', name = '\'e\'')], name = 'false')
-null = AstParser([LiteralParser('n', name = '\'n\''),LiteralParser('u', name = '\'u\''),LiteralParser('l', name = '\'l\''),LiteralParser('l', name = '\'l\'')], name = 'null')
+true = AstParser([LiteralParser.Eliteral('t', name = '\'t\''),LiteralParser.Eliteral('r', name = '\'r\''),LiteralParser.Eliteral('u', name = '\'u\''),LiteralParser.Eliteral('e', name = '\'e\'')], name = 'true')
+false = AstParser([LiteralParser.Eliteral('f', name = '\'f\''),LiteralParser.Eliteral('a', name = '\'a\''),LiteralParser.Eliteral('l', name = '\'l\''),LiteralParser.Eliteral('s', name = '\'s\''),LiteralParser.Eliteral('e', name = '\'e\'')], name = 'false')
+null = AstParser([LiteralParser.Eliteral('n', name = '\'n\''),LiteralParser.Eliteral('u', name = '\'u\''),LiteralParser.Eliteral('l', name = '\'l\''),LiteralParser.Eliteral('l', name = '\'l\'')], name = 'null')
 Number = AstParser([SeqParser([LiteralParser('\d', name = '\'\d\'')], atleast = 1),SeqParser([LiteralParser('\.', name = '\'\.\''),SeqParser([LiteralParser('\d', name = '\'\d\'')], atleast = 1)], atmost = 1)], name = 'Number')
 Const = AstParser([Ref('true')],[Ref('false')],[Ref('null')],[Ref('Number')], name = 'Const')
 Space = LiteralParser('\s+', name = 'Space')

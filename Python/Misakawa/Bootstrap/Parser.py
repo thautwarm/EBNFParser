@@ -11,7 +11,7 @@ from ..ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser
 lit = LiteralParser 
 
 Str    = lit("[RK]{0,1}'[\w|\W]*?'", name = 'Str')
-Name   = lit('[a-zA-Z_][a-zA-Z0-9]*', name = 'Name')
+Name   = lit('[a-zA-Z_][a-zA-Z0-9\.]*', name = 'Name')
 Number = lit('\d+',name = 'Number')
 
 NEWLINE= lit('\n', name = 'NEWLINE')
@@ -31,9 +31,15 @@ LitDef  = lit.Eliteral(':=', name = 'LitDef')
 OrSign  = lit.Eliteral("|",   name = 'OrSign')
 
 Throw   = lit.Eliteral('Throw', name = 'Throw') 
+using   = lit.Eliteral('using', name = 'usingSign')
+Codes   = lit('\{\{[\w\W]+?\}\}', name = 'Codes')
 
 namespace     = globals()
 recurSearcher = set()
+
+Using = AstParser(
+        [using, SeqParser([Name],[Codes], atmost = 1)],
+        name = 'Using')
 
 Expr = AstParser(
     [Ref('Or'),
@@ -58,7 +64,6 @@ Atom = AstParser(
     [LB, Ref("Expr"), RB],
     name = 'Atom')
 
-
 Equals = AstParser(
     [Name, LitDef, SeqParser([Str], atleast=1)],
     [Name, SeqParser([Throw,SeqParser([Name])],atmost = 1),Def, Ref("Expr")],
@@ -76,34 +81,42 @@ Trailer = AstParser(
     name = 'Trailer')
 
 Stmt  = AstParser(
-            [SeqParser([
+            [SeqParser([Using], atmost = 1),
+             SeqParser([
                         SeqParser([NEWLINE]),
                         SeqParser([Ref('Equals')]),
                         SeqParser([NEWLINE])
                        ]),
             ],
-            name = 'Stmt')
+            name = 'Stmt', toIgnore = {'NEWLINE'})
 
 Stmt.compile(namespace, recurSearcher)
 
-def _genToken():
-    import re
-    namespace['aStr'] = namespace['Str']
-    del namespace['Str']
-    tk_reg = []
-    tk_raw = []  
-    for var in list(namespace.keys()):
-        val = namespace[var]
-        if isinstance(val, LiteralParser):
-            if val.isRegex:
-                tk_reg.append(val.token_rule)
-            else:
-                tk_raw.append(val.token_rule)
-    namespace['Str'] = namespace['aStr']
-    del namespace['aStr']
-    token = re.compile("[RK]{0,1}'[\w|\W]*?'"+ '|'+'|'.join(sorted(tk_raw)[::-1]+tk_reg) )
-    return token
-token = _genToken()
+
+import re as _re
+def _escape(*strs):
+    return '|'.join([_re.escape(str) for str in strs])
+token = _re.compile('|'.join(
+        [
+        "[RK]{0,1}'[\w\W]*?'",
+        '\{\{[\w\W]+?\}\}',
+        _escape('|',
+                '{',
+                '}',
+                '[',
+                ']',
+                '(',
+                ')',
+                '+',
+                '*',
+                ':=',
+                '::=',
+                '.'),
+        "[a-zA-Z_][a-zA-Z0-9]*",
+        "\d+","\n",
+        ]
+        ))
+
 
 
 

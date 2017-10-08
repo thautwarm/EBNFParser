@@ -7,11 +7,11 @@
                 {
                     "name": "TagHead",
                     "value": "<top>",
-                    "meta": {
-                        "rowIdx": 1,
-                        "hasParsed": 2,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        1,
+                        2,
+                        "<input>"
+                    ]
                 },
                 {
                     "name": "Block",
@@ -19,52 +19,52 @@
                         {
                             "name": "TagHead",
                             "value": "<x>",
-                            "meta": {
-                                "rowIdx": 2,
-                                "hasParsed": 4,
-                                "fileName": "<input>"
-                            }
+                            "meta": [
+                                2,
+                                4,
+                                "<input>"
+                            ]
                         },
                         {
                             "name": "Cell",
                             "value": "x+1",
-                            "meta": {
-                                "rowIdx": 3,
-                                "hasParsed": 6,
-                                "fileName": "<input>"
-                            }
+                            "meta": [
+                                3,
+                                6,
+                                "<input>"
+                            ]
                         },
                         {
                             "name": "TagEnd",
                             "value": "</x>",
-                            "meta": {
-                                "rowIdx": 4,
-                                "hasParsed": 8,
-                                "fileName": "<input>"
-                            }
+                            "meta": [
+                                4,
+                                8,
+                                "<input>"
+                            ]
                         }
                     ],
-                    "meta": {
-                        "rowIdx": 2,
-                        "hasParsed": 3,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        2,
+                        3,
+                        "<input>"
+                    ]
                 },
                 {
                     "name": "TagEnd",
                     "value": "</top>",
-                    "meta": {
-                        "rowIdx": 5,
-                        "hasParsed": 10,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        5,
+                        10,
+                        "<input>"
+                    ]
                 }
             ],
-            "meta": {
-                "rowIdx": 1,
-                "hasParsed": 1,
-                "fileName": "<input>"
-            }
+            "meta": [
+                1,
+                1,
+                "<input>"
+            ]
         },
         {
             "name": "Block",
@@ -72,20 +72,20 @@
                 {
                     "name": "TagHead",
                     "value": "<a>",
-                    "meta": {
-                        "rowIdx": 7,
-                        "hasParsed": 13,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        7,
+                        13,
+                        "<input>"
+                    ]
                 },
                 {
                     "name": "Cell",
                     "value": "sss",
-                    "meta": {
-                        "rowIdx": 8,
-                        "hasParsed": 15,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        8,
+                        15,
+                        "<input>"
+                    ]
                 },
                 {
                     "name": "Block",
@@ -93,48 +93,48 @@
                         {
                             "name": "TagHead",
                             "value": "<d>",
-                            "meta": {
-                                "rowIdx": 9,
-                                "hasParsed": 17,
-                                "fileName": "<input>"
-                            }
+                            "meta": [
+                                9,
+                                17,
+                                "<input>"
+                            ]
                         },
                         {
                             "name": "TagEnd",
                             "value": "</d>",
-                            "meta": {
-                                "rowIdx": 9,
-                                "hasParsed": 19,
-                                "fileName": "<input>"
-                            }
+                            "meta": [
+                                9,
+                                19,
+                                "<input>"
+                            ]
                         }
                     ],
-                    "meta": {
-                        "rowIdx": 9,
-                        "hasParsed": 16,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        9,
+                        16,
+                        "<input>"
+                    ]
                 },
                 {
                     "name": "TagEnd",
                     "value": "</a>",
-                    "meta": {
-                        "rowIdx": 10,
-                        "hasParsed": 21,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        10,
+                        21,
+                        "<input>"
+                    ]
                 }
             ],
-            "meta": {
-                "rowIdx": 7,
-                "hasParsed": 12,
-                "fileName": "<input>"
-            }
+            "meta": [
+                7,
+                12,
+                "<input>"
+            ]
         }
     ],
-    "meta": {
-        "rowIdx": 0,
-        "hasParsed": 0,
-        "fileName": "<input>"
-    }
+    "meta": [
+        0,
+        0,
+        "<input>"
+    ]
 }

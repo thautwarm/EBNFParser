@@ -14,7 +14,7 @@ args = cmdparser.parse_args()
 
 parser = handle_error(eval(args.Parser).match)
 
-tokenized = token.findall(args.Codes)
+tokenized = token(args.Codes)
 if args.testTk:
     print(tokenized)
 result = parser(tokenized,partial=False)

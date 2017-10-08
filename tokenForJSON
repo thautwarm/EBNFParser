@@ -1,0 +1,1 @@
+lambda s : list(x) # or just `list`

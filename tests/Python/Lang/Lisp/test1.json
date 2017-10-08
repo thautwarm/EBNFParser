@@ -7,11 +7,11 @@
                 {
                     "name": "'('",
                     "value": "(",
-                    "meta": {
-                        "rowIdx": 0,
-                        "hasParsed": 1,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        0,
+                        1,
+                        "<input>"
+                    ]
                 },
                 {
                     "name": "Expr",
@@ -19,18 +19,18 @@
                         {
                             "name": "Atom",
                             "value": "set",
-                            "meta": {
-                                "rowIdx": 0,
-                                "hasParsed": 2,
-                                "fileName": "<input>"
-                            }
+                            "meta": [
+                                0,
+                                2,
+                                "<input>"
+                            ]
                         }
                     ],
-                    "meta": {
-                        "rowIdx": 0,
-                        "hasParsed": 1,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        0,
+                        1,
+                        "<input>"
+                    ]
                 },
                 {
                     "name": "Expr",
@@ -38,18 +38,18 @@
                         {
                             "name": "Atom",
                             "value": "r",
-                            "meta": {
-                                "rowIdx": 0,
-                                "hasParsed": 3,
-                                "fileName": "<input>"
-                            }
+                            "meta": [
+                                0,
+                                3,
+                                "<input>"
+                            ]
                         }
                     ],
-                    "meta": {
-                        "rowIdx": 0,
-                        "hasParsed": 2,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        0,
+                        2,
+                        "<input>"
+                    ]
                 },
                 {
                     "name": "Expr",
@@ -57,34 +57,34 @@
                         {
                             "name": "Atom",
                             "value": "1",
-                            "meta": {
-                                "rowIdx": 0,
-                                "hasParsed": 4,
-                                "fileName": "<input>"
-                            }
+                            "meta": [
+                                0,
+                                4,
+                                "<input>"
+                            ]
                         }
                     ],
-                    "meta": {
-                        "rowIdx": 0,
-                        "hasParsed": 3,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        0,
+                        3,
+                        "<input>"
+                    ]
                 },
                 {
                     "name": "')'",
                     "value": ")",
-                    "meta": {
-                        "rowIdx": 0,
-                        "hasParsed": 5,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        0,
+                        5,
+                        "<input>"
+                    ]
                 }
             ],
-            "meta": {
-                "rowIdx": 0,
-                "hasParsed": 0,
-                "fileName": "<input>"
-            }
+            "meta": [
+                0,
+                0,
+                "<input>"
+            ]
         },
         {
             "name": "Expr",
@@ -92,11 +92,11 @@
                 {
                     "name": "'('",
                     "value": "(",
-                    "meta": {
-                        "rowIdx": 0,
-                        "hasParsed": 6,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        0,
+                        6,
+                        "<input>"
+                    ]
                 },
                 {
                     "name": "Expr",
@@ -104,18 +104,18 @@
                         {
                             "name": "Atom",
                             "value": "define",
-                            "meta": {
-                                "rowIdx": 0,
-                                "hasParsed": 7,
-                                "fileName": "<input>"
-                            }
+                            "meta": [
+                                0,
+                                7,
+                                "<input>"
+                            ]
                         }
                     ],
-                    "meta": {
-                        "rowIdx": 0,
-                        "hasParsed": 6,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        0,
+                        6,
+                        "<input>"
+                    ]
                 },
                 {
                     "name": "Expr",
@@ -123,18 +123,18 @@
                         {
                             "name": "Atom",
                             "value": "a",
-                            "meta": {
-                                "rowIdx": 0,
-                                "hasParsed": 8,
-                                "fileName": "<input>"
-                            }
+                            "meta": [
+                                0,
+                                8,
+                                "<input>"
+                            ]
                         }
                     ],
-                    "meta": {
-                        "rowIdx": 0,
-                        "hasParsed": 7,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        0,
+                        7,
+                        "<input>"
+                    ]
                 },
                 {
                     "name": "Expr",
@@ -142,18 +142,18 @@
                         {
                             "name": "Atom",
                             "value": "b",
-                            "meta": {
-                                "rowIdx": 0,
-                                "hasParsed": 9,
-                                "fileName": "<input>"
-                            }
+                            "meta": [
+                                0,
+                                9,
+                                "<input>"
+                            ]
                         }
                     ],
-                    "meta": {
-                        "rowIdx": 0,
-                        "hasParsed": 8,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        0,
+                        8,
+                        "<input>"
+                    ]
                 },
                 {
                     "name": "Expr",
@@ -161,11 +161,11 @@
                         {
                             "name": "'('",
                             "value": "(",
-                            "meta": {
-                                "rowIdx": 0,
-                                "hasParsed": 10,
-                                "fileName": "<input>"
-                            }
+                            "meta": [
+                                0,
+                                10,
+                                "<input>"
+                            ]
                         },
                         {
                             "name": "Expr",
@@ -173,18 +173,18 @@
                                 {
                                     "name": "Atom",
                                     "value": "+",
-                                    "meta": {
-                                        "rowIdx": 0,
-                                        "hasParsed": 11,
-                                        "fileName": "<input>"
-                                    }
+                                    "meta": [
+                                        0,
+                                        11,
+                                        "<input>"
+                                    ]
                                 }
                             ],
-                            "meta": {
-                                "rowIdx": 0,
-                                "hasParsed": 10,
-                                "fileName": "<input>"
-                            }
+                            "meta": [
+                                0,
+                                10,
+                                "<input>"
+                            ]
                         },
                         {
                             "name": "Expr",
@@ -192,18 +192,18 @@
                                 {
                                     "name": "Atom",
                                     "value": "a",
-                                    "meta": {
-                                        "rowIdx": 0,
-                                        "hasParsed": 12,
-                                        "fileName": "<input>"
-                                    }
+                                    "meta": [
+                                        0,
+                                        12,
+                                        "<input>"
+                                    ]
                                 }
                             ],
-                            "meta": {
-                                "rowIdx": 0,
-                                "hasParsed": 11,
-                                "fileName": "<input>"
-                            }
+                            "meta": [
+                                0,
+                                11,
+                                "<input>"
+                            ]
                         },
                         {
                             "name": "Expr",
@@ -211,11 +211,11 @@
                                 {
                                     "name": "'('",
                                     "value": "(",
-                                    "meta": {
-                                        "rowIdx": 0,
-                                        "hasParsed": 13,
-                                        "fileName": "<input>"
-                                    }
+                                    "meta": [
+                                        0,
+                                        13,
+                                        "<input>"
+                                    ]
                                 },
                                 {
                                     "name": "Expr",
@@ -223,18 +223,18 @@
                                         {
                                             "name": "Atom",
                                             "value": "+",
-                                            "meta": {
-                                                "rowIdx": 0,
-                                                "hasParsed": 14,
-                                                "fileName": "<input>"
-                                            }
+                                            "meta": [
+                                                0,
+                                                14,
+                                                "<input>"
+                                            ]
                                         }
                                     ],
-                                    "meta": {
-                                        "rowIdx": 0,
-                                        "hasParsed": 13,
-                                        "fileName": "<input>"
-                                    }
+                                    "meta": [
+                                        0,
+                                        13,
+                                        "<input>"
+                                    ]
                                 },
                                 {
                                     "name": "Expr",
@@ -242,18 +242,18 @@
                                         {
                                             "name": "Atom",
                                             "value": "r",
-                                            "meta": {
-                                                "rowIdx": 0,
-                                                "hasParsed": 15,
-                                                "fileName": "<input>"
-                                            }
+                                            "meta": [
+                                                0,
+                                                15,
+                                                "<input>"
+                                            ]
                                         }
                                     ],
-                                    "meta": {
-                                        "rowIdx": 0,
-                                        "hasParsed": 14,
-                                        "fileName": "<input>"
-                                    }
+                                    "meta": [
+                                        0,
+                                        14,
+                                        "<input>"
+                                    ]
                                 },
                                 {
                                     "name": "Expr",
@@ -261,71 +261,71 @@
                                         {
                                             "name": "Atom",
                                             "value": "1",
-                                            "meta": {
-                                                "rowIdx": 0,
-                                                "hasParsed": 16,
-                                                "fileName": "<input>"
-                                            }
+                                            "meta": [
+                                                0,
+                                                16,
+                                                "<input>"
+                                            ]
                                         }
                                     ],
-                                    "meta": {
-                                        "rowIdx": 0,
-                                        "hasParsed": 15,
-                                        "fileName": "<input>"
-                                    }
+                                    "meta": [
+                                        0,
+                                        15,
+                                        "<input>"
+                                    ]
                                 },
                                 {
                                     "name": "')'",
                                     "value": ")",
-                                    "meta": {
-                                        "rowIdx": 0,
-                                        "hasParsed": 17,
-                                        "fileName": "<input>"
-                                    }
+                                    "meta": [
+                                        0,
+                                        17,
+                                        "<input>"
+                                    ]
                                 }
                             ],
-                            "meta": {
-                                "rowIdx": 0,
-                                "hasParsed": 12,
-                                "fileName": "<input>"
-                            }
+                            "meta": [
+                                0,
+                                12,
+                                "<input>"
+                            ]
                         },
                         {
                             "name": "')'",
                             "value": ")",
-                            "meta": {
-                                "rowIdx": 0,
-                                "hasParsed": 18,
-                                "fileName": "<input>"
-                            }
+                            "meta": [
+                                0,
+                                18,
+                                "<input>"
+                            ]
                         }
                     ],
-                    "meta": {
-                        "rowIdx": 0,
-                        "hasParsed": 9,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        0,
+                        9,
+                        "<input>"
+                    ]
                 },
                 {
                     "name": "')'",
                     "value": ")",
-                    "meta": {
-                        "rowIdx": 0,
-                        "hasParsed": 19,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        0,
+                        19,
+                        "<input>"
+                    ]
                 }
             ],
-            "meta": {
-                "rowIdx": 0,
-                "hasParsed": 5,
-                "fileName": "<input>"
-            }
+            "meta": [
+                0,
+                5,
+                "<input>"
+            ]
         }
     ],
-    "meta": {
-        "rowIdx": 0,
-        "hasParsed": 0,
-        "fileName": "<input>"
-    }
+    "meta": [
+        0,
+        0,
+        "<input>"
+    ]
 }

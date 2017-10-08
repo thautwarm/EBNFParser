@@ -25,8 +25,8 @@ class Tools:
             r = regex.match(y)
             if not r: return None
             a, b = r.span()
-            if a is not 0:
-                raise Exception('Do not match string at the first character.')
+#            if a is not 0:
+#                raise Exception('Do not match string at the first character.')
             if b != len(y):
                 return None
             return y
@@ -91,6 +91,7 @@ class Ast:
         return len(self.value)
         
     def dump(self, indent = 0):
+        
         endl = ' '*indent
         if self.type is str:
             value = 'NEWLINE' if self.value is '\n' else self.value
@@ -99,9 +100,7 @@ class Ast:
             next_indent  = len(self.name)+indent+1
             body = f"\n{' '*(next_indent)}".join(map(lambda x:x.dump(next_indent), self))
             return f"{self.name}[{body}\n{endl}]"
-    def setName(self, name):
-        self.name = name
-        return self
+        
     def dumpToJSON(self):
         JSON = dict(name  = self.name,
                     value = self.value if self.type is str else [value.dumpToJSON() for value in self.value],
@@ -131,8 +130,7 @@ class LiteralParser(BaseParser):
         if r is '\n':
             meta.rdx += 1
         meta.count += 1
-        metaForAst = dict(rowIdx = meta.rdx, hasParsed = meta.count, fileName = meta.fileName)
-        return Ast(metaForAst, r, type = str, name = self.name if self.name else r)
+        return Ast(meta.clone(), r, type = str, name = self.name if self.name else r)
     
     @staticmethod
     def Eliteral(regex_str, name):
@@ -144,15 +142,29 @@ class Ref(BaseParser):
 
 
 class AstParser(BaseParser):
-    def __init__(self, *ebnf, name = None, toIgnore=None):
-        # the possibilities for an series of input tokenized words.
-        self.possibilities = [] 
-        self.has_recur     = False
-        self.cache         = ebnf
-        self.name          = name if name is not None else \
+    def __init__(self, *ebnf, name = None, toIgnore : set = None):
+        
+        # each in the cache will be processed into a parser.
+        self.cache          = ebnf
+        
+        # the possible output types for an series of input tokenized words.
+        self.possibilities  = []  
+        
+        # whether this parser will refer to itself.
+        self.has_recur      = False
+        
+        
+        # the identity of a parser.
+        
+        self.name           = name if name is not None else \
                 ' | '.join(' '.join(map(lambda parser : parser.name,ebnf_i)) for ebnf_i in ebnf)
-        self.compiled      = False
-        self.toIgnore      = toIgnore
+        
+        # is this parser compiled, must be False when initializing.
+        self.compiled       = False
+        
+        #  if a parser's name is in this set, the result it output will be ignored when parsing.
+        self.toIgnore       = toIgnore
+        
     
     def compile(self, namespace: dict, recurSearcher: set):
         if self.name:
@@ -193,9 +205,9 @@ class AstParser(BaseParser):
             del self.cache
         
         if not self.compiled: self.compiled = True
+        
     def match(self, objs, meta, partial = True):
-        metaForAst = dict(rowIdx = meta.rdx, hasParsed = meta.count, fileName = meta.fileName)
-        res = Ast(metaForAst, type = list, name = self.name)
+        res = Ast(meta.clone(), type = list, name = self.name)
         if DEBUG:
             print(f"{self.name} WITH {meta.trace}")
         for possibility in self.possibilities:
@@ -267,8 +279,7 @@ class SeqParser(AstParser):
         self.atmost  = atmost
 
     def match(self, objs, meta, partial=True):
-        metaForAst = dict(rowIdx = meta.rdx, hasParsed = meta.count, fileName = meta.fileName)
-        res = Ast(metaForAst, type = list, name = self.name)
+        res = Ast(meta.clone(), type = list, name = self.name)
         if meta.count == len(objs):
             if self.atleast is 0:
                 return res

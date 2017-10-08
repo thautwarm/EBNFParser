@@ -1,9 +1,9 @@
 
 from Misakawa.ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser, MetaInfo
+from token import token 
 import re
 namespace     = globals()
 recurSearcher = set()
-token = re.compile('|'.join(['\]','\\n','\[','\:','\/','\-','\,','\+','\*','\)','\(','\%','if(?!\S)','else(?!\S)','lambda(?!\S)','not(?!\S)','or(?!\S)','and(?!\S)','for(?!\S)','in(?!\S)','\d+|\d*\.\d+','True(?!\S)|False(?!\S)|None(?!\S)','[a-zA-Z_][a-zA-Z0-9]*']))
 Test = AstParser([Ref('Lambdef')],[Ref('OrTest'),SeqParser([LiteralParser('if(?!\S)', name = '\'if(?!\S)\''),Ref('OrTest'),LiteralParser('else(?!\S)', name = '\'else(?!\S)\''),Ref('Test')], atmost = 1)], name = 'Test')
 Lambdef = AstParser([LiteralParser('lambda(?!\S)', name = '\'lambda(?!\S)\''),Ref('NameList'),LiteralParser.Eliteral(':', name = '\':\''),Ref('Test')], name = 'Lambdef')
 OrTest = AstParser([Ref('AndTest'),SeqParser([Ref('Or'),Ref('AndTest')])], name = 'OrTest')

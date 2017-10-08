@@ -13,55 +13,55 @@
                                 {
                                     "name": "'{'",
                                     "value": "{",
-                                    "meta": {
-                                        "rowIdx": 0,
-                                        "hasParsed": 1,
-                                        "fileName": "<input>"
-                                    }
+                                    "meta": [
+                                        0,
+                                        1,
+                                        "<input>"
+                                    ]
                                 },
                                 {
                                     "name": "statements",
                                     "value": [],
-                                    "meta": {
-                                        "rowIdx": 0,
-                                        "hasParsed": 1,
-                                        "fileName": "<input>"
-                                    }
+                                    "meta": [
+                                        0,
+                                        1,
+                                        "<input>"
+                                    ]
                                 },
                                 {
                                     "name": "'}'",
                                     "value": "}",
-                                    "meta": {
-                                        "rowIdx": 0,
-                                        "hasParsed": 2,
-                                        "fileName": "<input>"
-                                    }
+                                    "meta": [
+                                        0,
+                                        2,
+                                        "<input>"
+                                    ]
                                 }
                             ],
-                            "meta": {
-                                "rowIdx": 0,
-                                "hasParsed": 0,
-                                "fileName": "<input>"
-                            }
+                            "meta": [
+                                0,
+                                0,
+                                "<input>"
+                            ]
                         }
                     ],
-                    "meta": {
-                        "rowIdx": 0,
-                        "hasParsed": 0,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        0,
+                        0,
+                        "<input>"
+                    ]
                 }
             ],
-            "meta": {
-                "rowIdx": 0,
-                "hasParsed": 0,
-                "fileName": "<input>"
-            }
+            "meta": [
+                0,
+                0,
+                "<input>"
+            ]
         }
     ],
-    "meta": {
-        "rowIdx": 0,
-        "hasParsed": 0,
-        "fileName": "<input>"
-    }
+    "meta": [
+        0,
+        0,
+        "<input>"
+    ]
 }

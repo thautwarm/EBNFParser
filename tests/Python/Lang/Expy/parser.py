@@ -1,9 +1,9 @@
 
 from Misakawa.ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser, MetaInfo
+from token import token 
 import re
 namespace     = globals()
 recurSearcher = set()
-token = re.compile('|'.join(['\}','\{','\]','\[','\.','\,','\)','\(','def(?!\S)','\/\/|\/|\|\||\||\>\>|\<\<|\>\=|\<\=|\<\-|\>|\<|\=\>|\-\>|\?|\-\-|\+\+|\*\*|\+|\-|\*|\=\=|\=|\~|\@|\$|\%|\^|\&|\!|\:\:|\:','\d+|\d*\.\d+','True(?!\S)|False(?!\S)|None(?!\S)','[a-z]{0,1}"[\w|\W]*"','[a-zA-Z_][a-zA-Z0-9]*','\n']))
 Stmt = AstParser([SeqParser([SeqParser([Ref('NEWLINE')]),SeqParser([Ref('Expr')]),SeqParser([Ref('NEWLINE')])])], name = 'Stmt')
 Expr = AstParser([Ref('BinOp')],[Ref('Factor')], name = 'Expr')
 BinOp = AstParser([Ref('Factor'),SeqParser([Ref('Op'),Ref('Factor')])], name = 'BinOp')

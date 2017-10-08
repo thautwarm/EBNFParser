@@ -1,9 +1,9 @@
 
 from Misakawa.ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser, MetaInfo
+from token import token 
 import re
 namespace     = globals()
 recurSearcher = set()
-token = re.compile('|'.join(['module','import','\}','\{','\`','\]','\[','\=\>','\=','\:','\/\*','\.','\-\>','\,','\*\/','\)','\(','//[^\n]*','[a-z]*"[\w|\W]*"','0[XxOoBb][\da-fA-F]+','\d+(?:\.\d+|)(?:E\-{0,1}\d+|)','\n',';','[a-zA-Z_][a-z0-9A-Z_]*','\/\/|\/|\|\||\||\>\>|\<\<|\>\=|\<\=|\<\-|\>|\<|\=\>|\-\-|\+\+|\*\*|\+|\-|\*|\=\=|\=|\%|\^','\?|\!|\&|\$|\@|\+|\-|\~']))
 Any = LiteralParser('^((?!/\*|\*/|\n)[\s\S])*$', name = 'Any')
 multilineComment = AstParser([LiteralParser.Eliteral('/*', name = '\'/*\''),SeqParser([SeqParser([Ref('Any')],[Ref('NEWLINE')],[Ref('multilineComment')], atleast = 1, atmost = 1)]),LiteralParser.Eliteral('*/', name = '\'*/\'')], name = 'multilineComment')
 Comment = LiteralParser('//[^\n]*', name = 'Comment')

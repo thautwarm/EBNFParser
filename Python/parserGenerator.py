@@ -25,12 +25,17 @@ cmdparser.add_argument("-multiline", default = False, type=bool, help="generate 
 
 args = cmdparser.parse_args()
 inp, outp, is_test = args.InputFile, args.OutputFile, args.test
-if is_test:
-	import sys, shutil, os
-	head_from , _ = os.path.split(sys.argv[0])
-	head_to   , _ = os.path.split(outp)
-	shutil.copy(f"{head_from}/testLang.py", f"{head_to}/testLang.py")
 
+import sys,os
+
+try:
+    import shutil # sometimes there might be with bugs... So I catch this
+    cp = lambda x,y: shutil.copy(x, y)
+except AttributeError:
+    cp = lambda x,y: os.system(f"cp {x} {y}")    
+head_from , _ = os.path.split(sys.argv[0])
+head_to   , _ = os.path.split(outp)
+cp(f"{head_from}/testLang.py", f"{head_to}/testLang.py")
 def getRaw(inp):
     with open(inp, 'r', encoding='utf8') as file: 
         ret = file.read()
@@ -54,8 +59,14 @@ if args.comment:
 if args.multiline:
     mode.append('multiline')
 
-with open(outp,'w', encoding='utf8') as file: file.write(bootstrap_comp(
+with open(outp,'w', encoding='utf8') as parserFile, \
+     open(  os.path.join(os.path.split(outp)[0],'token.py'), 
+            'w', 
+            encoding='utf8') as tokenFile: 
+    parser, token = bootstrap_comp(
         transform(getRaw(inp), mode)
-        , 'Unnamed'))
+        , 'Unnamed')
+    parserFile.write(parser)
+    tokenFile.write(token)
 
 

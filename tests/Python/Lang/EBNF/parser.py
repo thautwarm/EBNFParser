@@ -1,9 +1,9 @@
 
 from Misakawa.ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser, MetaInfo
+from token import token 
 import re
 namespace     = globals()
 recurSearcher = set()
-token = re.compile('|'.join(['\}','\|','\{','\]','\\n','\[','\:\=','\:\:\=','\+','\*','\)','\(','"[\w|\W]*?"','[a-zA-Z_][a-zA-Z0-9]*','\d+']))
 Stmt = AstParser([SeqParser([SeqParser([Ref('NEWLINE')]),SeqParser([Ref('Equals')]),SeqParser([Ref('NEWLINE')])])], name = 'Stmt')
 Expr = AstParser([Ref('Or'),SeqParser([LiteralParser.Eliteral('|', name = '\'|\''),Ref('Or')])], name = 'Expr')
 Or = AstParser([SeqParser([Ref('AtomExpr')], atleast = 1)], name = 'Or')

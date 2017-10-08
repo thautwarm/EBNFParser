@@ -1,12 +1,19 @@
-NEWLINE    := R'\n'
-true       ::= K't' K'r' K'u' K'e'
-false      ::= K'f' K'a' K'l' K's' K'e'
-null       ::= K'n' K'u' K'l' K'l'
+using {{ lambda string : list(string) }}
+# can also be `using list`. `list` is special, 
+# and other name like `list1` would be regarded as a filename.
+
+# There is a file named tokenForJSON which has define a tokenizer too, 
+# so you can use `using tokenForJSON`.
+
+NEWLINE    := K'\n'
+true       ::= 't' 'r' 'u' 'e'
+false      ::= 'f' 'a' 'l' 's' 'e'
+null       ::= 'n' 'u' 'l' 'l'
 Number     ::= K'\d'+ [K'\.' K'\d'+] 
 Const      ::= true | false | null | Number
 Space      := K'\s+'
-S          := R'[^\n"\\\\]'
-Escape     := R'\\\\' 
+S          := K'[^\n"\\\\]'
+Escape     := K'\\\\' 
 EscapeStr  ::= Escape '"' 
 Str        ::= '"' (S|Space|EscapeStr)* '"'
 KeyValue Throw Space::=  Atom ':' Space* Atom 

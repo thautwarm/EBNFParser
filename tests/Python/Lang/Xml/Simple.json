@@ -7,41 +7,41 @@
                 {
                     "name": "TagHead",
                     "value": "<html>",
-                    "meta": {
-                        "rowIdx": 0,
-                        "hasParsed": 1,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        0,
+                        1,
+                        "<input>"
+                    ]
                 },
                 {
                     "name": "Cell",
                     "value": " x+1 ",
-                    "meta": {
-                        "rowIdx": 0,
-                        "hasParsed": 2,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        0,
+                        2,
+                        "<input>"
+                    ]
                 },
                 {
                     "name": "TagEnd",
                     "value": "</html>",
-                    "meta": {
-                        "rowIdx": 0,
-                        "hasParsed": 3,
-                        "fileName": "<input>"
-                    }
+                    "meta": [
+                        0,
+                        3,
+                        "<input>"
+                    ]
                 }
             ],
-            "meta": {
-                "rowIdx": 0,
-                "hasParsed": 0,
-                "fileName": "<input>"
-            }
+            "meta": [
+                0,
+                0,
+                "<input>"
+            ]
         }
     ],
-    "meta": {
-        "rowIdx": 0,
-        "hasParsed": 0,
-        "fileName": "<input>"
-    }
+    "meta": [
+        0,
+        0,
+        "<input>"
+    ]
 }

@@ -10,7 +10,7 @@ Ast.py
 DEBUG = True
 from ..ObjectRegex.Node import Ast
 from .. import ErrorFamily
-import re
+import re, os
 esc = lambda str: str.replace("'",r"\'").replace('"',r'\"')
 _compose_eq = 0
 _literal_eq = 1
@@ -23,26 +23,35 @@ def ast_for_stmts(stmts : Ast, info = None):
 #               _literal_eq if stmt[2].name == 'Str' else \
 #               _compose_eq
 #    grps = groupBy(grpFunc)(ast)
-    row_idx = 0
     res = []   
     to_compile= []
-    for eq_or_newline in stmts:
-        if eq_or_newline.name == 'NEWLINE':
-            row_idx += 1
-            continue
-        else:
-            define, tp = ast_for_equal(eq_or_newline, info)
-            if tp is None:
-                to_compile.append(eq_or_newline[0].value)
+    DefTokenInEBNF= True
+    if stmts[0].name  == 'Using':
+        usingType =  stmts[0][1].name  
+        if usingType == 'Name':
+            usingFrom =  stmts[0][1].value  
+            if usingFrom == 'list':
+                codesDefToken = 'list'
             else:
-                status, tk = tp
-                if status is 'R':
-                    info['regex'].append(tk)
-                if status is 'L':
-                    info['raw'].append(f"'{re.escape(tk[1:-1])}'")
-            res.append(define) 
-                
-    tks = info
+                with open(os.path.join(usingFrom.split('.'))) as read_from:
+                    codesDefToken = read_from.read()
+        else:
+            codesDefToken = stmts[0][1].value[2:-2]
+        DefTokenInEBNF    = False      
+        stmts = stmts[1:]
+        
+    for eq in stmts:
+        define, tp = ast_for_equal(eq, info)
+        if tp is None:
+            to_compile.append(eq[0].value)
+        elif DefTokenInEBNF:
+            status, tk = tp
+            if status is 'R':
+                info['regex'].append(tk)
+            if status is 'L':
+                info['raw'].append(f"'{re.escape(tk[1:-1])}'")
+        res.append(define) 
+    tks = info if DefTokenInEBNF else codesDefToken
     return res, tks, to_compile
               
            
