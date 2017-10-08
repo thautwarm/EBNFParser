@@ -10,12 +10,15 @@ Parse Many, Any, Every
 
 
 ## Multi-Language-Versions
-- [Python Project ](./Python)  (v0.1.1)
+- [Python Project ](./Python)  (v0.1.2)
+    - [What's new in EBNFParser 0.1.2](./Python/release-note)
 - [C# Project](./CSharp)(unfinished)
 
 --------------------
 
 ## An Introduce to EBNFParser
+
+
 
 `EBNFParser` seems to be a parser framework for EBNF, however, 
 it's just what I want to do at the beginning, 
