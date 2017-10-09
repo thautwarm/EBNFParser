@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/home/misakawa/Software/anaconda3/bin/python
 # -*- coding: utf-8 -*-
 """
 Created on Mon Oct  2 13:48:35 2017

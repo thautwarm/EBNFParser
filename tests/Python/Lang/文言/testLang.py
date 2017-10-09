@@ -1,3 +1,4 @@
+
 from Misakawa.ErrorFamily import handle_error
 from parser import *
 import argparse
@@ -25,11 +26,3 @@ if args.o:
         json.dump(result.dumpToJSON(), JSONFile, indent = 4)
     with open(f"{args.o}Ast", 'w', encoding = 'utf8') as OriginAstFile:
         OriginAstFile.write(result.dump())
-    
-
-
-
-
-
-
-
