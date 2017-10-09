@@ -1,6 +1,6 @@
 
 from Misakawa.ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser, MetaInfo
-from token import token 
+from etoken import token 
 import re
 namespace     = globals()
 recurSearcher = set()
@@ -8,7 +8,7 @@ recurSearcher = set()
 字2 = LiteralParser('[^\]]', name = '字2')
 分隔 = LiteralParser('\n', name = '分隔')
 由义言物 = AstParser([LiteralParser.Eliteral('由', name = '\'由\''),Ref('概念'),Ref('具象')], name = '由义言物')
-以义行物 = AstParser([LiteralParser.Eliteral('以', name = '\'以\''),Ref('概念'),Ref('具象')], name = '以义行物')
+以义行物 = AstParser([LiteralParser.Eliteral('以', name = '\'以\''),Ref('具象'),Ref('具象')], name = '以义行物')
 左标 = LiteralParser.Eliteral('[', name = '左标')
 右标 = LiteralParser.Eliteral(']', name = '右标')
 概念 = AstParser([Ref('字')],[Ref('左标'),SeqParser([Ref('字2')]),Ref('右标')], name = '概念')

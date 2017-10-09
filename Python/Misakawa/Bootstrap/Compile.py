@@ -18,7 +18,7 @@ token = {tokendef}
 """
 parserTemplate = """
 from Misakawa.ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser, MetaInfo
-from token import token 
+from etoken import token 
 import re
 namespace     = globals()
 recurSearcher = set()

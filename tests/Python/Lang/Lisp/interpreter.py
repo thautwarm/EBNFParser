@@ -8,9 +8,10 @@ sub = lambda a, b : a-b
 
 # Misakawa是EBNFParser的一个实现，是我第二次重构后的版本。
 from Misakawa.ErrorFamily import handle_error # 函数装饰器用来做智能错误提示
-from parser import Expr, token # parser.py是parserGenerator根据语法文件自动生成的。
+from parser import Expr # parser.py是parserGenerator根据语法文件自动生成的。
+from token import token
 parser = handle_error(Expr.match)
-parse  = lambda codes : parser(token.findall(codes), partial = False)
+parse  = lambda codes : parser(token(codes), partial = False)
 # 下面是代码生成
 def astForExpr(expr):
     # Expr ::= Atom | Quote | '('  Expr*  ')' 

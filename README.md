@@ -10,8 +10,8 @@ Parse Many, Any, Every
 
 
 ## Multi-Language-Versions
-- [Python Project ](./Python)  (v0.1.2)
-    - [What's new in EBNFParser 0.1.2](./Python/release-note)
+- [Python Project ](./Python)  (v0.1.3.1)
+    - [What's new in EBNFParser 0.1.3.1](./Python/release-note)
 - [C# Project](./CSharp)(unfinished)
 
 --------------------
