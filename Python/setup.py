@@ -8,11 +8,10 @@ Created on Fri Oct  6 00:51:38 2017
 
 from setuptools import setup, find_packages
 import os
-os.chdir('./Python')
-with open('../ReadMe.rst', encoding='utf-8') as f:
+with open('./README.rst', encoding='utf-8') as f:
     readme = f.read()
 setup(  name = 'EBNFParser',
-        version = '0.1.2',
+        version = '0.1.2.2',
         keywords='parser, parser framework, parser generator, gramamr, ast, tokenizer, EBNF, BNF',
         description = "very powerful and optional parser framework for python",
         long_description=readme,
@@ -24,5 +23,6 @@ setup(  name = 'EBNFParser',
         packages=['Misakawa'],
         scripts =  ['parserGenerator.py','testLang.py'],
         platforms='any',
-        classifiers=['Programming Language :: Python :: 3.6','Programming Language :: Python :: Implementation :: CPython']
+        classifiers=['Programming Language :: Python :: 3.6','Programming Language :: Python :: Implementation :: CPython'],
+	zip_safe=False
         )

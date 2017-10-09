@@ -12,13 +12,11 @@ from .Parser import Stmt, token
 from ..ObjectRegex.Node import MetaInfo
 from ..ErrorFamily import handle_error
 parser = handle_error(Stmt.match)
-tokenTemplate = \
-"""
+tokenTemplate = """
 import re
 token = {tokendef}
 """
-parserTemplate = \
-"""
+parserTemplate = """
 from Misakawa.ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser, MetaInfo
 from token import token 
 import re
@@ -42,8 +40,7 @@ def compile(ebnf_text, language_name):
     astParser_compile = lambda name : f"{name}.compile(namespace, recurSearcher)"
     parser_compile = '\n'.join(map(astParser_compile, to_compile))
     define         = '\n'.join(res)
-    return parserTemplate.format(define = define, parser_compile = parser_compile, tokendef = tokendef), \
-           tokenTemplate.format(tokendef = tokendef)
+    return parserTemplate.format(define = define, parser_compile = parser_compile, tokendef = tokendef), tokenTemplate.format(tokendef = tokendef)
         
 
       

@@ -59,8 +59,7 @@ if args.comment:
 if args.multiline:
     mode.append('multiline')
 
-with open(outp,'w', encoding='utf8') as parserFile, \
-     open(  os.path.join(os.path.split(outp)[0],'token.py'), 
+with open(outp,'w', encoding='utf8') as parserFile, open(  os.path.join(os.path.split(outp)[0],'token.py'), 
             'w', 
             encoding='utf8') as tokenFile: 
     parser, token = bootstrap_comp(
