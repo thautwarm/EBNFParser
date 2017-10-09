@@ -7,12 +7,14 @@ add = lambda a, b : a+b
 sub = lambda a, b : a-b
 
 # Misakawa是EBNFParser的一个实现，是我第二次重构后的版本。
-from Misakawa.ErrorFamily import handle_error # 函数装饰器用来做智能错误提示
+from Misakawa.ErrorFamily import handle_error, MetaInfo # 函数装饰器用来做智能错误提示
 from Misakawa.ObjectRegex import Ast
-from parser import Expr # parser.py是parserGenerator根据语法文件自动生成的。
+from parser import Expr, Stmt # parser.py是parserGenerator根据语法文件自动生成的。
 from etoken import token
 parser = handle_error(Expr.match)
+stmtParser = handle_error(Stmt.match)
 parse  = lambda codes : parser(token(codes), partial = False)
+stmtParse = lambda codes : stmtParser(token(codes), partial = False)
 # 下面是代码生成
 def defFun(ast, *formalArgs, area):
     def __call__(*realArgs):
@@ -68,8 +70,39 @@ def astForExpr(expr, area):
                 exprlist = [astForExpr(maybeAtom, area) for maybeAtom in  expr]
                 return exprlist[0](*exprlist[1:])
      
-area = dict(mul = mul, add = add, sub = sub)
-while True:
-    string = input('>> ')
-    if string == ':q': break
-    print('=> ', astForExpr(parse(string), area))
+        
+
+def repl():
+    area  = dict(mul = mul, add = add, sub = sub)
+    meta  = lambda : MetaInfo(fileName='<console>')
+    cache = []
+    holdOn= False
+    while True:
+        string = input('...' if holdOn else '>> ')
+        if string == ':q': break
+        elif string == ':l': 
+            cache = []
+            holdOn = False
+            continue
+        cache += token(string)
+        try:
+            res   = parser(cache, meta(), False)
+            cache = []
+            print('=> ', astForExpr(res, area))
+            holdOn = False
+        except:
+            holdOn = True
+            pass
+
+import sys
+fileName = sys.argv[1] if len(sys.argv)>1 else ''
+if not fileName:
+    repl()
+else:
+    with open(fileName, 'r', encoding = 'utf8') as f: codes = f.read()
+    asts = stmtParse(codes)
+    area  = dict(mul = mul, add = add, sub = sub)
+    for ast in asts:
+        astForExpr(ast, area)
+        
+    
