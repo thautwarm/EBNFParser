@@ -1,6 +1,6 @@
-# 十分钟学会学写这样的编译器
+# 十分钟学会学写这样的解释器
 
-# 用知乎里大家一致认为最垃圾python来写吧。
+# 用知乎里大家一致认为最垃圾的python来写吧。
 # 预先定义库函数
 mul = lambda a, b : a*b
 add = lambda a, b : a+b
@@ -32,12 +32,12 @@ def parserArgName(expr):
 def astForExpr(expr, area):
     # Expr ::= Atom | Quote | '('  Expr*  ')' 
     if len(expr) is 1:
-       if expr[0].name == 'Quote': # 文中没涉及我们就暂不谈咯
+       if expr[0].name == 'Quote':
             return expr[0][1]
        else :
             ret =  eval(expr[0].value, area) 
-            if ret.__class__ is Ast:
-                return astForExpr(ret, area)
+            while ret.__class__ is Ast:
+                ret = astForExpr(ret, area)
             return ret
             # 如果不用eval自然没有问题，
             # 但是你需要判断是怎样的Atom, 是数字，是字符串，还是符号等。
