@@ -4,4 +4,5 @@ Attempts-which-failed/
 .vscode/
 .idea/
 EBNFParser.egg-info/
+build/
 dist/
