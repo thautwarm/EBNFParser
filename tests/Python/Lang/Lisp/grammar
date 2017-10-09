@@ -1,5 +1,5 @@
 Expr  Throw NEWLINE ::= Atom | Quote | '(' (NEWLINE* Expr* NEWLINE*)* ')' 
 Quote ::= '`' Expr
-Atom    := R'[^\(\)\s]+'
+Atom    := R'[^\(\)\s\`]+'
 NEWLINE := R'\n'
 Stmt Throw NEWLINE ::= (NEWLINE* Expr* NEWLINE*)*
