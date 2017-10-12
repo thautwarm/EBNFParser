@@ -1,3 +1,5 @@
+# install
+bash INSTALL.sh
 # Lisp语法解析
 parserGenerator tests/Python/Lang/Lisp/grammar tests/Python/Lang/Lisp/parser.py -test True
 python tests/Python/Lang/Lisp/testLang.py Stmt "(set r 1) (define a b (+ a (+ r 1)))"  -o tests/Python/Lang/Lisp/test1
