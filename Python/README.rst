@@ -11,9 +11,9 @@ Parse Many, Any, Every
 Multi-Language-Versions
 -----------------------
 
--  `Python Project <./Python>`__ (v0.1.3.4)
+-  `Python Project <./Python>`__ (v0.1.4)
 
-   -  `What's new in EBNFParser 0.1.3.4 <./Python/release-note>`__
+   -  `What's new in EBNFParser 0.1.4 <./Python/release-note>`__
 
 -  `C# Project <./CSharp>`__\ (unfinished)
 
