@@ -14,7 +14,7 @@ from ..ErrorFamily import handle_error
 parser = handle_error(Stmt.match)
 tokenTemplate = """
 import re
-token = {tokendef}
+{tokendef}
 """
 parserTemplate = """
 from Misakawa.ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser, MetaInfo
@@ -34,9 +34,9 @@ def compile(ebnf_text, language_name):
 #    print(res)
     if isinstance(tks, dict):
         tks = sorted(tks['raw'])[::-1] + tks['regex']
-        tokendef = "re.compile('|'.join([{}])).findall".format(','.join(tks))
+        tokendef = f"token = re.compile('|'.join([{','.join(tks)}])).findall"
     else:
-        tokendef = tks
+        tokendef = tks.strip(" ")
     astParser_compile = lambda name : f"{name}.compile(namespace, recurSearcher)"
     parser_compile = '\n'.join(map(astParser_compile, to_compile))
     define         = '\n'.join(res)

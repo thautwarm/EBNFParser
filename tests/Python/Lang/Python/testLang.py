@@ -26,3 +26,4 @@ if args.o:
         json.dump(result.dumpToJSON(), JSONFile, indent = 4)
     with open(f"{args.o}Ast", 'w', encoding = 'utf8') as OriginAstFile:
         OriginAstFile.write(result.dump())
+    

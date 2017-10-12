@@ -1,1 +1,1 @@
-lambda s : list(x) # or just `list`
+token = lambda s : list(x) # or just `list`

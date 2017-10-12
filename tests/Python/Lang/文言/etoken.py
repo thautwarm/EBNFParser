@@ -1,3 +1,3 @@
 
 import re
-token =  lambda str:str 
+token = lambda str:str

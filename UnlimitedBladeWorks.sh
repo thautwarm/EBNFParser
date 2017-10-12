@@ -1,5 +1,4 @@
-export PYTHONPATH="Python"
-python Python/parserGenerator.py tests/Python/Lang/文言/grammar tests/Python/Lang/文言/parser.py -test True -comment True
+parserGenerator tests/Python/Lang/文言/grammar tests/Python/Lang/文言/parser.py -test True -comment True
 
 python tests/Python/Lang/文言/testLang.py 语句 "[吾身]作为剑所[天成]。" -o tests/Python/Lang/文言/吾身乃剑所天成 -testTk True
 

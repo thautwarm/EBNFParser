@@ -11,9 +11,9 @@ Parse Many, Any, Every
 Multi-Language-Versions
 -----------------------
 
--  `Python Project <./Python>`__  (v0.1.1)
-    - `What's new in EBNFParser 0.1.2 <./Python/release-note>`__
--  `C# Project <./CSharp>`__ (unfinished)
+-  `Python Project <https://github.com/thautwarm/EBNFParser/Python>`__  (v0.1.3.2)
+    - `What's new in EBNFParser 0.1.3.2 <https://github.com/thautwarm/EBNFParser/Python/release-note>`__
+-  `C# Project <https://github.com/thautwarm/EBNFParser/CSharp>`__ (unfinished)
 
 --------------
 
@@ -54,7 +54,7 @@ The reason why I choose Lisp is that its EEBNF codes is very very short.
   - download CPython 3.6(If you're in China, go to `Tsinghua Tuna Mirror <https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/>`__ and choose the corresponding installer for you OS.
   - download EBNFParser ``pip install EBNFParser``. 
   
-  - type this codes ``parserGenerator.py lisp.eebnf ./parser.py -test True -comment True``
+  - type this codes ``parserGenerator lisp.eebnf ./lispParser.py -test True -comment True``
   
   And now there should be two files(\ ``testLang.py, parser.py``)
   automatically generated near by ``lisp.eebnf``. - feel free to try any
@@ -86,7 +86,7 @@ The reason why I choose Lisp is that its EEBNF codes is very very short.
     ]
 
 See the results at `test1.json, test1Ast, test2.json, test2Ast`.  
-A complete EEBNF for Lisp can be found at [Grammar](./tests/Python/Lang/Lisp/grammar).  
+A complete EEBNF for Lisp can be found at [Grammar](https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Lisp/grammar).  
 Here are more examples given at the following sections.
 
 Each example has the same structure like:
@@ -100,9 +100,9 @@ Each example has the same structure like:
 Some Examples
 -------------
 
--  `Lisp <./tests/Python/Lang/Lisp>`__
+-  `Lisp <https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Lisp>`__
 
-   -  Grammar See ``./tests/Python/Lang/Lisp/grammar``.
+   -  Grammar See ``https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Lisp/grammar``.
 
       ::
 
@@ -112,7 +112,7 @@ Some Examples
           NEWLINE := R'\n'
           Stmt Throw NEWLINE  ::= (NEWLINE* Expr* NEWLINE*)*
 
-   -  testCodes See ``./testpy.sh``.
+   -  testCodes See ``https://github.com/thautwarm/EBNFParser/testpy.sh``.
 
       ::
 
@@ -123,7 +123,7 @@ Some Examples
    -  Result
 
       -  | JSON.
-         | See ``./tests/Python/Lang/Lisp/test1.json``.
+         | See ``https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Lisp/test1.json``.
 
          .. code:: json
 
@@ -158,7 +158,7 @@ Some Examples
                              ],
              ...
 
-      -  Ast See ``./tests/Python/Lang/Lisp/test1Ast``.
+      -  Ast See ``https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Lisp/test1Ast``.
 
          ::
 
@@ -217,12 +217,12 @@ Some Examples
              ]
              ]
 
--  `Python(Just Expression) <./tests/Python/Lang/Python>`__
--  `ExtraPy Language <./tests/Python/Lang/Expy>`__
--  `EBNF(bootstrap) <./tests/Python/Lang/EBNF>`__
--  `CmLang <./tests/Python/Lang/Cm>`__
--  `JSON <./tests/Python/Lang/JSON>`__
--  `XML <./tests/Python/Lang/Xml>`__
+-  `Python(Just Expression) <https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Python>`__
+-  `ExtraPy Language <https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Expy>`__
+-  `EBNF(bootstrap) <https://github.com/thautwarm/EBNFParser/tests/Python/Lang/EBNF>`__
+-  `CmLang <https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Cm>`__
+-  `JSON <https://github.com/thautwarm/EBNFParser/tests/Python/Lang/JSON>`__
+-  `XML <https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Xml>`__
 
 Usage
 -----
@@ -238,7 +238,7 @@ quickly and easily.
     1. move to the root of project directory.
     2. ``cd Python/`` 
     3. write an EBNF file to define the grammars for your own language. 
-    4. see the following codes. Also, you can find out more details in each example listed above. Or you can see `testpy.sh <./testpy.sh>`__.
+    4. see the following codes. Also, you can find out more details in each example listed above. Or you can see `testpy.sh <https://github.com/thautwarm/EBNFParser/testpy.sh>`__.
 
 .. code:: shell     
 
@@ -259,13 +259,13 @@ conveniently.
 Parser-Generator
 ----------------
 
--  `Python <./Python/Misakawa>`__
+-  `Python <https://github.com/thautwarm/EBNFParser/Python/Misakawa>`__
 
 It is implemented by using bootstrap EBNF gramamr.
 
-- `BootstrapParser <./Python/Misakawa/Bootstrap/Parser.py>`__ 
-- `BootstrapAst <./Python/Misakawa/Bootstrap/Ast.py>`__ 
-- `BootstrapCompile/Code Generator <./Python/Misakawa/Bootstrap/Compile.py>`__
+- `BootstrapParser <https://github.com/thautwarm/EBNFParser/Python/Misakawa/Bootstrap/Parser.py>`__ 
+- `BootstrapAst <https://github.com/thautwarm/EBNFParser/Python/Misakawa/Bootstrap/Ast.py>`__ 
+- `BootstrapCompile/Code Generator <https://github.com/thautwarm/EBNFParser/Python/Misakawa/Bootstrap/Compile.py>`__
 
 Will support C# sooner.
 
@@ -274,7 +274,7 @@ Will support C# sooner.
 License
 -------
 
-`GPL <./LICENSE>`__
+`GPL <https://github.com/thautwarm/EBNFParser/LICENSE>`__
 
 .. |Build Status| image:: https://travis-ci.org/thautwarm/EBNFParser.svg?branch=master
    :target: https://travis-ci.org/thautwarm/EBNFParser

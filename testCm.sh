@@ -1,6 +1,5 @@
-export PYTHONPATH="Python"
 # Cm lang
-python Python/parserGenerator.py tests/Python/Lang/Cm/grammar tests/Python/Lang/Cm/parser.py -test True -comment True -multiline True
+parserGenerator tests/Python/Lang/Cm/grammar tests/Python/Lang/Cm/parser.py -test True -comment True -multiline True
 python tests/Python/Lang/Cm/testLang.py statements "let s:int = 1;" -testTk True -o tests/Python/Lang/Cm/test1
 python tests/Python/Lang/Cm/testLang.py statements "{}" -testTk True -o tests/Python/Lang/Cm/test2
 python tests/Python/Lang/Cm/testLang.py statements "

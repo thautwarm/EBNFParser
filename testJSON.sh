@@ -1,6 +1,5 @@
-export PYTHONPATH="Python"
 # JSON
-python Python/parserGenerator.py tests/Python/Lang/JSON/grammar tests/Python/Lang/JSON/parser.py -test True -comment True 
+parserGenerator tests/Python/Lang/JSON/grammar tests/Python/Lang/JSON/parser.py -test True -comment True 
 python tests/Python/Lang/JSON/testLang.py Atom '
 {
 "a":"b",

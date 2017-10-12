@@ -4,7 +4,7 @@ from etoken import token
 import re
 namespace     = globals()
 recurSearcher = set()
-字 = LiteralParser('[^\\[\]\(\),。由以有所列于作为]', name = '字')
+字 = LiteralParser('[^\;\\[\]\(\),。由以有所列于作为]', name = '字')
 字2 = LiteralParser('[^\]]', name = '字2')
 分隔 = LiteralParser('\n', name = '分隔')
 由义言物 = AstParser([LiteralParser.Eliteral('由', name = '\'由\''),Ref('概念'),Ref('具象')], name = '由义言物')

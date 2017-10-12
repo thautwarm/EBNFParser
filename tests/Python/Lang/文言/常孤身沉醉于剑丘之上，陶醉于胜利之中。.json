@@ -309,95 +309,95 @@
                                                 9,
                                                 "<input>"
                                             ]
-                                        },
+                                        }
+                                    ],
+                                    "meta": [
+                                        0,
+                                        9,
+                                        "<input>"
+                                    ]
+                                }
+                            ],
+                            "meta": [
+                                0,
+                                0,
+                                "<input>"
+                            ]
+                        }
+                    ],
+                    "meta": [
+                        0,
+                        0,
+                        "<input>"
+                    ]
+                }
+            ],
+            "meta": [
+                0,
+                0,
+                "<input>"
+            ]
+        },
+        {
+            "name": "';'",
+            "value": ";",
+            "meta": [
+                0,
+                14,
+                "<input>"
+            ]
+        },
+        {
+            "name": "\u5177\u8c61",
+            "value": [
+                {
+                    "name": "\u8c13\u8bcd\u5012\u88c5",
+                    "value": [
+                        {
+                            "name": "\u4f4d\u7f6e\u5012\u88c5",
+                            "value": [
+                                {
+                                    "name": "\u57fa\u672c",
+                                    "value": [
                                         {
-                                            "name": "\u57fa\u672c",
+                                            "name": "\u5143\u7d20",
                                             "value": [
                                                 {
-                                                    "name": "\u5143\u7d20",
+                                                    "name": "\u6982\u5ff5",
                                                     "value": [
                                                         {
-                                                            "name": "\u6982\u5ff5",
-                                                            "value": [
-                                                                {
-                                                                    "name": "\u5b57",
-                                                                    "value": ";",
-                                                                    "meta": [
-                                                                        0,
-                                                                        14,
-                                                                        "<input>"
-                                                                    ]
-                                                                }
-                                                            ],
+                                                            "name": "\u5de6\u6807",
+                                                            "value": "[",
                                                             "meta": [
                                                                 0,
-                                                                13,
+                                                                15,
                                                                 "<input>"
                                                             ]
-                                                        }
-                                                    ],
-                                                    "meta": [
-                                                        0,
-                                                        13,
-                                                        "<input>"
-                                                    ]
-                                                },
-                                                {
-                                                    "name": "\u57fa\u672c",
-                                                    "value": [
+                                                        },
                                                         {
-                                                            "name": "\u5143\u7d20",
-                                                            "value": [
-                                                                {
-                                                                    "name": "\u6982\u5ff5",
-                                                                    "value": [
-                                                                        {
-                                                                            "name": "\u5de6\u6807",
-                                                                            "value": "[",
-                                                                            "meta": [
-                                                                                0,
-                                                                                15,
-                                                                                "<input>"
-                                                                            ]
-                                                                        },
-                                                                        {
-                                                                            "name": "\u5b572",
-                                                                            "value": "\u9676",
-                                                                            "meta": [
-                                                                                0,
-                                                                                16,
-                                                                                "<input>"
-                                                                            ]
-                                                                        },
-                                                                        {
-                                                                            "name": "\u5b572",
-                                                                            "value": "\u9189",
-                                                                            "meta": [
-                                                                                0,
-                                                                                17,
-                                                                                "<input>"
-                                                                            ]
-                                                                        },
-                                                                        {
-                                                                            "name": "\u53f3\u6807",
-                                                                            "value": "]",
-                                                                            "meta": [
-                                                                                0,
-                                                                                18,
-                                                                                "<input>"
-                                                                            ]
-                                                                        }
-                                                                    ],
-                                                                    "meta": [
-                                                                        0,
-                                                                        14,
-                                                                        "<input>"
-                                                                    ]
-                                                                }
-                                                            ],
+                                                            "name": "\u5b572",
+                                                            "value": "\u9676",
                                                             "meta": [
                                                                 0,
-                                                                14,
+                                                                16,
+                                                                "<input>"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "name": "\u5b572",
+                                                            "value": "\u9189",
+                                                            "meta": [
+                                                                0,
+                                                                17,
+                                                                "<input>"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "name": "\u53f3\u6807",
+                                                            "value": "]",
+                                                            "meta": [
+                                                                0,
+                                                                18,
                                                                 "<input>"
                                                             ]
                                                         }
@@ -411,14 +411,14 @@
                                             ],
                                             "meta": [
                                                 0,
-                                                13,
+                                                14,
                                                 "<input>"
                                             ]
                                         }
                                     ],
                                     "meta": [
                                         0,
-                                        9,
+                                        14,
                                         "<input>"
                                     ]
                                 },
@@ -510,21 +510,21 @@
                             ],
                             "meta": [
                                 0,
-                                0,
+                                14,
                                 "<input>"
                             ]
                         }
                     ],
                     "meta": [
                         0,
-                        0,
+                        14,
                         "<input>"
                     ]
                 }
             ],
             "meta": [
                 0,
-                0,
+                14,
                 "<input>"
             ]
         },

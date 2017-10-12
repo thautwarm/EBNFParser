@@ -17,12 +17,8 @@ _literal_eq = 1
 _newline    = 2
 
 def ast_for_stmts(stmts : Ast, info = None):
+    global codesDefToken
     if DEBUG: assert stmts.name == 'Stmt'
-#    def grpFunc(stmt : Ast):
-#       return  _newline if stmt.name == 'NEWLINE' else  \
-#               _literal_eq if stmt[2].name == 'Str' else \
-#               _compose_eq
-#    grps = groupBy(grpFunc)(ast)
     res = []   
     to_compile= []
     DefTokenInEBNF= True
@@ -33,7 +29,7 @@ def ast_for_stmts(stmts : Ast, info = None):
             if usingFrom == 'list':
                 codesDefToken = 'list'
             else:
-                with open(os.path.join(usingFrom.split('.'))) as read_from:
+                with open(f"./{os.path.join(usingFrom.split('.'))}") as read_from:
                     codesDefToken = read_from.read()
         else:
             codesDefToken = stmts[0][1].value[2:-2]

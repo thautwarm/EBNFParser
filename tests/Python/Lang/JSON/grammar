@@ -1,4 +1,4 @@
-using {{ lambda string : list(string) }}
+using {{ token = lambda string : list(string) }}
 # can also be `using list`. `list` is special, 
 # and other name like `list1` would be regarded as a filename.
 

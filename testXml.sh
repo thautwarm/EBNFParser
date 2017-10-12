@@ -1,5 +1,4 @@
-export PYTHONPATH="Python"
-python Python/parserGenerator.py tests/Python/Lang/Xml/grammar tests/Python/Lang/Xml/parser.py -test True -multiline True
+parserGenerator tests/Python/Lang/Xml/grammar tests/Python/Lang/Xml/parser.py -test True -multiline True
 
 python tests/Python/Lang/Xml/testLang.py Module "<html> x+1 </html>" -o tests/Python/Lang/Xml/Simple -testTk True
 python tests/Python/Lang/Xml/testLang.py Module "
