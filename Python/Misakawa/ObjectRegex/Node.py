@@ -13,6 +13,10 @@ DEBUG = False
 
 from .. import ErrorFamily
 from ..ErrorFamily import MetaInfo
+from typing import List
+import warnings
+
+
 
 class Tools:
     import re
@@ -137,6 +141,8 @@ class LiteralParser(BaseParser):
         return LiteralParser(regex_str, name = name, escape = True)
     
 
+
+
 class Ref(BaseParser):
     def __init__(self, name):self.name = name
 
@@ -208,58 +214,103 @@ class AstParser(BaseParser):
         
     def match(self, objs, meta, partial = True):
         res = Ast(meta.clone(), type = list, name = self.name)
+        recursivePossibilities = []
         if DEBUG:
             print(f"{self.name} WITH {meta.trace}")
         for possibility in self.possibilities:
             meta.branch()
-            for ast_struct in possibility:
-                history = (meta.count, ast_struct.name)
-                if ast_struct.has_recur:
-                    if history in meta.trace:
-                        if DEBUG:
-                            print("Found L-R! Dealed!")
-                        r = None
-                    else:
-                        meta.trace.append(history)
-                        r = ast_struct.match(objs, meta=meta)
-                else:
-                    if DEBUG:
-                        meta.trace.append(history)
-                    r = ast_struct.match(objs, meta=meta)
-                if r is None:
-                    res.clear()
-                    meta.rollback()
-                    break
-                if isinstance(ast_struct, SeqParser):
-                    if not self.toIgnore:
-                        res.extend(r)
-                    else:
-                        for _r in r:
-                            if _r.name not in self.toIgnore:
-                                res.append(_r)
-                else:
-                    if not self.toIgnore or r.name not in self.toIgnore:
-                        res.append(r)
-                if DEBUG:
-                    print(f"{ast_struct.name} << \n{r}")                    
-            else:
+            status = patternMatching(self, res, objs, meta,
+                                     possibility, recursivePossibilities)
+
+            if status is Matched:
                 break
-            # continue
+            elif status is GotoNext:
+                continue
         else:
             """ end case 1: no possibility matched.
                 Meta-information has been rollbacked!
             """
             return None
         meta.pull()
+        if recursivePossibilities:
+            while True:
+                for possibility in recursivePossibilities:
+                    meta.branch()
+                    recurRes = Ast(meta.clone(), type=list, name=self.name)
+                    status = patternMatching(self, recurRes, objs, meta,
+                                             possibility, None)
+                    if status is GotoNext:
+                        continue
+                    elif status is Matched:
+                        meta.pull()
+                        r   = res
+                        res = Ast(meta.clone(), type=list, name=self.name)
+                        res.append(r)
+                        res.extend(recurRes)
+                        break
+                else:
+                    break
+
         if partial or meta.count == len(objs):
             """ end case 2: found a possibility matched and match exactly.
             """
             return res
-        
+
         """ end case 3: although a possibility matched, do not match exactly.
             (do not match in partial mode and do not match completely).
         """
         return None
+
+
+
+GotoNext   = object()
+Matched    = object()
+continueLR = object()
+
+def patternMatching(self:AstParser,
+                    res:Ast,
+                    objs:List[str],
+                    meta:MetaInfo,
+                    possibility:List[BaseParser],
+                    recursivePossibilities:List[List[BaseParser]] = None)->object:
+
+    for ast_struct in possibility:
+        history = (meta.count, ast_struct.name)
+        if ast_struct.has_recur:
+            if history in meta.trace:
+                if DEBUG:
+                    print("Found L-R! Dealed!")
+                r = None
+                if recursivePossibilities is not None:
+                    if len(possibility)>1:
+                        recursivePossibilities.append(possibility[1:])
+                    else:
+                        warnings.warn("Invalid left recursion. => a ::= a | ... ;")
+            else:
+                meta.trace.append(history)
+                r = ast_struct.match(objs, meta=meta)
+        else:
+            if DEBUG:
+                meta.trace.append(history)
+            r = ast_struct.match(objs, meta=meta)
+        if r is None:
+            res.clear()
+            meta.rollback()
+            return GotoNext
+        if isinstance(ast_struct, SeqParser):
+            if not self.toIgnore:
+                res.extend(r)
+            else:
+                for _r in r:
+                    if _r.name not in self.toIgnore:
+                        res.append(_r)
+        else:
+            if not self.toIgnore or r.name not in self.toIgnore:
+                res.append(r)
+        if DEBUG:
+            print(f"{ast_struct.name} << \n{r}")
+    else:
+        return Matched
             
                     
     

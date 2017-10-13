@@ -1,0 +1,8 @@
+type   := 't'
+prefix ::= ex '(' ex* ')' | ex '=>' ex | type  
+ex     ::= ex ':' ex | prefix 
+
+
+
+
+

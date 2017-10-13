@@ -11,8 +11,9 @@ Parse Many, Any, Every
 
 ## Multi-Language-Versions
 
-- [Python Project ](./Python)  (v0.1.4)
-    - [What's new in EBNFParser 0.1.4](./Python/release-note)
+- [Python Project ](./Python)  (v0.2.0)
+    - [What's new in EBNFParser 0.2.0](./Python/release-note)
+    - P.S : Become v0.2.0 because of my perfect solution to LR.
 
 - [C# Project](./CSharp)(unfinished)
 
@@ -81,7 +82,7 @@ And now there should be two files(`testLang.py, LispParser.py`) automatically ge
     ```
     
     Then see the results at `test1.json, test1Ast`.  
-    A complete EEBNF for Lisp can be found at [Grammar](./tests/Python/Lang/Lisp/grammar).  
+    A complete EEBNF for Lisp can be found at [Grammar](https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Lisp/grammar).  
     Here are more examples given at the following sections.
 
 Each example has the same structure like:
@@ -98,10 +99,10 @@ Each example has the same structure like:
 
 ## Some Examples
 
-- [Lisp](./tests/Python/Lang/Lisp)
+- [Lisp](https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Lisp)
 
     - Grammar
-    See `./tests/Python/Lang/Lisp/grammar`.
+    See [grammar](https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Lisp/grammar).
 
     ```bnf
     Expr  Throw NEWLINE ::= Atom | Quote | '(' NEWLINE* Expr* NEWLINE* ')' 
@@ -112,7 +113,7 @@ Each example has the same structure like:
     ```
 
     - testCodes
-    See `./testpy.sh`.
+    See [Travis Test Script](./testpy.sh).
     
     ```shell
     parserGenerator tests/Python/Lang/Lisp/grammar tests/Python/Lang/Lisp/parser.py -test True
@@ -121,7 +122,7 @@ Each example has the same structure like:
     
     - Result
         - JSON.   
-        See `./tests/Python/Lang/Lisp/test1.json`.
+        See [test1.json](https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Lisp/test1.json).
         ```json
         {
         "name": "Stmt",
@@ -154,7 +155,7 @@ Each example has the same structure like:
         // ...
         ```
         - Ast
-        See `./tests/Python/Lang/Lisp/test1Ast`.
+        See [test1Ast](https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Lisp/test1Ast).
 
         ```
         Stmt[Expr['('[(]
@@ -197,19 +198,19 @@ Each example has the same structure like:
                             ]
         ...
         ```
-- [Python(Just Expression)](./tests/Python/Lang/Python)
+- [Python(Just Expression)](https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Python)
 
-- [ExtraPy Language](./tests/Python/Lang/Expy)
+- [ExtraPy Language](https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Expy)
 
-- [EBNF(bootstrap)](./tests/Python/Lang/EBNF)
+- [EBNF(bootstrap)](https://github.com/thautwarm/EBNFParser/tests/Python/Lang/EBNF)
 
-- [CmLang](./tests/Python/Lang/Cm)
+- [CmLang](https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Cm)
 
-- [JSON](./tests/Python/Lang/JSON)
+- [JSON](https://github.com/thautwarm/EBNFParser/tests/Python/Lang/JSON)
 
-- [XML](./tests/Python/Lang/Xml)
+- [XML](https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Xml)
 
-- See more at [tests](./tests/Python/Lang).
+- See more at [tests](https://github.com/thautwarm/EBNFParser/tests/Python/Lang).
 
 ## Usage
 
@@ -240,14 +241,14 @@ Each example has the same structure like:
         `True` or `False`. Default to be False.
 
 ## Parser-Generator
-- [For Python](./Python/Misakawa)  
+- [For Python](https://github.com/thautwarm/EBNFParser/Python/Misakawa)  
 It is implemented by using bootstrap EBNF gramamr.
 
-- [BootstrapParser](./Python/Misakawa/Bootstrap/Parser.py)
+- [BootstrapParser](https://github.com/thautwarm/EBNFParser/Python/Misakawa/Bootstrap/Parser.py)
 
-- [BootstrapAst](./Python/Misakawa/Bootstrap/Ast.py)
+- [BootstrapAst](https://github.com/thautwarm/EBNFParser/Python/Misakawa/Bootstrap/Ast.py)
 
-- [BootstrapCompile/Code Generator](./Python/Misakawa/Bootstrap/Compile.py)
+- [BootstrapCompile/Code Generator](https://github.com/thautwarm/EBNFParser/Python/Misakawa/Bootstrap/Compile.py)
 
 Will support C# sooner.
 

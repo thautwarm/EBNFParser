@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 with open('./README.rst', encoding='utf-8') as f:
     readme = f.read()
 setup(name='EBNFParser',
-      version='0.1.4',
+      version='0.2.0',
       keywords='parser, parser framework, parser generator, gramamr, ast, tokenizer, EBNF, BNF',
       description="very powerful and optional parser framework for python",
       long_description=readme,

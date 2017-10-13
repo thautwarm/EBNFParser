@@ -13,7 +13,7 @@ cmdparser.add_argument("-o",  default = "", type = str)
 
 args = cmdparser.parse_args()
 
-parser = handle_error(eval(args.Parser).match)
+parser = handle_error(eval(args.Parser))
 
 tokenized = token(args.Codes)
 if args.testTk:

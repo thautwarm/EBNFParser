@@ -100,11 +100,16 @@ class MetaInfo:
 
 
 
-def handle_error(func):
+def handle_error(parser):
+    func    = parser.match
+    history = (0, parser.name)
     def _f(objs, meta = None, partial=True):
-        if not meta: meta = MetaInfo()
+        if not meta:
+            meta = MetaInfo()
+            meta.trace.append(history)
         if meta.trace:
             return func(objs, meta=meta, partial=partial)
+
         res = func(objs, meta=meta, partial=partial)
         if res is None:
             c = meta.count

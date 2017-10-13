@@ -46,6 +46,31 @@
 	```
 	to generate a parser.
 
+   what's new in EBNFParser 0.2.0:
+	
+	I think that I have just found a fantastic method to solve left recursion problem.
+	The way to do it is just:
+
+		- mark the left-recursive parser node and store the tail of each epsilon production of this parser as TAIL.
+		```
+		a ::= a b c | a '=>' d | c
+		# TAIL = b c | '=>' d 
+		```
+		- when an ast named RESULT has been parsed, just
+
+			* make an new ast also named RESULT', take RESULT as the first elem in RESULT'!!!
+			* continue parsing by using TAIL.
+	
+	I will refactor this method sooner to make my codes more elegant.
+
+	- P.S
+		Sometimes I think my ideas might come from God's Revelation.
+		It seems so incredible for me to totally solve a part of Principles by myself.
+	
+
+	
+	 
+
 	
 	
 	

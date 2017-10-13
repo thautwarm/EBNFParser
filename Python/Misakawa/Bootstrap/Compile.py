@@ -11,7 +11,7 @@ from .Ast import ast_for_stmts
 from .Parser import Stmt, token
 from ..ObjectRegex.Node import MetaInfo
 from ..ErrorFamily import handle_error
-parser = handle_error(Stmt.match)
+parser = handle_error(Stmt)
 tokenTemplate = """
 import re
 {tokendef}
