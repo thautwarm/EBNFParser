@@ -11,9 +11,10 @@ Parse Many, Any, Every
 Multi-Language-Versions
 -----------------------
 
--  `Python Project <./Python>`__ (v0.1.4)
+-  `Python Project <./Python>`__ (v0.2.0)
 
-   -  `What's new in EBNFParser 0.1.4 <./Python/release-note>`__
+   -  `What's new in EBNFParser 0.2.0 <./Python/release-note>`__
+   -  P.S : Become v0.2.0 because of my perfect solution to LR.
 
 -  `C# Project <./CSharp>`__\ (unfinished)
 
@@ -86,7 +87,7 @@ automatically generated near by ``lisp.eebnf``.
 
    | Then see the results at ``test1.json, test1Ast``.
    | A complete EEBNF for Lisp can be found at
-     `Grammar <./tests/Python/Lang/Lisp/grammar>`__.
+     `Grammar <https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Lisp/grammar>`__.
    | Here are more examples given at the following sections.
 
 Each example has the same structure like:
@@ -104,9 +105,10 @@ Each example has the same structure like:
 Some Examples
 -------------
 
--  `Lisp <./tests/Python/Lang/Lisp>`__
+-  `Lisp <https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Lisp>`__
 
-   -  Grammar See ``./tests/Python/Lang/Lisp/grammar``.
+   -  Grammar See
+      `grammar <https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Lisp/grammar>`__.
 
    .. code:: bnf
 
@@ -116,7 +118,7 @@ Some Examples
        NEWLINE := R'\n'
        Stmt Throw NEWLINE  ::= (NEWLINE* Expr* NEWLINE*)*
 
-   -  testCodes See ``./testpy.sh``.
+   -  testCodes See `Travis Test Script <./testpy.sh>`__.
 
    .. code:: shell
 
@@ -126,7 +128,8 @@ Some Examples
    -  Result
 
       -  | JSON.
-         | See ``./tests/Python/Lang/Lisp/test1.json``.
+         | See
+           `test1.json <https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Lisp/test1.json>`__.
 
          .. code:: json
 
@@ -160,7 +163,8 @@ Some Examples
                          ]
              // ...
 
-      -  Ast See ``./tests/Python/Lang/Lisp/test1Ast``.
+      -  Ast See
+         `test1Ast <https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Lisp/test1Ast>`__.
 
       ::
 
@@ -204,19 +208,22 @@ Some Examples
                               ]
           ...
 
--  `Python(Just Expression) <./tests/Python/Lang/Python>`__
+-  `Python(Just
+   Expression) <https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Python>`__
 
--  `ExtraPy Language <./tests/Python/Lang/Expy>`__
+-  `ExtraPy
+   Language <https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Expy>`__
 
--  `EBNF(bootstrap) <./tests/Python/Lang/EBNF>`__
+-  `EBNF(bootstrap) <https://github.com/thautwarm/EBNFParser/tests/Python/Lang/EBNF>`__
 
--  `CmLang <./tests/Python/Lang/Cm>`__
+-  `CmLang <https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Cm>`__
 
--  `JSON <./tests/Python/Lang/JSON>`__
+-  `JSON <https://github.com/thautwarm/EBNFParser/tests/Python/Lang/JSON>`__
 
--  `XML <./tests/Python/Lang/Xml>`__
+-  `XML <https://github.com/thautwarm/EBNFParser/tests/Python/Lang/Xml>`__
 
--  See more at `tests <./tests/Python/Lang>`__.
+-  See more at
+   `tests <https://github.com/thautwarm/EBNFParser/tests/Python/Lang>`__.
 
 Usage
 -----
@@ -252,15 +259,16 @@ Usage
 Parser-Generator
 ----------------
 
--  | `For Python <./Python/Misakawa>`__
+-  | `For
+     Python <https://github.com/thautwarm/EBNFParser/Python/Misakawa>`__
    | It is implemented by using bootstrap EBNF gramamr.
 
--  `BootstrapParser <./Python/Misakawa/Bootstrap/Parser.py>`__
+-  `BootstrapParser <https://github.com/thautwarm/EBNFParser/Python/Misakawa/Bootstrap/Parser.py>`__
 
--  `BootstrapAst <./Python/Misakawa/Bootstrap/Ast.py>`__
+-  `BootstrapAst <https://github.com/thautwarm/EBNFParser/Python/Misakawa/Bootstrap/Ast.py>`__
 
 -  `BootstrapCompile/Code
-   Generator <./Python/Misakawa/Bootstrap/Compile.py>`__
+   Generator <https://github.com/thautwarm/EBNFParser/Python/Misakawa/Bootstrap/Compile.py>`__
 
 Will support C# sooner.
 
