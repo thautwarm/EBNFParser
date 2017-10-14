@@ -1,17 +1,17 @@
 language: python
-python:
-  - "3.6"
-  - "3.6-dev"
-  - "3.7-dev"
-script:
-  - bash ./testpy.sh
-  - bash ./tests/testRuiko.sh
+	python:
+	  - "3.6"
+	  - "3.6-dev"
+	  - "3.7-dev"
+	script:
+	  - bash ./testpy.sh
+	  - bash ./tests/testRuiko.sh
 
 
 language: csharp
-mono: none
-dotnet: 2.0.0
-script:
-  - bash ./testCSharp.sh
+	mono: none
+	dotnet: 2.0.0
+	script:
+	  - bash ./testCSharp.sh
 
 
