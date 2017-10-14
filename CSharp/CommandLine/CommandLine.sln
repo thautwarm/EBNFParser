@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.0.0
+MinimumVisualStudioVersion = 10.0.0.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLine", "CommandLine/CommandLine.csproj", "{25AE3305-73B5-4AE6-80A9-869062DF55F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuikoTest", "..\RuikoTest\RuikoTest\RuikoTest.csproj", "{8DD379DA-09FC-475A-B55F-5165D714D572}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ruikowa", "..\Ruikowa\Ruikowa\Ruikowa.csproj", "{4593EAC9-6C2F-4B7C-9418-56C4EFB0C6C2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{25AE3305-73B5-4AE6-80A9-869062DF55F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25AE3305-73B5-4AE6-80A9-869062DF55F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25AE3305-73B5-4AE6-80A9-869062DF55F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25AE3305-73B5-4AE6-80A9-869062DF55F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DD379DA-09FC-475A-B55F-5165D714D572}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DD379DA-09FC-475A-B55F-5165D714D572}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DD379DA-09FC-475A-B55F-5165D714D572}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DD379DA-09FC-475A-B55F-5165D714D572}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4593EAC9-6C2F-4B7C-9418-56C4EFB0C6C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4593EAC9-6C2F-4B7C-9418-56C4EFB0C6C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4593EAC9-6C2F-4B7C-9418-56C4EFB0C6C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4593EAC9-6C2F-4B7C-9418-56C4EFB0C6C2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

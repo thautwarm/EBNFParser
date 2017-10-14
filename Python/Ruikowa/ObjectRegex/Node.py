@@ -17,7 +17,7 @@ class BaseParser:
     """Abstract Class"""
     name       = Undef
     has_recur  = Undef
-    def match(self, objs, meta, partial):
+    def match(self, objs, meta, recursive):
         """Abstract Method"""
         raise Exception("There is no access to an abstract method.")
         # incomplete

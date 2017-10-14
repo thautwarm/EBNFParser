@@ -110,7 +110,7 @@ class Trace:
         elif sign is Operate.Next:
             return self.content[idx+1]
         else:
-            raise Exception("Undef Operate Sign") # incomplete
+            raise UnsolvedError("Undef Operate Sign") # incomplete
             
     def where(self, obj):
         for idx, elem in enumerate(self.content):
