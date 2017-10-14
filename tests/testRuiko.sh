@@ -1,1 +1,2 @@
-python Ruiko/test.py
+
+python tests/Ruiko/test.py
