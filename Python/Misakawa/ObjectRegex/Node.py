@@ -45,9 +45,6 @@ class Tools:
             return _2
         return _1
 
-
-
-
 class BaseParser:
     """Abstract Class"""
     name       = None
