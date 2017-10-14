@@ -26,7 +26,7 @@ class CharParser(BaseParser):
     """
     To parse the single character.
     """
-    def __init__(self, mode):
+    def __init__(self, mode:'char'):
         length = len(mode)
         assert length is 1 or (length is 2 and mode[0] == '\\')
         self.mode  = mode

@@ -1,0 +1,1 @@
+python Ruiko/test.py

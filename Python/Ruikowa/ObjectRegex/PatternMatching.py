@@ -8,8 +8,9 @@ Created on Sat Oct 14 19:40:09 2017
 
 import re
 from .MetaInfo import MetaInfo
-from .Node import *
-from typing import List
+from ..Core.BaseDef import Const
+from typing import List, TypeVar
+
 
 
 
@@ -35,7 +36,10 @@ def Generate_RegexPatten_From(mode:str, escape:bool=False)->re._pattern_type:
     
 """
 
-def Match_Char_By(self:LiteralParser):
+def Match_Char_By(self):
+    from .Node import LiteralParser
+    self: LiteralParser
+
     def match(objs:List[str], meta:MetaInfo, recursive:bool = False):
         value = objs[meta.count]
         if value is self.mode:
@@ -46,7 +50,10 @@ def Match_Char_By(self:LiteralParser):
         return Const.UnMatched
     return match
 
-def Match_Without_Regex_By(self:LiteralParser):
+def Match_Without_Regex_By(self):
+    from .Node import LiteralParser
+    self: LiteralParser
+
     def match(objs:List[str], meta:MetaInfo, recursive:bool = False):
         value = objs[meta.count]
         if value == self.mode:
@@ -57,7 +64,10 @@ def Match_Without_Regex_By(self:LiteralParser):
         return Const.UnMatched
     return match
 
-def Match_With_Regex_By(self:LiteralParser):
+def Match_With_Regex_By(self):
+    from .Node import LiteralParser
+    self: LiteralParser
+
     def match(objs:List[str], meta:MetaInfo, recursive:bool = False):
         value = objs[meta.count]
         if self.mode.fullmatch(value):

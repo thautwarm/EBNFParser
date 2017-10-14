@@ -40,8 +40,10 @@ class MetaInfo:
 
         :rtype: MetaInfo
         """
+        from .Node import BaseParser
+
         self.count = count
-        self.trace = trace if trace else Trace()
+        self.trace = trace if trace else Trace(BaseParser)
         self.rdx   = rdx
         self.history  = []
         self.fileName = fileName if fileName else "<input>"

@@ -20,7 +20,7 @@ setup(name='EBNFParser',
       author='thautwarm',
       author_email='twshere@outlook.com',
       include_package_data=True,
-      packages=['Misakawa'],
+      packages=['Misakawa', 'Ruikowa'],
       entry_points={
                 'console_scripts':'parserGenerator=Misakawa.Command:main',
                 },

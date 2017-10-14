@@ -1,3 +1,4 @@
 recursive-include Misakawa *.py
 include Misakawa
-
+recursive-include Ruikowa *.py
+include Ruikowa
