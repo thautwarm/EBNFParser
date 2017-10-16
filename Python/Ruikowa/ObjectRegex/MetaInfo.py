@@ -43,7 +43,11 @@ class MetaInfo:
         from .Node import BaseParser
 
         self.count = count
-        self.trace = trace if trace else Trace(BaseParser)
+        if trace:
+            self.trace = trace
+        else:
+            self.trace = Trace()
+            self.trace.push(Trace())
         self.rdx   = rdx
         self.history  = []
         self.fileName = fileName if fileName else "<input>"

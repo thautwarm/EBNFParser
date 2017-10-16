@@ -26,6 +26,7 @@ class Contrl:
     def __new__(self):
         raise ObjectUsageError("You're trying to new an instance with a module.")
     __slots__ = ()
+    UnMatched = ControlSign()
     Matched   = ControlSign()
     GotoLabel = ControlSign() 
 class Operate:
@@ -45,10 +46,27 @@ class Goto:
     def __new__(self, labelName):
         return (Contrl.GotoLabel, labelName)
 
+class RecursiveFound(Exception):
+    def __init__(self, node):
+        self.node =  node
+        self.possibilities = []
+    def add(self, possibility):
+        self.possibilities.append(possibility)
+
+    def __str__(self):
+        s = '=====\n'
+        s+=self.node.name+'\n'
+        s+='\n'.join(a.name +' | '+str([c.name for c in b])
+                        for a,b in self.possibilities)
+        return s
+
+
+class Recur:
+    def __new__(self, name, count):
+        return (name, count)
 
 class Trace:
-    def __init__(self, 
-                 objectType,
+    def __init__(self,
                  trace      = Undef,
                  length:int = Undef):
         self.length  = length     if length is not Undef else\
@@ -57,36 +75,29 @@ class Trace:
         self.content = trace if trace is not Undef else\
                        []
         self._Mem    = len(self.content)
-        self.objectType=objectType
 
 
-    def __getitem__(self, item:
-                Union[int, 
-                      Tuple[object, OperateSign]
-                      ]):
+    def __getitem__(self, item):
         if isinstance(item, int):
-            return self.fromIndex(item)
+            if item >= self.length:
+                warnings.warn("""
+                You're trying to visit the elems that've been deprecated.
+                If it occurred when you're using EBNFParser, report it as 
+                a BUG at 
+                `https://github.com/thautwarm/EBNFParser`. Thanks a lot!
+                """)
+            return self.content[item]
+        elif isinstance(item, slice):
+            if item.stop > self.length:
+                warnings.warn("""
+                You're trying to visit the elems that've been deprecated.
+                If it occurred when you're using EBNFParser, report it as 
+                a BUG at 
+                `https://github.com/thautwarm/EBNFParser`. Thanks a lot!
+                """)
+            return self.content[item]
 
-        elif isinstance(item, tuple):
-            
-            # ===== In case of debugging. =============
-            # Just ignore it if it annoys you :)
-            assert len(item) is 2 
-            assert isinstance(item[0],  self.objectType)
-            assert isinstance(item[1],  OperateSign)
-            # =========================================
-            
-            return self.which(item)
-        
-    def fromIndex(self, i):
-        if i >= self.length:
-            warnings.warn("""
-            You're trying to visit the elems that've been deprecated.
-            If it occurred when you're using EBNFParser, report it as 
-            a BUG at 
-            `https://github.com/thautwarm/EBNFParser`. Thanks a lot!
-            """)
-        return self.content[i]
+
 
     def push(self, elem):
         # reuse the memory cache
@@ -101,19 +112,9 @@ class Trace:
     def pop(self):
         self.length -= 1
         assert self.length>=0
-
-    def which(self, tups):
-        obj, sign = tups
-        idx = self.where(obj)
-        if sign is Operate.Last:
-            return self.content[idx-1]
-        elif sign is Operate.Next:
-            return self.content[idx+1]
-        else:
-            raise UnsolvedError("Undef Operate Sign") # incomplete
             
     def where(self, obj):
-        for idx, elem in enumerate(self.content):
+        for idx, elem in enumerate(self.content[:self.length]):
             if elem is obj:
                 return idx
         return Undef
