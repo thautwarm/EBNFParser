@@ -19,32 +19,14 @@ class GenType:
 # ======
 
 Undef = None
-ControlSign    = object
-OperateSign    = object
-
-class Contrl:
-    def __new__(self):
-        raise ObjectUsageError("You're trying to new an instance with a module.")
-    __slots__ = ()
-    UnMatched = ControlSign()
-    Matched   = ControlSign()
-    GotoLabel = ControlSign() 
-class Operate:
-    def __new__(self):
-        raise ObjectUsageError("You're trying to new an instance with a module.")
-    __slots__ = ()
-    Next      = OperateSign()
-    Last      = OperateSign()
 class Const:
     def __new__(self):
         raise ObjectUsageError("You're trying to new an instance with a module.")
-    UnMatched = None
+    UnMatched  = None
+    NameFilter = 0
+    RawFilter  = 1
+    RegexFilter= 2
 
-
-
-class Goto:
-    def __new__(self, labelName):
-        return (Contrl.GotoLabel, labelName)
 
 class RecursiveFound(Exception):
     def __init__(self, node):

@@ -15,10 +15,59 @@ from ..ErrorFamily import *
 from .PatternMatching import *
 from collections import deque
 
+
 class Ast(deque):
-    def __init__(self, name:str):
+    def __init__(self, meta, name):
         super(Ast, self).__init__()
         self.name = name
+        self.meta = meta
+
+    @staticmethod
+    def _genDump(x, indent=0):
+        if isinstance(x, Ast):
+            return x.dump(indent)
+        else:
+            return "\n{indent}'{str}'".format(indent =' ' * (indent), str = x)
+
+
+    @staticmethod
+    def _genDumpJSON(node):
+        if isinstance(node, str):
+            return node
+        else:
+            return node.dumpToJSON()
+
+
+    def __str__(self):
+        return self.dump()
+    def dump(self, indent = 0):
+
+
+        next_indent = len(self.name)+indent+1
+        body        = ("{next_indent}".format(next_indent = ' '*(next_indent))) \
+                                              .join([
+                                                    "\n{indent}'{str}'".format(indent=' ' * (next_indent), str=node)
+                                                    if isinstance(node, str) else \
+                                                    node.dump(next_indent)
+                                                    for node in self])
+
+        return "{name}[{body}\n{endl}]".format(name= self.name,
+                                               body=body,
+                                               endl=' '*indent)
+    def dumpToJSON(self):
+        return dict(name = self.name,
+                    value= [node if isinstance(node, str) else\
+                            node.dumpToJSON()
+                            for node in self],
+                    meta = self.meta)
+
+
+
+
+
+
+
+
 
 class Ignore:
     Value = 0
@@ -68,7 +117,7 @@ class Ref(BaseParser):
     def __init__(self,name):self.name = name
 
 class AstParser(BaseParser):
-    def __init__(self, *ebnf, name=None, toIgnore: List[set] = None):
+    def __init__(self, *ebnf, name=Undef, toIgnore: List[set] = Undef):
         # each in the cache will be processed into a parser.
         self.cache = ebnf
 
@@ -80,7 +129,7 @@ class AstParser(BaseParser):
 
         # the identity of a parser.
 
-        self.name = name if name is not None else \
+        self.name = name if name is not Undef else \
             ' | '.join(' '.join(map(lambda parser: parser.name, ebnf_i)) for ebnf_i in ebnf)
 
         # is this parser compiled, must be False when initializing.
@@ -122,7 +171,6 @@ class AstParser(BaseParser):
                         self.has_recur = True
 
                 elif isinstance(e, AstParser):
-
                      if e.name not in namespace:
                         namespace[e.name] = e
                      else:
@@ -141,7 +189,7 @@ class AstParser(BaseParser):
 
 def AstMatch(self):
     def match(objs:List[str], meta:MetaInfo, allowLR:bool = True):
-
+        meta.branch()
         if self.has_recur:
 
             if self not in meta.trace[meta.count][:meta.trace[meta.count].length]:
@@ -149,26 +197,27 @@ def AstMatch(self):
                 meta.trace[meta.count].push(self)
                 print('LENGTH BEFORE:', meta.trace[meta.count].length)
             else:
+                meta.rollback()
                 if not allowLR:
                     return Const.UnMatched
                 raise RecursiveFound(self)
 
         for possibility in self.possibilities:
-            meta.branch()
+
             result = self.patternMatch(objs, meta, possibility, allowLR = allowLR)
 
             if result is Const.UnMatched:
-                meta.rollback()
                 continue
 
             elif isinstance(result, Ast):
                 meta.pull()
+
                 return result
 
             elif isinstance(result, RecursiveFound):
                 if self is result.node:
                     print("RECUR DEAL AT ", self.name)
-                    meta.pull()
+                    meta.rollback()
                     break # Deal (Cycle) Left Recursive Cases
                 else:
                     print("RECUR PASS BY ", self.name)
@@ -180,33 +229,40 @@ def AstMatch(self):
             return Const.UnMatched
 
         # if LR :
-        print(result)
-        result:RecursiveFound
-        veryFirst = result.node.match(objs, meta, allowLR=False)
+        if DEBUG:
+            print(meta.history, ' <=hisory')
+        recur:RecursiveFound = result
+        print(meta.count)
+        veryFirst = recur.node.match(objs, meta, allowLR=False)
+        if DEBUG:
+            print('veryFirst =>', veryFirst)
         first = veryFirst
         if first is Const.UnMatched:
             return Const.UnMatched
-
+        print(recur)
         # do left recur :
         while True:
             meta.branch()
-            for parser, possibility in result.possibilities:
+            for parser, possibility in recur.possibilities:
                 result : Ast= parser.patternMatch(objs, meta, possibility)
                 if result is Const.UnMatched:
                     meta.rollback()
                     return veryFirst
-                result.appendleft(first)
+                elif isinstance(result, Ast):
+                    result.appendleft(first)
+                else:
+                    raise UnsolvedError("???Emmmmm....")
                 first = result
             meta.pull()
             veryFirst = first
 
         # unexpected end.
         raise UnsolvedError("unexpected LR!!!")
-
     return match
 
 
 def patternMatch(self:AstParser):
+
     def subMatch(
              objs:List[str],
              meta:MetaInfo ,
@@ -215,7 +271,7 @@ def patternMatch(self:AstParser):
 
 
         try: # Not recur
-            result = Ast(self.name)
+            result = Ast(meta.clone(), self.name)
             for parser in possibility:
 
                 r = parser.match(objs, meta = meta, allowLR = True if result else allowLR)
@@ -223,18 +279,36 @@ def patternMatch(self:AstParser):
 
                 if isinstance(r, str) or isinstance(r, Ast):
 
-                    if isinstance(parser, SeqParser):
-                        result.extend(r)
-                    else:
-                        result.append(r)
+                    if self.toIgnore is Undef:
 
+                        if isinstance(parser, SeqParser):
+                            result.extend(r)
+                        else:
+                            result.append(r)
+                    else:
+
+                        if isinstance(parser, SeqParser):
+
+                            result.extend([maybeAst for maybeAst in r if maybeAst not in(
+                                                    self.toIgnore[Const.RawFilter]      \
+                                                    if   isinstance(maybeAst, str)      \
+                                                    else self.toIgnore[Const.NameFilter])
+                                           ])
+
+                        else:
+
+                            if isinstance(r, str) and r not in self.toIgnore[Const.RawFilter]:
+
+                                result.append(r)
+
+                            elif r.name not in self.toIgnore[Const.NameFilter]: # r is Ast
+
+                                result.append(r)
 
                 elif r is Const.UnMatched:
-                    return Contrl.UnMatched
+                    return Const.UnMatched
 
                 elif isinstance(r, RecursiveFound):
-                    if DEBUG:
-                        print('Recur ADD ', r)
                     r.add((self, possibility[possibility.index(parser)+1:]) )
                     return r
 
@@ -242,7 +316,7 @@ def patternMatch(self:AstParser):
                 return result
 
         except RecursiveFound as RecurInfo:
-            print("Found \n", RecurInfo)
+            print("Found Left Recursion \n", RecurInfo)
             RecurInfo.add((self, possibility[possibility.index(parser)+1:]))
             # RecurInfo has a trace of Beginning Recur Node to Next Recur Node with
             # specific possibility.
@@ -268,7 +342,7 @@ class SeqParser(AstParser):
         self.atmost  = atmost
 
     def match(self, objs:List[str], meta:MetaInfo, allowLR:bool=True):
-        result = Ast(self.name)
+        result = Ast(meta.clone(), self.name)
 
         if meta.count == len(objs):  # boundary cases
             if self.atleast is 0:
@@ -309,7 +383,7 @@ class SeqParser(AstParser):
                 result.extend(r)
                 idx += 1
         if DEBUG:
-            print(f'idx => {idx}')
+            print('idx => {idx}'.format(idx = idx))
         if  idx < self.atleast:
             meta.rollback()
             return Const.UnMatched

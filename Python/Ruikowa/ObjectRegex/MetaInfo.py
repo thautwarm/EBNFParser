@@ -56,7 +56,7 @@ class MetaInfo:
         """
         Save a record of parsing history in order to trace back.
         """
-        self.history.append((self.count, self.rdx, self.trace.length))
+        self.history.append((self.count, self.rdx, self.trace[self.count].length))
 
     def rollback(self):
         """
@@ -68,7 +68,8 @@ class MetaInfo:
             return None
         self.count = count
         self.rdx   = rdx
-        self.trace.length = length
+        self.trace.length = count+1
+        self.trace[count].length = length
 
     def pull(self):
         """
