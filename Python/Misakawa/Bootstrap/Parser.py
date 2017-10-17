@@ -6,7 +6,6 @@ Created on Tue Sep 19 17:16:02 2017
 @author: misakawa
 """
 
-bootstrap = True
 from ..ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser
 lit = LiteralParser 
 

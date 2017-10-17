@@ -12,16 +12,16 @@ assert litParser.match(inputs, meta)   is None
 assert charParser2.match(inputs, meta) is '\n'
 assert litParser.match(inputs, meta)   == 'abc'
 
-#a = LiteralParser('a', name = 'a')
-#c = LiteralParser('c', name = 'c')
-#d = LiteralParser('d', name = 'd')
-#ASeq = AstParser([Ref('U'), d],[a], name = 'ASeq')
-#U    = AstParser([Ref('ASeq'), c],  name = 'U')
-#namespace = globals()
-#seset     = set()
-#ASeq.compile(namespace, seset)
-#x = MetaInfo()
-#print(ASeq.match(['a', 'c','d','c','d','k'], x))
+a = LiteralParser('a', name = 'a')
+c = LiteralParser('c', name = 'c')
+d = LiteralParser('d', name = 'd')
+ASeq = AstParser([Ref('U'), d],[a], name = 'ASeq')
+U    = AstParser([Ref('ASeq'), c],  name = 'U')
+namespace = globals()
+seset     = set()
+ASeq.compile(namespace, seset)
+x = MetaInfo()
+print(ASeq.match(['a', 'c','d','c','d','k'], x))
 
 
 a = LiteralParser('a', name = 'a')
@@ -34,4 +34,7 @@ seset     = set()
 ASeq.compile(namespace, seset)
 x = MetaInfo()
 print(ASeq.match(['a', 'd','d','d','d','d','g'], x).dumpToJSON())
+
+
+
 

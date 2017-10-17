@@ -7,13 +7,7 @@ Created on Sat Oct 14 19:40:09 2017
 """
 
 import re
-from .MetaInfo import MetaInfo
 from ..Core.BaseDef import Const, Trace
-from typing import List, TypeVar
-
-
-
-
 
 
 def Generate_RegexPatten_From(mode:str, escape:bool=False)->re._pattern_type:
@@ -38,8 +32,8 @@ def Generate_RegexPatten_From(mode:str, escape:bool=False)->re._pattern_type:
 """
 
 def Match_Char_By(self):
-    self: LiteralParser
-    def match(objs:List[str], meta:MetaInfo, allowLR:bool = None):
+    def match(objs, meta, allowLR = None):
+        if not (len(objs) - meta.count): return Const.UnMatched
         value = objs[meta.count]
         if value is self.mode:
             if value is '\n':
@@ -51,8 +45,8 @@ def Match_Char_By(self):
     return match
 
 def Match_Without_Regex_By(self):
-    self: LiteralParser
-    def match(objs:List[str], meta:MetaInfo, allowLR:bool = None):
+    def match(objs, meta, allowLR = None):
+        if not (len(objs) - meta.count): return Const.UnMatched
         value = objs[meta.count]
         if value == self.mode:
             if value is '\n':
@@ -64,8 +58,8 @@ def Match_Without_Regex_By(self):
     return match
 
 def Match_With_Regex_By(self):
-    self: LiteralParser
-    def match(objs:List[str], meta:MetaInfo, allowLR:bool = None):
+    def match(objs, meta, allowLR = None):
+        if not (len(objs) - meta.count): return Const.UnMatched
         value = objs[meta.count]
         if self.mode.fullmatch(value):
             if value is '\n':

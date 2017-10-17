@@ -6,43 +6,45 @@ Created on Tue Oct 17 10:16:52 2017
 @author: misakawa
 """
 
-from ..ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser
-lit = LiteralParser 
+from ..ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser, CharParser
+lit = LiteralParser
+Str    = lit("[A-Z]{0,1}'[\w|\W]*?'", name = 'Str', isRegex=True)
+Name   = lit('[a-zA-Z_\u4e00-\u9fa5][a-zA-Z0-9\u4e00-\u9fa5\.]*', name = 'Name',isRegex=True)
+Number = lit('\d+',name = 'Number',isRegex=True)
 
-Str    = lit("[A-Z]{0,1}'[\w|\W]*?'", name = 'Str')
-Name   = lit('[a-zA-Z_\u4e00-\u9fa5][a-zA-Z0-9\u4e00-\u9fa5\.]*', name = 'Name')
-Number = lit('\d+',name = 'Number')
+NEWLINE= CharParser('\n')
+LBB =    CharParser('{')
+LB  =    CharParser('[')
+LP  =    CharParser('(')
+RBB =    CharParser('}')
+RB  =    CharParser(']')
+RP  =    CharParser(')')
 
-NEWLINE= lit('\n', name = 'NEWLINE')
+SeqStar = CharParser('*')
+SeqPlus = CharParser('+')
 
-LBB = lit.Eliteral('{', name = 'LBB')
-LB  = lit.Eliteral('[', name = 'LB')
-LP  = lit.Eliteral('(', name = 'LP')
-RBB = lit.Eliteral('}', name = 'RBB')
-RB  = lit.Eliteral(']', name = 'RB')
-RP  = lit.Eliteral(')', name = 'RP')
+Def     = lit.RawFormProcessor('::=')
+LitDef  = lit.RawFormProcessor(':=')
+OrSign  = CharParser("|")
 
-SeqStar = lit.Eliteral('*', name = 'SeqStar')
-SeqPlus = lit.Eliteral('+', name = 'SeqPlus')
+ThrowSign   = lit.RawFormProcessor('Throw')
+TokenSign   = lit.RawFormProcessor('Token')
 
-Def     = lit.Eliteral('::=', name = 'Def')
-LitDef  = lit.Eliteral(':=', name = 'LitDef')
-OrSign  = lit.Eliteral("|",   name = 'OrSign')
-
-Throw   = lit.Eliteral('Throw', name = 'Throw') 
-using   = lit.Eliteral('using', name = 'usingSign')
-Codes   = lit('\{\{[\w\W]+?\}\}', name = 'Codes')
+Codes       = lit('\{\{[\w\W]+?\}\}', isRegex=True)
 
 namespace     = globals()
 recurSearcher = set()
 
-Filter = AstParser(
-        [Throw, SeqParser, SeqParser([LB, SeqParser([Name]), RB])]
-        )
+Throw = AstParser(
+        [ThrowSign,
+         LB, SeqParser([Name], [Str]), RB],
+        name = 'Throw')
 
-Using = AstParser(
-        [using, SeqParser([Name],[Codes], atmost = 1)],
-        name = 'Using')
+TokenDef = AstParser(
+        [TokenSign,
+         SeqParser([Name], [Codes], atmost=1)],
+        name = 'TokenDef')
+
 
 Expr = AstParser(
     [Ref('Or'),
@@ -69,7 +71,7 @@ Atom = AstParser(
 
 Equals = AstParser(
     [Name, LitDef, SeqParser([Str], atleast=1)],
-    [Name, SeqParser([Throw,SeqParser([Name])],atmost = 1),Def, Ref("Expr")],
+    [Name, SeqParser([Ref('Throw')],atmost =1), Def, Ref('Expr')],
     name = 'Equals')
 
 
@@ -80,11 +82,12 @@ Trailer = AstParser(
         [Number],
         atleast=1,
         atmost =2
-        ),           RBB],
+        ),
+     RBB],
     name = 'Trailer')
 
 Stmt  = AstParser(
-            [SeqParser([Using], atmost = 1),
+            [SeqParser([Ref('TokenDef')], atmost = 1),
              SeqParser([
                         SeqParser([NEWLINE]),
                         SeqParser([Ref('Equals')]),
@@ -101,7 +104,7 @@ def _escape(*strs):
     return '|'.join([_re.escape(str) for str in strs])
 token = _re.compile('|'.join(
         [
-        "[RK]{0,1}'[\w\W]*?'",
+        "[A-Z]{0,1}'[\w\W]*?'",
         '\{\{[\w\W]+?\}\}',
         _escape('|',
                 '{',

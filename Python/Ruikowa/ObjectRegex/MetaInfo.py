@@ -36,11 +36,6 @@ class MetaInfo:
     """
 
     def __init__(self, count=0, rdx=0, trace=None, fileName=None):
-        """
-
-        :rtype: MetaInfo
-        """
-        from .Node import BaseParser
 
         self.count = count
         if trace:
