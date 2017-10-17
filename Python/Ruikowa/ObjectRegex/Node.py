@@ -147,6 +147,9 @@ def AstMatch(self):
                     print('LENGTH BEFORE: {len}'.format(len=meta.trace[meta.count].length))
             else:
                 meta.rollback()
+                if DEBUG:
+                    print('ROLLBACK ', self.name)
+
                 if not allowLR:
                     return Const.UnMatched
                 if DEBUG:
@@ -155,6 +158,7 @@ def AstMatch(self):
 
         if DEBUG:
             enum = 0
+
         for possibility in self.possibilities:
 
             result = self.patternMatch(objs, meta, possibility, allowLR = allowLR)
@@ -162,31 +166,46 @@ def AstMatch(self):
             if result is Const.UnMatched:
                 if DEBUG:
                     print('POSSIBILITY {enum} failed.'.format(enum = enum))
+                    enum += 1
+                    meta.rollback()
+                    meta.branch()
                 continue
 
             elif isinstance(result, Ast):
                 if DEBUG:
                     print('GET RESULT for NODE {name}: \n{result}'.format(result = result, name = self.name))
+
                 meta.pull()
+                if DEBUG:
+                    print('PULL ', self.name)
 
                 return result
 
             elif isinstance(result, RecursiveFound):
+                if DEBUG:
+                    print('ROLLBACK ', self.name)
+
                 if self is result.node:
                     if DEBUG:
                         print("RECUR DONE AT {name}".format(name = self.name))
+
                     meta.rollback()
                     break # Deal (Cycle) Left Recursive Cases
                 else:
                     if DEBUG:
                         print("RECUR PASS BY {name}".format(name = self.name))
+
                     meta.rollback()  # rollback or pull?
                     return result
 
         else:
             if DEBUG:
                 print('Failed at all in NODE {name}.'.format(name = self.name))
+
             meta.rollback()
+            if DEBUG:
+                print('ROLLBACK ', self.name)
+
             return Const.UnMatched
 
         # if LR :

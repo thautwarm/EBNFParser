@@ -20,7 +20,7 @@ class Ast(deque):
         next_indent = len(self.name)+indent+1
         body        = ("{next_indent}".format(next_indent = ' '*(next_indent))) \
                                       .join([
-                                            "\n{indent}'{str}'".format(indent=' ' * (next_indent), str=node)
+                                            "\n{indent}'{str}'\n".format(indent=' ' * (next_indent), str=node)
                                             if isinstance(node, str) else \
                                             node.dump(next_indent)
                                             for node in self])
