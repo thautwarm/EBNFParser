@@ -15,6 +15,13 @@ class GenType:
     G = TypeVar('G')
     V = TypeVar('V')
 
+WarningInfo ="""
+                You're trying to visit the elems that've been deprecated.
+                If it occurred when you're using EBNFParser, report it as 
+                a BUG at 
+                `https://github.com/thautwarm/EBNFParser`. Thanks a lot!
+            """
+
 
 # ======
 
@@ -59,24 +66,18 @@ class Trace:
         self._Mem    = len(self.content)
 
 
+    def __iter__(self):
+        yield [elem for elem in self.content[:self.length]]
+
+
     def __getitem__(self, item):
         if isinstance(item, int):
             if item >= self.length:
-                warnings.warn("""
-                You're trying to visit the elems that've been deprecated.
-                If it occurred when you're using EBNFParser, report it as 
-                a BUG at 
-                `https://github.com/thautwarm/EBNFParser`. Thanks a lot!
-                """)
+                warnings.warn(WarningInfo)
             return self.content[item]
         elif isinstance(item, slice):
             if item.stop > self.length:
-                warnings.warn("""
-                You're trying to visit the elems that've been deprecated.
-                If it occurred when you're using EBNFParser, report it as 
-                a BUG at 
-                `https://github.com/thautwarm/EBNFParser`. Thanks a lot!
-                """)
+                warnings.warn(WarningInfo)
             return self.content[item]
 
 
