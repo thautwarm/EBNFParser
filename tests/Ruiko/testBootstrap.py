@@ -8,7 +8,6 @@ Created on Tue Oct 17 20:07:44 2017
 
 from Ruikowa.Bootstrap.Parser import *
 from Ruikowa.ObjectRegex.MetaInfo import *
-words = token.findall("a Throw [d e f] ::=b c d ;")
+words = token.findall("a Throw [d e f] ::=b c d")
 meta = MetaInfo()
-a = Equals.match(words, meta)
-print(a)
+Equals.match(words, meta)

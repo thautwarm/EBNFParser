@@ -33,8 +33,10 @@ def Generate_RegexPatten_From(mode:str, escape:bool=False)->re._pattern_type:
 
 def Match_Char_By(self):
     def match(objs, meta, allowLR = None):
-        if not (len(objs) - meta.count): return Const.UnMatched
-        value = objs[meta.count]
+        try:
+            value = objs[meta.count]
+        except IndexError:
+            return Const.UnMatched
         if value is self.mode:
             if value is '\n':
                 meta.rdx   += 1
@@ -46,8 +48,10 @@ def Match_Char_By(self):
 
 def Match_Without_Regex_By(self):
     def match(objs, meta, allowLR = None):
-        if not (len(objs) - meta.count): return Const.UnMatched
-        value = objs[meta.count]
+        try:
+            value = objs[meta.count]
+        except IndexError:
+            return Const.UnMatched
         if value == self.mode:
             if value is '\n':
                 meta.rdx   += 1
@@ -59,8 +63,10 @@ def Match_Without_Regex_By(self):
 
 def Match_With_Regex_By(self):
     def match(objs, meta, allowLR = None):
-        if not (len(objs) - meta.count): return Const.UnMatched
-        value = objs[meta.count]
+        try:
+            value = objs[meta.count]
+        except IndexError:
+            return Const.UnMatched
         if self.mode.fullmatch(value):
             if value is '\n':
                 meta.rdx += 1
