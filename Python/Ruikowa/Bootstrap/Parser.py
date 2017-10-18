@@ -94,7 +94,7 @@ Stmt  = AstParser(
                         SeqParser([NEWLINE])
                        ]),
             ],
-            name = 'Stmt', toIgnore = [{'NEWLINE'}, set()])
+            name = 'Stmt', toIgnore = [set(), {'\n'}])
 
 Stmt.compile(namespace, recurSearcher)
 
