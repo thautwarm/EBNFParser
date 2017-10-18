@@ -67,7 +67,7 @@ class Trace:
 
 
     def __iter__(self):
-        yield [elem for elem in self.content[:self.length]]
+        yield from [elem for elem in self.content[:self.length]]
 
 
     def __getitem__(self, item):

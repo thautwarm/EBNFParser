@@ -12,7 +12,7 @@ Str    = lit("[A-Z]{0,1}'[\w|\W]*?'", name = 'Str', isRegex=True)
 Name   = lit('[a-zA-Z_\u4e00-\u9fa5][a-zA-Z0-9\u4e00-\u9fa5\.]*', name = 'Name',isRegex=True)
 Number = lit('\d+',name = 'Number',isRegex=True)
 
-NEWLINE= CharParser('\n')
+NEWLINE= CharParser('\n', name = 'NEWLINE')
 LBB =    CharParser('{')
 LB  =    CharParser('[')
 LP  =    CharParser('(')
@@ -94,7 +94,7 @@ Stmt  = AstParser(
                         SeqParser([NEWLINE])
                        ]),
             ],
-            name = 'Stmt', toIgnore = {'NEWLINE'})
+            name = 'Stmt', toIgnore = [{'NEWLINE'}, set()])
 
 Stmt.compile(namespace, recurSearcher)
 

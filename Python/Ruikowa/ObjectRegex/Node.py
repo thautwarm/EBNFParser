@@ -7,7 +7,28 @@ Created on Sat Oct 14 18:53:53 2017
 """
 
 
+
+
 DEBUG = True
+
+def debugger(Begin='', End = '', Check = lambda x:Undef):
+    def funcHook(matcher):
+        def innerHook(*args, **kwargs):
+            locals()['args'] = args
+            locals().update(kwargs)
+            exec(Begin, locals())
+            ret = matcher(*args, **kwargs)
+            checked = Check(ret)
+            if checked is Undef : pass
+            else:
+                print(checked)
+            exec(End, locals())
+            return ret
+        return innerHook
+    return funcHook
+
+
+
 
 from ..Core.BaseDef import *
 from .MetaInfo import MetaInfo
@@ -32,11 +53,11 @@ class CharParser(BaseParser):
     """
     To parse the single character.
     """
-    def __init__(self, mode:str):
+    def __init__(self, mode, name = Undef):
         length = len(mode)
         assert length is 1
         self.mode  = mode
-        self.name  = "'{MODE}'".format(MODE=mode)
+        self.name  = "'{MODE}'".format(MODE=mode) if name is Undef else name
         self.match = Match_Char_By(self)
 
 class LiteralParser(BaseParser):
@@ -85,142 +106,148 @@ class AstParser(BaseParser):
         #  if a parser's name is in this set, the result it output will be ignored when parsing.
         self.toIgnore = toIgnore
 
-
-
-
     def compile(self, namespace: dict, recurSearcher: set):
-        if self.name:
-            if self.name in recurSearcher:
-                self.has_recur = True
-                self.compiled = True
-            else:
-                recurSearcher.add(self.name)
-        if self.compiled: return self
+
+        if self.name in recurSearcher:
+            self.has_recur = True
+            self.compiled = True
+        else:
+            recurSearcher.add(self.name)
+
+        if self.compiled:
+            return self
+
         self.patternMatch = patternMatch(self)
         if isinstance(self, SeqParser):
             self.matchOne = AstMatch(self)
         else:
-            self.match    = AstMatch(self)
+            self.match = AstMatch(self)
 
         for es in self.cache:
             self.possibilities.append([])
             for e in es:
-                if   isinstance(e, LiteralParser) or \
-                     isinstance(e, CharParser   ):
-                     self.possibilities[-1].append(e)
+                if isinstance(e, LiteralParser) or \
+                        isinstance(e, CharParser):
+                    self.possibilities[-1].append(e)
 
                 elif isinstance(e, Ref):
-                     e = namespace[e.name]
-                     if isinstance(e, AstParser):
+                    e = namespace[e.name]
+                    if isinstance(e, AstParser):
                         e.compile(namespace, recurSearcher)
-                     self.possibilities[-1].append(e)
-                     if e.has_recur:
+                    self.possibilities[-1].append(e)
+                    if e.has_recur:
                         self.has_recur = True
 
                 elif isinstance(e, AstParser):
-                     if e.name not in namespace:
+                    if e.name not in namespace:
                         namespace[e.name] = e
-                     else:
+                    else:
                         e = namespace[e.name]
-                     e.compile(namespace, recurSearcher)
-                     self.possibilities[-1].append(e)
-                     if e.has_recur:
+                    e.compile(namespace, recurSearcher)
+                    self.possibilities[-1].append(e)
+                    if e.has_recur:
                         self.has_recur = True
                 else:
-                     raise UnsolvedError("Unknown Parser Type.")
+                    raise UnsolvedError("Unknown Parser Type.")
 
         if hasattr(self, 'cache'):
             del self.cache
 
-        if not self.compiled: self.compiled = True
+        if self.name in recurSearcher:
+            recurSearcher.remove(self.name)
+
+        if not self.compiled:
+            self.compiled = True
 
 def AstMatch(self):
+
     def match(objs, meta, allowLR = True):
         meta.branch()
         if self.has_recur:
             if self not in meta.trace[meta.count][:meta.trace[meta.count].length]:
-                if DEBUG:
-                    print('{name} Has Recur Possibility : '.format(name = self.name))
-                    print('LENGTH BEFORE: {len}'.format(len = meta.trace[meta.count].length))
+                # if DEBUG:
+                #     print('{name} Has Recur Possibility : '.format(name = self.name))
+                #     print('LENGTH BEFORE: {len}'.format(len = meta.trace[meta.count].length))
                 meta.trace[meta.count].push(self)
-                if DEBUG:
-                    print('LENGTH BEFORE: {len}'.format(len=meta.trace[meta.count].length))
+                # if DEBUG:
+                #     print('LENGTH BEFORE: {len}'.format(len=meta.trace[meta.count].length))
             else:
                 meta.rollback()
-                if DEBUG:
-                    print('ROLLBACK ', self.name)
+                # if DEBUG:
+                #     print('ROLLBACK ', self.name)
 
-                if not allowLR:
+                if not allowLR or isinstance(self, SeqParser):
                     return Const.UnMatched
-                if DEBUG:
-                    print('FOUND LEFT RECUR : {name}'.format(name = self.name))
+                # if DEBUG:
+                #     print('FOUND LEFT RECUR : {name}'.format(name = self.name))
+
                 raise RecursiveFound(self)
 
-        if DEBUG:
-            enum = 0
+        # if DEBUG:
+        #     enum = 0
 
         for possibility in self.possibilities:
 
             result = self.patternMatch(objs, meta, possibility, allowLR = allowLR)
 
             if result is Const.UnMatched:
-                if DEBUG:
-                    print('POSSIBILITY {enum} failed.'.format(enum = enum))
-                    enum += 1
-                    meta.rollback()
-                    meta.branch()
+                # if DEBUG:
+                #     print('POSSIBILITY {enum} failed.'.format(enum = enum))
+                #     enum += 1
+                meta.rollback()
+                meta.branch()
                 continue
 
             elif isinstance(result, Ast):
-                if DEBUG:
-                    print('GET RESULT for NODE {name}: \n{result}'.format(result = result, name = self.name))
+                # if DEBUG:
+                #     print('GET RESULT for NODE {name}: \n{result}'.format(result = result, name = self.name))
 
                 meta.pull()
-                if DEBUG:
-                    print('PULL ', self.name)
+                # if DEBUG:
+                #     print('PULL ', self.name)
 
                 return result
 
             elif isinstance(result, RecursiveFound):
-                if DEBUG:
-                    print('ROLLBACK ', self.name)
+                # if DEBUG:
+                #     print('ROLLBACK ', self.name)
 
                 if self is result.node:
-                    if DEBUG:
-                        print("RECUR DONE AT {name}".format(name = self.name))
+                    # if DEBUG:
+                    #     print("RECUR DONE AT {name}".format(name = self.name))
 
                     meta.rollback()
                     break # Deal (Cycle) Left Recursive Cases
                 else:
-                    if DEBUG:
-                        print("RECUR PASS BY {name}".format(name = self.name))
+                    # if DEBUG:
+                    #     print("RECUR PASS BY {name}".format(name = self.name))
 
                     meta.rollback()  # rollback or pull?
                     return result
 
         else:
-            if DEBUG:
-                print('Failed at all in NODE {name}.'.format(name = self.name))
+            # if DEBUG:
+            #     print('Failed at all in NODE {name}.'.format(name = self.name))
 
             meta.rollback()
-            if DEBUG:
-                print('ROLLBACK ', self.name)
+            # if DEBUG:
+            #     print('ROLLBACK ', self.name)
 
             return Const.UnMatched
 
         # if LR :
-        if DEBUG:
-            print(meta.history, ' <= hisory')
+        # if DEBUG:
+        #     print(meta.history, ' <= hisory')
         recur:RecursiveFound = result
         veryFirst = recur.node.match(objs, meta, allowLR=False)
-        if DEBUG:
-            print('veryFirst =>', veryFirst)
+        # if DEBUG:
+        #     print('veryFirst =>', veryFirst)
         first = veryFirst
         if first is Const.UnMatched:
             return Const.UnMatched
-        if DEBUG:
-            print('RECUR STRUCTURE:')
-            print(recur)
+        # if DEBUG:
+        #     print('RECUR STRUCTURE:')
+        #     print(recur)
         # do left recur :
         while True:
             meta.branch()
@@ -242,29 +269,30 @@ def AstMatch(self):
     return match
 
 
-def patternMatch(self):
 
+def patternMatch(self):
+    # @debugger(
+    #     Begin=r'print("-----------------------------\nCOUNT :",args[1].count, "  TRACE LENGTH :",args[1].trace.length)',
+    #     End=r'print("COUNT :",args[1].count, "  TRACE LENGTH :",args[1].trace.length,"\n-----------------------------")')
     def subMatch(
              objs,
              meta,
              possibility,
              allowLR = True):
-
-
         try: # Not recur
             result = Ast(meta.clone(), self.name)
             for parser in possibility:
 
-                if DEBUG:
-                    print("Try Parsing Node {name}".format(name = parser.name))
+                # if DEBUG:
+                #     print("Try Parsing Node {name}".format(name = parser.name))
 
                 r = parser.match(objs, meta = meta, allowLR = True if result else allowLR)
                 # if `result` is still empty, it might not allow LR now.
 
                 if isinstance(r, str) or isinstance(r, Ast):
 
-                    if DEBUG:
-                        print('PARSED RESULT : {r}\n From Parser {name}'.format(r = r, name = parser.name))
+                    # if DEBUG:
+                    #     print('PARSED RESULT : {r}\n From Parser {name}'.format(r = r, name = parser.name))
 
                     if self.toIgnore is Undef:
 
@@ -275,11 +303,10 @@ def patternMatch(self):
                     else:
 
                         if isinstance(parser, SeqParser):
-
-                            result.extend([maybeAst for maybeAst in r if maybeAst not in(
-                                                    self.toIgnore[Const.RawFilter]      \
-                                                    if   isinstance(maybeAst, str)      \
-                                                    else self.toIgnore[Const.NameFilter])
+                            result.extend([maybeAst for maybeAst in r if
+                                           (maybeAst.name not in self.toIgnore[Const.NameFilter] \
+                                                if isinstance(maybeAst, Ast) \
+                                            else maybeAst not in self.toIgnore[Const.RawFilter])
                                            ])
 
                         else:
@@ -293,24 +320,24 @@ def patternMatch(self):
                                 result.append(r)
 
                 elif r is Const.UnMatched:
-                    if DEBUG:
-                        print('No Matched by Parser {name}'.format(name = parser.name))
+                    # if DEBUG:
+                    #     print('No Matched by Parser {name}'.format(name = parser.name))
                     return Const.UnMatched
 
                 elif isinstance(r, RecursiveFound):
-                    if DEBUG:
-                        print('PASS LEFT RECURSION BY {name}'.format(name = parser.name))
+                    # if DEBUG:
+                    #     print('PASS LEFT RECURSION BY {name}'.format(name = parser.name))
                     r.add((self, possibility[possibility.index(parser)+1:]) )
                     return r
 
             else:
-                if DEBUG:
-                    print('SUCCESS at a kind of possibility of Parser {name}'.format(name = self.name))
+                # if DEBUG:
+                #     print('SUCCESS at a kind of possibility of Parser {name}'.format(name = self.name))
                 return result
 
         except RecursiveFound as RecurInfo:
-            if DEBUG:
-                print("Found Left Recursion at Parser {name}:\n".format(name = self.name), RecurInfo)
+            # if DEBUG:
+            #     print("Found Left Recursion at Parser {name}:\n".format(name = self.name), RecurInfo)
             RecurInfo.add((self, possibility[possibility.index(parser)+1:]))
             # RecurInfo has a trace of Beginning Recur Node to Next Recur Node with
             # specific possibility.
@@ -352,18 +379,19 @@ class SeqParser(AstParser):
                     break
                 try:
                     r = self.matchOne(objs, meta=meta)
+
                 except IndexError:
                     break
 
                 if r is Const.UnMatched:
-                    if DEBUG:
-                        print('No Matched by Parser {name}'.format(name=self.name))
+                    # if DEBUG:
+                    #     print('No Matched by Parser {name}'.format(name=self.name))
                     break
                 elif isinstance(r, RecursiveFound):
                     meta.rollback()
                     return Const.UnMatched
-                if DEBUG:
-                    print('PARSED RESULT : {r}\n From Sequence Parser {name}'.format(r=r, name=self.name))
+                # if DEBUG:
+                #     print('PARSED RESULT : {r}\n From Sequence Parser {name}'.format(r=r, name=self.name))
 
                 result.extend(r)
                 idx += 1
@@ -373,30 +401,31 @@ class SeqParser(AstParser):
 
                 try:
                     r = self.matchOne(objs, meta=meta)
+
                 except IndexError:
                     break
 
                 if r is Const.UnMatched:
-                    if DEBUG:
-                        print('No Matched by Parser {name}'.format(name=self.name))
+                    # if DEBUG:
+                    #     print('No Matched by Parser {name}'.format(name=self.name))
                     break
 
                 elif isinstance(r, RecursiveFound):
                     meta.rollback()
                     return Const.UnMatched
 
-                if DEBUG:
-                    print('PARSED RESULT : {r}\n From Sequence Parser {name}'.format(r=r, name=self.name))
+                # if DEBUG:
+                #     print('PARSED RESULT : {r}\n From Sequence Parser {name}'.format(r=r, name=self.name))
 
                 result.extend(r)
                 idx += 1
 
-        if DEBUG:
-            print('Sequence Length : {idx}'.format(idx = idx))
+        # if DEBUG:
+        #     print('Sequence Length : {idx}'.format(idx = idx))
 
         if  idx < self.atleast:
-            if DEBUG:
-                print('No Matched by Parser {name} BECAUSE of NOT ENOUGH MATCHED.'.format(name=self.name))
+            # if DEBUG:
+            #     print('No Matched by Parser {name} BECAUSE of NOT ENOUGH MATCHED.'.format(name=self.name))
             meta.rollback()
             return Const.UnMatched
 

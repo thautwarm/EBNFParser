@@ -86,3 +86,18 @@ class MetaInfo:
         """
         return (self.rdx, self.count, self.fileName)
 
+    def __str__(self):
+        return """
+--------------------
+COUNT   : {COUNT}
+ROW_IDX : {ROW_DIX}
+TRACE   :
+{TRACE}
+--------------------
+""".format(COUNT = self.count,
+           ROW_DIX = self.rdx,
+           TRACE   = '\n'.join(
+               ['['+(','.join([item.name for item in unit ]))+']'for unit in self.trace])
+           )
+
+
