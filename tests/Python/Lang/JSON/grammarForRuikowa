@@ -1,0 +1,23 @@
+Token {{ 
+token = lambda string : list(string) 
+}}
+# can also be `using list`. `list` is special, 
+# and other name like `list1` would be regarded as a filename.
+
+# There is a file named tokenForJSON which has define a tokenizer too, 
+# so you can use `using tokenForJSON`.
+true       ::= 't' 'r' 'u' 'e'
+false      ::= 'f' 'a' 'l' 's' 'e'
+null       ::= 'n' 'u' 'l' 'l'
+Number     ::= R'\d'+ [R'\.' R'\d'+] 
+Const      ::= true | false | null | Number
+Space      ::= R'\s+'
+S          := R'[^\n"\\\\]'
+Escape     := R'\\\\' 
+EscapeStr  ::= Escape '"' 
+Str        ::= '"' (S|Space|EscapeStr)* '"'
+KeyValue Throw [Space]::=  Atom ':' Space* Atom 
+Dict     Throw [Space]::= '{' Space* [KeyValue (Space* ',' Space*, KeyValue)*] Space* '}'
+List     Throw [Space]::= '[' Space* [Atom (Space* ','  Space* Atom)*]  Space* ']'
+Atom     Throw [Space]::=  Const | Str | Dict | List | Space* Atom Space*
+

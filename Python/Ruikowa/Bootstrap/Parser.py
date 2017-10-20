@@ -23,17 +23,19 @@ RP  =    CharParser(')')
 SeqStar = CharParser('*')
 SeqPlus = CharParser('+')
 
-Def     = lit.RawFormProcessor('::=')
-LitDef  = lit.RawFormProcessor(':=')
+Def     = lit('::=')
+LitDef  = lit(':=')
 OrSign  = CharParser("|")
 
-ThrowSign   = lit.RawFormProcessor('Throw')
-TokenSign   = lit.RawFormProcessor('Token')
+ThrowSign   = lit('Throw')
+TokenSign   = lit('Token')
 
 Codes       = lit('\{\{[\w\W]+?\}\}', isRegex=True)
 
 namespace     = globals()
 recurSearcher = set()
+
+AstStr = AstParser([Str], name = 'AstStr')
 
 Throw = AstParser(
         [ThrowSign,
@@ -63,14 +65,14 @@ AtomExpr =  AstParser(
     name = 'AtomExpr')
 
 Atom = AstParser(
-    [Str],
+    [AstStr],
     [Name],
     [LP, Ref("Expr"), RP],
     [LB, Ref("Expr"), RB],
     name = 'Atom')
 
 Equals = AstParser(
-    [Name, LitDef, SeqParser([Str], atleast=1)],
+    [Name, LitDef, Str],
     [Name, SeqParser([Ref('Throw')],atmost =1), Def, Ref('Expr')],
     name = 'Equals')
 

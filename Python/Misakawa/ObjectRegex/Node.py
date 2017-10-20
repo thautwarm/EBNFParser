@@ -35,15 +35,6 @@ class Tools:
                 return None
             return y
         return token_rule, _1
-    @staticmethod
-    def check_obj(check_func):
-        def _1(func):
-            def _2(self, *args, **kwargs):
-                if not check_func(self):
-                    raise ErrorFamily.CheckConditionError(f"{func.__name__} checked failed.")
-                return func(self, *args, **kwargs)
-            return _2
-        return _1
 
 class BaseParser:
     """Abstract Class"""
@@ -76,15 +67,12 @@ class Ast:
     def type(self):
         return self.value.__class__
     
-    @Tools.check_obj(lambda self: self.value.__class__ is list)
     def append(self, v):
         self.value.append(v)
-    
-    @Tools.check_obj(lambda self: self.value.__class__ is list)
+
     def clear(self):
         self.value.clear()
-    
-    @Tools.check_obj(lambda self: self.value.__class__ is list)
+        
     def extend(self, v):
         self.value.extend(v.value if isinstance(v, Ast) else v)
         
@@ -170,14 +158,15 @@ class AstParser(BaseParser):
         
     
     def compile(self, namespace: dict, recurSearcher: set):
-        if self.name:
-            if self.name in recurSearcher:
-                self.has_recur = True
-                self.compiled  = True
-            else:
-                recurSearcher.add(self.name)
-        if self.compiled: return self
-        
+        if self.name in recurSearcher:
+            self.has_recur = True
+            self.compiled = True
+        else:
+            recurSearcher.add(self.name)
+
+        if self.compiled:
+            return self
+
         for es in self.cache:
             self.possibilities.append([])
             for e in es:
@@ -200,14 +189,16 @@ class AstParser(BaseParser):
                     if e.has_recur:
                         self.has_recur = True
                 else:
-                    raise ErrorFamily.UnsolvedError("Unknown Parser Type.")
-                
-        if DEBUG and self.has_recur and self.name: print(f"Found recursive Parser {self.name}")
-        
+                    raise UnsolvedError("Unknown Parser Type.")
+
         if hasattr(self, 'cache'):
             del self.cache
-        
-        if not self.compiled: self.compiled = True
+
+        if self.name in recurSearcher:
+            recurSearcher.remove(self.name)
+
+        if not self.compiled:
+            self.compiled = True
         
     def match(self, objs, meta, partial = True):
         res = Ast(meta.clone(), type = list, name = self.name)

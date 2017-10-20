@@ -9,12 +9,18 @@ from collections import deque
 import re
 
 INDENT_UNIT = ' '*4
-class Ast(deque):
+class Ast(list):
 
     def __init__(self, meta, name):
         super(Ast, self).__init__()
         self.name = name
         self.meta = meta
+
+
+    def appendleft(self, obj):
+        self.reverse()
+        self.append(obj)
+        self.reverse()
 
     def __str__(self):
         return self.dump()

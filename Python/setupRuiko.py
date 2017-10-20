@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Fri Oct  6 00:51:38 2017
+Created on Fri Oct 20 20:27:24 2017
 
 @author: misakawa
 """
+
 from setuptools import setup, find_packages
 
 
@@ -20,9 +21,9 @@ setup(name='EBNFParser',
       author='thautwarm',
       author_email='twshere@outlook.com',
       include_package_data=True,
-      packages=['Misakawa'],
+      packages=['Ruikowa'],
       entry_points={
-                'console_scripts':'parserGenerator=Misakawa.Command:main',
+                'console_scripts':'parserGenerator=Ruikowa.Command:main',
                 },
       platforms='any',
       classifiers=['Programming Language :: Python :: 3.6',

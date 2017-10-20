@@ -40,8 +40,7 @@ def Match_Char_By(self):
         if value is self.mode:
             if value is '\n':
                 meta.rdx   += 1
-            meta.count += 1
-            meta.trace.push(Trace())
+            meta.new()
             return value
         return Const.UnMatched
     return match
@@ -55,8 +54,7 @@ def Match_Without_Regex_By(self):
         if value == self.mode:
             if value is '\n':
                 meta.rdx   += 1
-            meta.count += 1
-            meta.trace.push(Trace())
+            meta.new()
             return value
         return Const.UnMatched
     return match
@@ -70,8 +68,7 @@ def Match_With_Regex_By(self):
         if self.mode.fullmatch(value):
             if value is '\n':
                 meta.rdx += 1
-            meta.count += 1
-            meta.trace.push(Trace())
+            meta.new()
             return value
         return Const.UnMatched
     return match

@@ -1,3 +1,3 @@
 
 import re
-token = re.compile('|'.join(['t','\=\>','\:','\)','\('])).findall
+token = re.compile('|'.join([])).findall

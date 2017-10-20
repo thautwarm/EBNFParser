@@ -1,5 +1,6 @@
 
-from Misakawa.ErrorFamily import handle_error
+from Ruikowa.ErrorFamily import handle_error
+from Ruikowa.ObjectRegex.MetaInfo import MetaInfo
 from lrTestParser import *
 import argparse
 
@@ -11,14 +12,14 @@ cmdparser.add_argument("Codes",  metavar = 'lispCodes', type = str,
 cmdparser.add_argument("-testTk",  default = False, type = bool)
 cmdparser.add_argument("-o",  default = "", type = str)
 
-args = cmdparser.parse_args()
-
+args   = cmdparser.parse_args()
+meta   = MetaInfo()
 parser = handle_error(eval(args.Parser))
 
 tokenized = token(args.Codes)
 if args.testTk:
     print(tokenized)
-result = parser(tokenized,partial=False)
+result = parser(tokenized,meta = meta, partial=False)
 print(result)
 if args.o:
     import json
