@@ -32,7 +32,7 @@ def Generate_RegexPatten_From(mode:str, escape:bool=False)->re._pattern_type:
 """
 
 def Match_Char_By(self):
-    def match(objs, meta, allowLR = None):
+    def match(objs, meta, recur=None):
         try:
             value = objs[meta.count]
         except IndexError:
@@ -46,7 +46,7 @@ def Match_Char_By(self):
     return match
 
 def Match_Without_Regex_By(self):
-    def match(objs, meta, allowLR = None):
+    def match(objs, meta, recur=None):
         try:
             value = objs[meta.count]
         except IndexError:
@@ -60,7 +60,7 @@ def Match_Without_Regex_By(self):
     return match
 
 def Match_With_Regex_By(self):
-    def match(objs, meta, allowLR = None):
+    def match(objs, meta, recur=None):
         try:
             value = objs[meta.count]
         except IndexError:

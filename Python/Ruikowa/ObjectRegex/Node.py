@@ -39,7 +39,7 @@ class BaseParser:
     """Abstract Class"""
     name       = Undef
     has_recur  = Undef
-    def match(self, objs:List[str], meta:MetaInfo, allowLR:bool):
+    def match(self, objs:List[str], meta:MetaInfo, recur=Undef):
         """Abstract Method"""
         raise Exception("There is no access to an abstract method.")
         # incomplete
@@ -103,7 +103,7 @@ class AstParser(BaseParser):
     def compile(self, namespace: dict, recurSearcher: set):
         if self.name in recurSearcher:
             self.has_recur = True
-            self.compiled = True
+            self.compiled  = True
         else:
             recurSearcher.add(self.name)
 
@@ -112,27 +112,38 @@ class AstParser(BaseParser):
 
         for es in self.cache:
             self.possibilities.append([])
+
             for e in es:
+
                 if isinstance(e, LiteralParser) or \
                         isinstance(e, CharParser):
                     self.possibilities[-1].append(e)
 
                 elif isinstance(e, Ref):
+
                     e = namespace[e.name]
+
                     if isinstance(e, AstParser):
                         e.compile(namespace, recurSearcher)
+
                     self.possibilities[-1].append(e)
-                    if e.has_recur:
+
+                    if not self.has_recur and e.has_recur:
                         self.has_recur = True
+
                 elif isinstance(e, AstParser):
+
                     if e.name not in namespace:
                         namespace[e.name] = e
                     else:
                         e = namespace[e.name]
+
                     e.compile(namespace, recurSearcher)
                     self.possibilities[-1].append(e)
-                    if e.has_recur:
+
+                    if not self.has_recur and e.has_recur:
                         self.has_recur = True
+
                 else:
                     raise UnsolvedError("Unknown Parser Type.")
 
@@ -145,22 +156,22 @@ class AstParser(BaseParser):
         if not self.compiled:
             self.compiled = True
 
-    def match(self, objs, meta):
-        # if self.has_recur and self in meta.trace[meta.count]:
-        #     # if isinstance(self, SeqParser) and self.atleast is 0:
-        #         return Const.UnMatched
-            # raise RecursiveFound(self)
-        if self in meta.trace[meta.count]:
-            return Const.UnMatched
+    def match(self, objs, meta, recur=Undef):
+
+        if self.has_recur and self in meta.trace[meta.count]:
+            if isinstance(self, SeqParser) or recur is self:
+                return Const.UnMatched
+
+            raise RecursiveFound(self)
 
         meta.branch()
-        # if self.has_recur or isinstance(self, SeqParser) and self.atleast is 0:
-        #         meta.trace[meta.count].append(self)
-        meta.trace[meta.count].append(self)
-        for possibility in self.possibilities:
 
+        if self.has_recur:
+            meta.trace[meta.count].append(self)
+
+        for possibility in self.possibilities:
             meta.branch()
-            result = self.patternMatch(objs, meta, possibility)
+            result = self.patternMatch(objs, meta, possibility, recur = recur)
             if result is Const.UnMatched:
                 meta.rollback()
                 continue
@@ -168,20 +179,21 @@ class AstParser(BaseParser):
                 meta.pull()
                 break
             elif isinstance(result, RecursiveFound):
-                raise UnsolvedError("Invalid Left Recursion.")
                 meta.rollback()
+                break
+
         meta.pull()
         return result
 
 
 
 
-    def patternMatch(self, objs, meta, possibility):
+    def patternMatch(self, objs, meta, possibility, recur=Undef):
 
         try: # Not recur
             result = Ast(meta.clone(), self.name)
             for parser in possibility:
-                r = parser.match(objs, meta = meta)
+                r = parser.match(objs, meta = meta, recur = recur)
                 # if `result` is still empty, it might not allow LR now.
                 if isinstance(r, str) or isinstance(r, Ast):
                     resultMerge(result, r, parser, self.toIgnore)
@@ -198,7 +210,6 @@ class AstParser(BaseParser):
                 return result
 
         except RecursiveFound as RecurInfo:
-            raise UnsolvedError("Invalid Left Recursion.")
             RecurInfo.add((self, possibility[possibility.index(parser)+1:]))
 
             # RecurInfo has a trace of Beginning Recur Node to Next Recur Node with
@@ -229,37 +240,35 @@ def resultMerge(result, r, parser, toIgnore):
                 result.append(r)
 
 def leftRecursion(objs, meta, RecurCase, RecurInfo):
-    recur = RecurInfo.node
 
+    recur = RecurInfo.node
     for case in recur.possibilities:
         if case is RecurCase: continue
         meta.branch()
-        veryFirst = recur.patternMatch(objs, meta, case)
+        veryFirst = recur.patternMatch(objs, meta, case, recur=recur)
         if isinstance(veryFirst, RecursiveFound) or veryFirst is Const.UnMatched:
             meta.rollback()
             continue
         else:
             meta.pull()
             first = veryFirst
-
+            recurDeepCount = 0
             while True:
-
                 meta.branch()
                 for parser, possibility in RecurInfo.possibilities:
-                    result: Ast = parser.patternMatch(objs, meta, possibility)
 
+                    result: Ast = parser.patternMatch(objs, meta, possibility, recur=recur)
                     if result is Const.UnMatched:
                         meta.rollback()
-                        return veryFirst
+                        return Const.UnMatched if recurDeepCount is 0 else veryFirst
                     elif isinstance(result, Ast):
                         result.appendleft(first)
                     elif isinstance(result, RecursiveFound):
-                        raise UnsolvedError("Invalid Left Recursion.")
+                        raise UnsolvedError("Error occurs : found a new left recursion when handling an other.")
                     else:
-                        raise UnsolvedError("FXXXXXXXXXXXXX")
-
+                        raise UnsolvedError("Unsolved return from method `patternMatch`.")
                     first = result
-
+                recurDeepCount += 1
                 meta.pull()
                 veryFirst = first
     else:
@@ -284,7 +293,7 @@ class SeqParser(AstParser):
         self.atleast = atleast
         self.atmost  = atmost
 
-    def match(self, objs, meta):
+    def match(self, objs, meta, recur = Undef):
 
         result = Ast(meta.clone(), self.name)
 
@@ -301,7 +310,7 @@ class SeqParser(AstParser):
                 if matchedNum >= self.atmost:
                     break
                 try:
-                    r = super(SeqParser, self).match(objs, meta=meta)
+                    r = super(SeqParser, self).match(objs, meta=meta, recur = recur)
                 except IndexError:
                     break
 
@@ -315,7 +324,7 @@ class SeqParser(AstParser):
             """ ast{a} | [ast] | ast* """
             while True:
                 try:
-                    r = super(SeqParser, self).match(objs, meta=meta)
+                    r = super(SeqParser, self).match(objs, meta=meta, recur = recur)
                 except IndexError:
                     break
 

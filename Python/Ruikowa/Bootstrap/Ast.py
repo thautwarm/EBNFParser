@@ -63,7 +63,6 @@ def autoToken(info, LiteralParserInfo):
 
 
 def ast_for_stmts(stmts : Ast, info = Undef):
-    print(stmts)
     if info is Undef:
         info = dict(keywd = [], regex = [], liter = [])
 
