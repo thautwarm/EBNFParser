@@ -32,7 +32,7 @@ class Ast(list):
                     NAME   = self.name,
                     CONTENT='\n'.join(
                                     [
-                                    "{NEXT_INDENT}STR:{STR}".format(NEXT_INDENT=INDENT_UNIT * next_indent, STR=node)
+                                    "{NEXT_INDENT}{STR}".format(NEXT_INDENT=INDENT_UNIT * next_indent, STR=node)
                                     if isinstance(node, str) else \
                                         node.dump(next_indent)
 

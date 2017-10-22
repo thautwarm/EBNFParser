@@ -4,7 +4,8 @@ defmodule Parser do
   defmodule Literal do
 
     def match([word|words], %{__struct__: Regex}=literalParser) do
-      case Regex.run(literalParser, word) do
+      case Regex.run(literalParser, word)
+      do
         [^word] -> {word, words}
         _       -> {:unmatched, [word|words]}
       end
@@ -27,14 +28,14 @@ defmodule Parser do
       astParser.strucure.starts
         |> Enum.find
             fn
-              (:isRegex, beginSign, _)->
+              (true, beginSign, _)->
                 case Regex.run(beginSign, word)
                 do
                   [^word] -> true
                   _       -> false
                 end
 
-              (_, beginSign, _)->
+              (false, beginSign, _)->
                 case beginSign
                 do
                   [^word] -> true

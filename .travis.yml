@@ -4,7 +4,7 @@ python:
   - "3.6-dev"
   - "3.7-dev"
 script:
-  - bash ./testpy.sh
+  - bash ./testMisakawa.sh
   - bash ./tests/testRuiko.sh
 
 

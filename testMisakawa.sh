@@ -30,16 +30,16 @@ python tests/Python/Lang/Python/testLang.py Test "lambda x,y : lambda z   : x + 
 python tests/Python/Lang/Python/testLang.py Test "lambda x,y : lambda z,d : x + y * (1+2)" -o tests/Python/Lang/Python/test3
 
 # Cm lang
-bash testCm.sh
+bash Misakawa/tests/testCm.sh
 
 # Xml
-bash testXml.sh
+bash Misakawa/tests/testXml.sh
 
 # JSON
-bash testJSON.sh
+bash Misakawa/tests/testJSON.sh
 
 # 文言
-bash UnlimitedBladeWorks.sh
+bash Misakawa/tests/UnlimitedBladeWorks.sh
 
 
 

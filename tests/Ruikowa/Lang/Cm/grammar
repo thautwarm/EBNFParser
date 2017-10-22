@@ -1,0 +1,205 @@
+Token tokendef ENDL
+# each '\n' will be ignored.
+# `ENDL` will be replaced by '\n' when compiling.
+
+# comments
+Any :=  '^((?!/\*|\*/|\n)[\s\S])*$'
+
+multilineComment  
+        ::= '/*' (Any | NEWLINE | multilineComment)* '*/' 
+        ENDL
+
+Comment:= R'//[^\n]*'   
+       ENDL
+
+# basics
+ 
+String  := R'[a-z]*"[\w|\W]*"' 
+        ENDL
+
+numberLiteral 
+        := R'0[XxOoBb][\da-fA-F]+'  
+        ENDL
+
+Decimal := R'\d+(?:\.\d+|)(?:E\-{0,1}\d+|)' 
+        ENDL
+
+Constant:= K'null|false|true' 
+        ENDL
+
+NEWLINE := R'\n'
+        ENDL
+
+
+EOL     := R';' 
+        ENDL
+
+
+I       ::=  NEWLINE | Comment | multilineComment
+        ENDL
+
+simpleName       
+        := R'[a-zA-Z_][a-z0-9A-Z_]*'
+        ENDL
+
+
+
+Identifier
+        ::= simpleName | '`' simpleName '`'
+        ENDL
+
+labelDeclaration
+        ::= ':' Identifier
+        ENDL
+
+block   ::= '{' 
+                [variableDeclarationEntryList [':' Type | '=>' Type] '->']
+                statements              # 若没有定义形式参数, 则类似kotlin的`it`或者scala的`_`
+            '}' 
+        ENDL
+
+body    ::=  block  | statement 
+        ENDL
+
+# module related
+
+
+module  ::= simpleName (',' simpleName)*
+        ENDL
+moduleDeclaration
+        ::= 'module' module
+        ENDL
+Import  ::= 'import' module
+        ENDL
+
+# statement 
+
+statement
+        ::= ( flowControl  |
+              declaration  |
+              flowControlSign [Identifier] |
+              expression
+            ) [EOL]
+        ENDL
+
+flowControlSign
+        := 'break|return|continue'
+        ENDL
+
+flowControl
+        ::= If | While
+        ENDL
+
+If      ::= 'if' '(' expression ')'
+                body
+            [
+            'else'
+                body
+            ]
+        ENDL
+
+While   ::=  [labelDeclaration]
+             'while' '(' expression  ')'
+                body
+        ENDL
+
+# declaration
+
+declaration
+        ::= structDeclaration | moduleDeclaration | Import | variableDeclaration
+        ENDL
+
+structDeclaration # Throw I
+        ::= 'struct' Identifier '{'
+                (I* variableDeclarationEntry [','] I*)*
+            '}'
+        ENDL
+
+variableDeclarationEntry
+        ::= Identifier [':' Type]
+        ENDL
+
+
+variableDeclarationEntryList # Throw I
+        ::= I* variableDeclarationEntry
+                (I* ','
+                 I* variableDeclarationEntry)*
+                 I*
+        ENDL
+
+variableDeclaration # Throw I
+        ::= ('let' | 'var') variableDeclarationEntry [ '=' I* expression ]
+        ENDL
+
+Type    ::=  '[' [TypeList] '=>' Type ']' | Identifier
+        ENDL
+
+TypeList
+        ::= Type (',' Type)*
+        ENDL
+
+genericParameters
+        ::= '<' Identifier (',' Identifier)* '>'
+        ENDL
+
+# expression
+
+BinaryOperator := R'\/\/|\/|\|\||\||\>\>|\<\<|\>\=|\<\=|\<\-|\>|\<|\=\>|\-\-|\+\+|\*\*|\+|\-|\*|\=\=|\=|\%|\^'
+                ENDL
+UnaryOperator  := R'\?|\!|\&|\$|\@|\+|\-|\~'
+                ENDL
+
+expression
+        ::= LambdaDef | BinaryOperation
+        ENDL
+
+LambdaDef # Throw I     
+        ::= variableDeclarationEntry '->' body
+            |
+            '(' variableDeclarationEntryList ')' [':' Type | '=>' Type ] '->' body
+            |
+            block [':' Type]
+            | [genericParameters] LambdaDef
+        ENDL
+
+BinaryOperation
+        ::= UnaryOperation (BinaryOperator UnaryOperation)*
+        ENDL
+
+UnaryOperation
+        ::= AtomExpr | UnaryOperator UnaryOperation
+        ENDL
+
+AtomExpr::= Atom Trailer*
+        ENDL
+
+expressionList # Throw I
+        ::= I* expression
+                (I* ','
+                 I* expression)*
+                 I*
+        ENDL
+
+## call function and get members.
+
+
+
+Trailer ::=  Call | Access
+        ENDL
+Call # Throw I
+        ::= '(' [expressionList] ')' 
+            [LambdaDef]
+        ENDL
+Access # Throw I
+        ::= I* '.' Identifier
+        ENDL
+
+
+Atom    ::= Constant | String | Identifier | numberLiteral | Decimal | '(' expression ')'
+        ENDL
+
+# extra
+statements # Throw I
+        ::= (I* statement* I*)*
+        ENDL
+

@@ -63,6 +63,7 @@ def autoToken(info, LiteralParserInfo):
 
 
 def ast_for_stmts(stmts : Ast, info = Undef):
+    print(stmts)
     if info is Undef:
         info = dict(keywd = [], regex = [], liter = [])
 
@@ -83,7 +84,9 @@ def ast_for_stmts(stmts : Ast, info = Undef):
         if usingType.startswith('{{'):
             codesDefToken = stmts[0][1][2:-2]
         else:
-            with open(f"./{os.path.join(usingType.split('.'))}") as read_from:
+            path = os.path.join(*filter(lambda x:x,  usingType.split('.')))
+
+            with open(f"./{path}") as read_from:
                 codesDefToken = read_from.read()
         DefTokenInEBNF    = False      
         stmts.reverse();stmts.pop();stmts.reverse()

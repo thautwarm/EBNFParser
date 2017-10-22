@@ -28,7 +28,7 @@ recurSearcher = set()
 
 
 def compile(ebnf_text, language_name = 'Unnamed'):
-    info = dict(liter=[], regex=[], keywd = [])
+    info = dict(liter=[], regex=[], keywd = [], char = [])
     stmts = parser(token.findall(ebnf_text), MetaInfo(), partial=False)
     res, tks, to_compile = ast_for_stmts(stmts, info)
     #    print(res)

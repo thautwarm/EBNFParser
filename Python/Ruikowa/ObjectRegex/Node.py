@@ -146,49 +146,42 @@ class AstParser(BaseParser):
             self.compiled = True
 
     def match(self, objs, meta):
-
-        if self.has_recur and self in meta.trace[meta.count]:
-            if isinstance(self, SeqParser) and self.atleast is 0:
-                return Const.UnMatched
-            raise RecursiveFound(self)
+        # if self.has_recur and self in meta.trace[meta.count]:
+        #     # if isinstance(self, SeqParser) and self.atleast is 0:
+        #         return Const.UnMatched
+            # raise RecursiveFound(self)
+        if self in meta.trace[meta.count]:
+            return Const.UnMatched
 
         meta.branch()
-        if self.has_recur:
-                meta.trace[meta.count].append(self)
-
+        # if self.has_recur or isinstance(self, SeqParser) and self.atleast is 0:
+        #         meta.trace[meta.count].append(self)
+        meta.trace[meta.count].append(self)
         for possibility in self.possibilities:
 
+            meta.branch()
             result = self.patternMatch(objs, meta, possibility)
             if result is Const.UnMatched:
                 meta.rollback()
-                meta.branch()
                 continue
             elif isinstance(result, Ast):
-
                 meta.pull()
-                return result
+                break
             elif isinstance(result, RecursiveFound):
+                raise UnsolvedError("Invalid Left Recursion.")
                 meta.rollback()
-                return result
+        meta.pull()
+        return result
 
-        else:
-            meta.rollback()
-            return Const.UnMatched
+
+
 
     def patternMatch(self, objs, meta, possibility):
 
         try: # Not recur
             result = Ast(meta.clone(), self.name)
             for parser in possibility:
-
-                print('<line 190')
-                DEBUG.ShowHead(objs, meta)
-                DEBUG.AstParserEnter(self, meta)
                 r = parser.match(objs, meta = meta)
-                print(r,'....')
-                DEBUG.ShowHead(objs, meta)
-                DEBUG.AstParserEnter(self, meta)
-                print('line 190>')
                 # if `result` is still empty, it might not allow LR now.
                 if isinstance(r, str) or isinstance(r, Ast):
                     resultMerge(result, r, parser, self.toIgnore)
@@ -205,7 +198,7 @@ class AstParser(BaseParser):
                 return result
 
         except RecursiveFound as RecurInfo:
-            DEBUG.PassRecur(parser, self)
+            raise UnsolvedError("Invalid Left Recursion.")
             RecurInfo.add((self, possibility[possibility.index(parser)+1:]))
 
             # RecurInfo has a trace of Beginning Recur Node to Next Recur Node with
