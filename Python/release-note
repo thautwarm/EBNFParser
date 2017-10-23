@@ -70,6 +70,7 @@
 	## what's new in EBNFParser 1.0:
 
 		- Totally support any kind of left recursion now.
+
 		- Some optimization on Bootstrap Compiler.
 			
 			for instance, the result of following one 
@@ -108,6 +109,8 @@
 				      "b"
 					 ]
 					```
+		- Support Python3.x !
+		 
 
 
 
