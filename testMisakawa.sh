@@ -1,5 +1,4 @@
-# install
-bash INSTALL.sh
+
 # Lisp语法解析
 parserGenerator tests/Python/Lang/Lisp/grammar tests/Python/Lang/Lisp/parser.py -test True
 python tests/Python/Lang/Lisp/testLang.py Stmt "(set r 1) (define a b (+ a (+ r 1)))"  -o tests/Python/Lang/Lisp/test1
@@ -30,16 +29,16 @@ python tests/Python/Lang/Python/testLang.py Test "lambda x,y : lambda z   : x + 
 python tests/Python/Lang/Python/testLang.py Test "lambda x,y : lambda z,d : x + y * (1+2)" -o tests/Python/Lang/Python/test3
 
 # Cm lang
-bash Misakawa/tests/testCm.sh
+bash tests/Misakawa/testCm.sh
 
 # Xml
-bash Misakawa/tests/testXml.sh
+bash tests/Misakawa/testXml.sh
 
 # JSON
-bash Misakawa/tests/testJSON.sh
+bash tests/Misakawa/testJSON.sh
 
 # 文言
-bash Misakawa/tests/UnlimitedBladeWorks.sh
+bash tests/Misakawa/UnlimitedBladeWorks.sh
 
 
 
