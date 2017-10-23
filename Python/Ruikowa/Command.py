@@ -34,9 +34,9 @@ result = parser(tokenized,meta = meta, partial=False)
 print(result)
 if args.o:
     import json
-    with open(f"{args.o}.json", 'w', encoding = 'utf8') as JSONFile:
+    with open("{O}.json".format(O=args.o), 'w', encoding = 'utf8') as JSONFile:
         json.dump(result.dumpToJSON(), JSONFile, indent = 4)
-    with open(f"{args.o}Ast", 'w', encoding = 'utf8') as OriginAstFile:
+    with open("{O}.json".format(O=args.o), 'w', encoding = 'utf8') as OriginAstFile:
         OriginAstFile.write(result.dump())
     """
     from .Bootstrap.Compile import compile as bootstrap_comp
