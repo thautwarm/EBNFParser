@@ -234,9 +234,9 @@ def ast_for_atom(atom, info):
             ErrorFamily.UnsolvedError("Unsolved Atom Parsed Ast.")
 
 
-def ast_for_trailer(series_expr, info, atleast = 0, atmost = None):
+def ast_for_trailer(series_expr, info, atleast = 0, atmost = Undef):
     if atleast is 0:
-        if atmost is None:
+        if atmost is Undef:
             return "SeqParser({series_expr})"\
                 .format(series_expr = series_expr)
         else:
@@ -247,6 +247,10 @@ def ast_for_trailer(series_expr, info, atleast = 0, atmost = None):
             return "SeqParser({series_expr}, atleast = {atleast})"\
                 .format(series_expr=series_expr,atleast=atleast)
         else:
+            if int(atleast) is int(atmost)  is 1:
+                return "DependentAstParser({series_expr})" \
+                .format(series_expr=series_expr, atleast=atleast, atmost=atmost)
+
             return "SeqParser({series_expr}, atleast = {atleast}, atmost = {atmost})"\
                 .format(series_expr=series_expr,atleast=atleast,atmost=atmost)
 

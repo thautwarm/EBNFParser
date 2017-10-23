@@ -11,14 +11,13 @@ lit = LiteralParser
 Str    = lit("[A-Z]{0,1}'[\w|\W]*?'", name = 'Str', isRegex=True)
 Name   = lit('[a-zA-Z_\u4e00-\u9fa5][a-zA-Z0-9\u4e00-\u9fa5\.]*', name = 'Name',isRegex=True)
 Number = lit('\d+',name = 'Number',isRegex=True)
-
-NEWLINE= CharParser('\n', name = 'NEWLINE')
 LBB =    CharParser('{')
 LB  =    CharParser('[')
 LP  =    CharParser('(')
 RBB =    CharParser('}')
 RB  =    CharParser(']')
 RP  =    CharParser(')')
+ENDM=    CharParser(';')
 
 SeqStar = CharParser('*')
 SeqPlus = CharParser('+')
@@ -32,10 +31,11 @@ TokenSign   = lit('Token')
 
 Codes       = lit('\{\{[\w\W]+?\}\}', isRegex=True)
 
+AstStr    = AstParser([Str], name = 'AstStr')
 namespace     = globals()
 recurSearcher = set()
 
-AstStr = AstParser([Str], name = 'AstStr')
+
 
 Throw = AstParser(
         [ThrowSign,
@@ -50,7 +50,7 @@ TokenDef = AstParser(
 
 Expr = AstParser(
     [Ref('Or'),
-     SeqParser([OrSign, Ref('Or')],
+     SeqParser([ OrSign, Ref('Or')],
                atleast=0)
      ],
     name = 'Expr')
@@ -72,9 +72,9 @@ Atom = AstParser(
     name = 'Atom')
 
 Equals = AstParser(
-    [Name, LitDef, Str],
-    [Name, SeqParser([Ref('Throw')],atmost =1), Def, Ref('Expr')],
-    name = 'Equals')
+    [Name, LitDef, Str, ENDM],
+    [Name, SeqParser([Ref('Throw')],atmost =1), Def, Ref('Expr'), ENDM],
+    name = 'Equals', toIgnore=[set(), {';'}])
 
 
 Trailer = AstParser(
@@ -91,12 +91,10 @@ Trailer = AstParser(
 Stmt  = AstParser(
             [SeqParser([Ref('TokenDef')], atmost = 1),
              SeqParser([
-                        SeqParser([NEWLINE]),
                         SeqParser([Ref('Equals')]),
-                        SeqParser([NEWLINE])
                        ]),
             ],
-            name = 'Stmt', toIgnore = [set(), {'\n'}])
+            name = 'Stmt')
 
 Stmt.compile(namespace, recurSearcher)
 
@@ -111,6 +109,7 @@ token = _re.compile('|'.join(
         _escape('|',
                 '{',
                 '}',
+                ';',
                 '[',
                 ']',
                 '(',
@@ -121,7 +120,7 @@ token = _re.compile('|'.join(
                 '::=',
                 '.'),
         "[a-zA-Z_\u4e00-\u9fa5][a-zA-Z0-9\u4e00-\u9fa5\.]*",
-        "\d+","\n",
+        "\d+",
         ]
         ))
 

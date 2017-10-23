@@ -44,5 +44,21 @@ Syntax Error at row {r}
         else:
             if not partial and len(objs) != meta.count:
                 warnings.warn("Parsing unfinished.")
+                c = meta.count
+                r = meta.rdx
+                for ch in objs[c:]:
+                    if ch is '\n':
+                        r += 1
+                        c += 1
+                        continue
+                    break
+                info = " ".join(objs[c:c + 10])
+                if len(objs) > c + 10:
+                    info += '...'
+                raise SyntaxError('''
+Syntax Error at row {r}
+   Error startswith :
+{info}
+'''.format(r=r, info=info))
         return res
     return _f

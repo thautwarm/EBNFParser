@@ -216,8 +216,9 @@ def resultMerge(result, r, parser, toIgnore):
         if toIgnore is Undef:
             result.append(r)
         else:
-            if isinstance(r, str) and r not in toIgnore[Const.RawFilter]:
-                result.append(r)
+            if isinstance(r, str):
+                if r not in toIgnore[Const.RawFilter]:
+                    result.append(r)
             elif r.name not in toIgnore[Const.NameFilter]:
                 result.append(r)
 

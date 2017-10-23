@@ -42,6 +42,7 @@ if args.o:
     from .Bootstrap.Compile import compile as bootstrap_comp
     import argparse
     import re
+    import warnings
 
     cmdparser = argparse.ArgumentParser(description='using EBNFParser.')
     cmdparser.add_argument("InputFile", metavar='in_filename', type=str,
@@ -72,13 +73,14 @@ if args.o:
     # ============
     # about preprocessing
     regexCommentRemove = lambda string: re.compile('#[\w\W]*?\n').sub('', string)
-    regexMultiLineSupport = lambda string: string.replace('\n', '').replace('ENDL', '\n')
+    regexMultiLineSupport = lambda string: string
 
     def selectMode(mode):
         toDo = []
         if 'comment' in mode:
             toDo.append(regexCommentRemove)
         if 'multiline' in mode:
+            warnings.warn("Deprecated: option `multuline` makes no sense in the new version.")
             toDo.append(regexMultiLineSupport)
         return toDo
 

@@ -17,7 +17,7 @@ import re
 {tokendef}
 """
 parserTemplate = """
-from Ruikowa.ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser, CharParser, MetaInfo
+from Ruikowa.ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser, CharParser, MetaInfo, DependentAstParser
 from etoken import token 
 import re
 namespace     = globals()
