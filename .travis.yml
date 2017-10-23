@@ -7,10 +7,3 @@ script:
   - bash ./test.sh
 
 
-language: csharp
-mono: none
-dotnet: 2.0.0
-script:
-  - bash ./testCSharp.sh
-
-
