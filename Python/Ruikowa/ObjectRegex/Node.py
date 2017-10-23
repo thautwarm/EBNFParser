@@ -5,26 +5,6 @@ Created on Sat Oct 14 18:53:53 2017
 
 @author: misakawa
 """
-
-def debugger(Begin='', End = '', Check = lambda x:Undef):
-    def funcHook(matcher):
-        def innerHook(*args, **kwargs):
-            locals()['args'] = args
-            locals().update(kwargs)
-            exec(Begin, locals())
-            ret = matcher(*args, **kwargs)
-            checked = Check(ret)
-            if checked is Undef : pass
-            else:
-                print(checked)
-            exec(End, locals())
-            return ret
-        return innerHook
-    return funcHook
-
-
-
-
 from ..Core.BaseDef import *
 from .MetaInfo import MetaInfo
 from ..ErrorFamily import *
@@ -351,43 +331,53 @@ class SeqParser(AstParser):
 
 
 
+# class DEBUG:
+#     b = True
+#
+#     @staticmethod
+#     def ShowHead(objs,meta):
+#         print(list(objs[meta.count:3+meta.count]))
+#
+#
+#     @staticmethod
+#     def AstParserEnter(self, meta):
+#         if not DEBUG.b : return
+#         print('==============')
+#         print(f'Name      :{self.name}')
+#         print(f'Meta Count:{meta.count}')
+#         print(f'Meta Trace: {[i.name for i in meta.trace[meta.count]]}')
+#
+#     @staticmethod
+#     def FoundRecur(self):
+#         if not DEBUG.b: return
+#         print(f"Found Recur at{self.name}")
+#
+#     @staticmethod
+#     def PassRecur(parser, self):
+#         if not DEBUG.b: return
+#         print(f'Pass RecurInfo from {parser.name} to {self.name}')
+#
+#     @staticmethod
+#     def LogResult(self, res):
+#         if not DEBUG.b: return
+#         print(f"{self.name} <= \n {res} \n ")
 
 
-
-
-
-class DEBUG:
-    b = True
-
-    @staticmethod
-    def ShowHead(objs,meta):
-        print(list(objs[meta.count:3+meta.count]))
-
-
-    @staticmethod
-    def AstParserEnter(self, meta):
-        if not DEBUG.b : return
-        print('==============')
-        print(f'Name      :{self.name}')
-        print(f'Meta Count:{meta.count}')
-        print(f'Meta Trace: {[i.name for i in meta.trace[meta.count]]}')
-
-    @staticmethod
-    def FoundRecur(self):
-        if not DEBUG.b: return
-        print(f"Found Recur at{self.name}")
-
-    @staticmethod
-    def PassRecur(parser, self):
-        if not DEBUG.b: return
-        print(f'Pass RecurInfo from {parser.name} to {self.name}')
-
-    @staticmethod
-    def LogResult(self, res):
-        if not DEBUG.b: return
-        print(f"{self.name} <= \n {res} \n ")
-
-
+# def debugger(Begin='', End = '', Check = lambda x:Undef):
+#     def funcHook(matcher):
+#         def innerHook(*args, **kwargs):
+#             locals()['args'] = args
+#             locals().update(kwargs)
+#             exec(Begin, locals())
+#             ret = matcher(*args, **kwargs)
+#             checked = Check(ret)
+#             if checked is Undef : pass
+#             else:
+#                 print(checked)
+#             exec(End, locals())
+#             return ret
+#         return innerHook
+#     return funcHook
 
 
 

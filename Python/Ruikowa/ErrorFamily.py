@@ -36,11 +36,11 @@ def handle_error(parser):
             info = " ".join(objs[c:c + 10])
             if len(objs) > c + 10:
                 info += '...'
-            raise SyntaxError(f'''
+            raise SyntaxError('''
 Syntax Error at row {r}
    Error startswith :
 {info}
-''')
+'''.format(r = r, info = info))
         else:
             if not partial and len(objs) != meta.count:
                 warnings.warn("Parsing unfinished.")

@@ -39,7 +39,7 @@ def compile(ebnf_text, language_name = 'Unnamed'):
     else:
         tokendef = tks.strip(" ")
 
-    astParser_compile = lambda name: f"{name}.compile(namespace, recurSearcher)"
+    astParser_compile = lambda name: "{name}.compile(namespace, recurSearcher)".format(name = name)
     parser_compile = '\n'.join(map(astParser_compile, to_compile))
     define = '\n'.join(res)
     return parserTemplate.format(define=define, parser_compile=parser_compile, tokendef=tokendef), tokenTemplate.format(

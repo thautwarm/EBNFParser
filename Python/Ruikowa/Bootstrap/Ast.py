@@ -85,7 +85,7 @@ def ast_for_stmts(stmts : Ast, info = Undef):
         else:
             path = os.path.join(*filter(lambda x:x,  usingType.split('.')))
 
-            with open(f"./{path}") as read_from:
+            with open("./{path}".format(path = path)) as read_from:
                 codesDefToken = read_from.read()
         DefTokenInEBNF    = False      
         stmts.reverse();stmts.pop();stmts.reverse()
@@ -167,19 +167,19 @@ def ast_for_atomExpr(atomExpr : Ast, info):
         case = atomExpr[1][0]
 
         if   case is '*':
-            res = ast_for_trailer(f"[{res}]", info)
+            res = ast_for_trailer('[{res}]'.format(res = res), info)
         elif case is '+':
-            res = ast_for_trailer(f"[{res}]", atleast = 1, info = info)
+            res = ast_for_trailer('[{res}]'.format(res = res), atleast = 1, info = info)
         elif case is '{':
             atleast = atomExpr[1][1]
             case    = atomExpr[1][2]
             if case is '}':
-                res = ast_for_trailer(f"[{res}]",
+                res = ast_for_trailer('[{res}]'.format(res = res),
                                       atleast = atleast,
                                       info = info)
             else:
                 atmost = case
-                res = ast_for_trailer(f"[{res}]",
+                res = ast_for_trailer('[{res}]'.format(res = res),
                                       atleast = atleast,
                                       atmost = atmost,
                                       info = info)
