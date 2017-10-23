@@ -6,14 +6,8 @@ Created on Sat Oct 14 17:46:02 2017
 @author: misakawa
 """
 import warnings
-from typing import List, Tuple, Any, Generic, TypeVar, Union
 from ..ErrorFamily import *
 # ====== Define Generic Type Params =============
-
-class GenType:
-    T = TypeVar('T')
-    G = TypeVar('G')
-    V = TypeVar('V')
 
 WarningInfo ="""
                 You're trying to visit the elems that've been deprecated.
@@ -56,8 +50,8 @@ class Recur:
 
 class Trace:
     def __init__(self,
-                 trace      = Undef,
-                 length:int = Undef):
+                 trace  = Undef,
+                 length = Undef):
         self.length  = length     if length is not Undef else\
                        len(trace) if trace  is not Undef else\
                        0

@@ -62,7 +62,7 @@ def autoToken(info, LiteralParserInfo):
     return lazy_define, action
 
 
-def ast_for_stmts(stmts : Ast, info = Undef):
+def ast_for_stmts(stmts, info = Undef):
     if info is Undef:
         info = dict(keywd = [], regex = [], liter = [])
 
@@ -110,7 +110,7 @@ def ast_for_stmts(stmts : Ast, info = Undef):
 #     groupBy(lambda x : )
 
 
-def ast_for_equal(eq : Ast, info):
+def ast_for_equal(eq, info):
     assert eq.name == 'Equals'
     case = eq[1]
     name = eq[0]
@@ -152,13 +152,13 @@ def ast_for_equal(eq : Ast, info):
                     ), Undef
             
     
-def ast_for_expr(expr : Ast, info):
+def ast_for_expr(expr, info):
     return [ast_for_or(or_expr, info) for or_expr in expr if or_expr is not '|']
 
-def ast_for_or(or_expr : Ast, info):
+def ast_for_or(or_expr, info):
     return '[{res}]'.format(res = ','.join(ast_for_atomExpr(atomExpr, info) for atomExpr in or_expr))
 
-def ast_for_atomExpr(atomExpr : Ast, info):
+def ast_for_atomExpr(atomExpr, info):
     
     res =  ast_for_atom(atomExpr[0], info)
 
@@ -185,7 +185,7 @@ def ast_for_atomExpr(atomExpr : Ast, info):
                                       info = info)
     return res
 
-def ast_for_atom(atom : Ast, info):
+def ast_for_atom(atom, info):
     n = len(atom)
     if n is 1:
         liter:str = atom[0]

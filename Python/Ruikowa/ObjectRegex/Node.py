@@ -20,7 +20,7 @@ class BaseParser:
     """Abstract Class"""
     name       = Undef
     has_recur  = Undef
-    def match(self, objs:List[str], meta:MetaInfo, recur=Undef):
+    def match(self, objs, meta, recur=Undef):
         """Abstract Method"""
         raise Exception("There is no access to an abstract method.")
         # incomplete
@@ -239,7 +239,7 @@ def leftRecursion(objs, meta, RecurCase, RecurInfo):
                 meta.branch()
                 for parser, possibility in RecurInfo.possibilities:
 
-                    result: Ast = parser.patternMatch(objs, meta, possibility, recur=recur)
+                    result = parser.patternMatch(objs, meta, possibility, recur=recur)
                     if result is Const.UnMatched:
                         meta.rollback()
                         return Const.UnMatched if recurDeepCount is 0 else veryFirst
