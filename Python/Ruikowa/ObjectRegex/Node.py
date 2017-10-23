@@ -6,6 +6,7 @@ Created on Sat Oct 14 18:53:53 2017
 @author: misakawa
 """
 from ..Core.BaseDef import *
+from .MetaInfo import MetaInfo
 from ..ErrorFamily import *
 from .PatternMatching import *
 from .ASTDef import Ast
