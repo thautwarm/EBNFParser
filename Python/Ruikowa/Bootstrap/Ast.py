@@ -79,7 +79,7 @@ def ast_for_stmts(stmts, info = Undef):
                     (Codes|Name)
                     ] 
         """
-        usingType:str =  stmts[0][1]
+        usingType =  stmts[0][1]
         if usingType.startswith('{{'):
             codesDefToken = stmts[0][1][2:-2]
         else:
@@ -188,7 +188,7 @@ def ast_for_atomExpr(atomExpr, info):
 def ast_for_atom(atom, info):
     n = len(atom)
     if n is 1:
-        liter:str = atom[0]
+        liter = atom[0]
         if isinstance(liter, Ast):
             """
             R'target' | 'target' | C'\n' | C 'c'

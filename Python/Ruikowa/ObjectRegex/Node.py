@@ -60,7 +60,7 @@ class Ref(BaseParser):
 
 
 class AstParser(BaseParser):
-    def __init__(self, *ebnf, name=Undef, toIgnore: List[set] = Undef):
+    def __init__(self, *ebnf, name=Undef, toIgnore = Undef):
         # each in the cache will be processed into a parser.
         self.cache = optimize(ebnf)
 
@@ -81,7 +81,7 @@ class AstParser(BaseParser):
         #  if a parser's name is in this set, the result it output will be ignored when parsing.
         self.toIgnore = toIgnore
 
-    def compile(self, namespace: dict, recurSearcher: set):
+    def compile(self, namespace, recurSearcher):
         if self.name in recurSearcher:
             self.has_recur = True
             self.compiled  = True
