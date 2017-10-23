@@ -4,8 +4,7 @@ python:
   - "3.6-dev"
   - "3.7-dev"
 script:
-  - bash ./testMisakawa.sh
-  - bash ./tests/testRuiko.sh
+  - bash ./test.sh
 
 
 language: csharp
