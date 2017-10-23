@@ -26,7 +26,7 @@ recurSearcher = set()
 {parser_compile}
 """
 
-
+import re
 def compile(ebnf_text, language_name = 'Unnamed'):
     info = dict(liter=[], regex=[], keywd = [], char = [])
     stmts = parser(token.findall(ebnf_text), MetaInfo(), partial=False)
@@ -34,7 +34,7 @@ def compile(ebnf_text, language_name = 'Unnamed'):
     #    print(res)
 
     if isinstance(tks, dict):
-        tks = sorted(tks['liter'])[::-1] + tks['regex']
+        tks = sorted(tks['char'])[::-1]+sorted(tks['liter'])[::-1] + tks['regex']
         tokendef = "token = re.compile('|'.join([{Tokens}])).findall".format(Tokens = ','.join(tks))
     else:
         tokendef = tks.strip(" ")

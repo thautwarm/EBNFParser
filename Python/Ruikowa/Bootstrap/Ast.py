@@ -19,13 +19,13 @@ def autoToken(info, LiteralParserInfo):
     prefix, value = LiteralParserInfo
 
     if prefix is 'R':  # Regex
-        action = lambda:info['regex'].append("'{ESCAPED}'".format(ESCAPED=re.escape(value[1:-1])))
+        action = lambda:info['regex'].append(value)
     elif prefix is 'L':  # Literal
         action = lambda:info['liter'].append("'{ESCAPED}'".format(ESCAPED=re.escape(value[1:-1])))
     elif prefix is Undef or prefix is 'K':  # Keyword
         action = lambda:info['keywd'].append(value)
     elif prefix is 'C':
-        action = lambda:info['char'].append(value)
+        action = lambda:info['char'].append("'{ESCAPED}'".format(ESCAPED=re.escape(value[1:-1])))
     else:
         raise UnsolvedError("Invalid Str Prefix {PREFIX}".format(PREFIX=value))
 
@@ -131,7 +131,8 @@ def ast_for_equal(eq, info):
         toIgnore = Undef
         if isinstance(case, Ast):
             toIgnore = case[2:-1]
-        value = ast_for_expr(eq[-1], info)
+
+        value = ast_for_expr(eq[-2], info)
         if toIgnore is Undef:
             return "{name} = AstParser({DEFINITIONS}, name = '{name}')"\
                     .format(name = name,

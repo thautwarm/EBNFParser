@@ -72,9 +72,10 @@ Atom = AstParser(
     name = 'Atom')
 
 Equals = AstParser(
-    [Name, LitDef, Str, ENDM],
-    [Name, SeqParser([Ref('Throw')],atmost =1), Def, Ref('Expr'), ENDM],
-    name = 'Equals', toIgnore=[set(), {';'}])
+    [Name, LitDef, Str, ENDM      ],
+    [Name, SeqParser([Ref('Throw')], atmost =1),
+           Def, Ref('Expr'), ENDM ],
+    name = 'Equals')
 
 
 Trailer = AstParser(
@@ -91,8 +92,7 @@ Trailer = AstParser(
 Stmt  = AstParser(
             [SeqParser([Ref('TokenDef')], atmost = 1),
              SeqParser([
-                        SeqParser([Ref('Equals')]),
-                       ]),
+                        SeqParser([Ref('Equals')])]),
             ],
             name = 'Stmt')
 

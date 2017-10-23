@@ -6,7 +6,6 @@ Created on Sat Oct 14 18:53:53 2017
 @author: misakawa
 """
 from ..Core.BaseDef import *
-from .MetaInfo import MetaInfo
 from ..ErrorFamily import *
 from .PatternMatching import *
 from .ASTDef import Ast
@@ -58,7 +57,6 @@ class Ref(BaseParser):
     def __init__(self,name):self.name = name
 
 
-
 class AstParser(BaseParser):
     def __init__(self, *ebnf, name=Undef, toIgnore = Undef):
         # each in the cache will be processed into a parser.
@@ -80,6 +78,7 @@ class AstParser(BaseParser):
 
         #  if a parser's name is in this set, the result it output will be ignored when parsing.
         self.toIgnore = toIgnore
+
 
     def compile(self, namespace, recurSearcher):
         if self.name in recurSearcher:
@@ -167,15 +166,13 @@ class AstParser(BaseParser):
         meta.pull()
         return result
 
-
-
-
     def patternMatch(self, objs, meta, possibility, recur=Undef):
 
         try: # Not recur
             result = Ast(meta.clone(), self.name)
             for parser in possibility:
-                r = parser.match(objs, meta = meta, recur = recur)
+                r = parser.match(objs, meta=meta, recur=recur)
+
                 # if `result` is still empty, it might not allow LR now.
                 if isinstance(r, str) or isinstance(r, Ast):
                     resultMerge(result, r, parser, self.toIgnore)

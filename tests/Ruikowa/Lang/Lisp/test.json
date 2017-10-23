@@ -1,0 +1,55 @@
+{
+    "name": "Stmt",
+    "value": [
+        {
+            "name": "Expr",
+            "value": [
+                "(",
+                {
+                    "name": "Expr",
+                    "value": [
+                        "+"
+                    ],
+                    "meta": [
+                        0,
+                        1,
+                        "<input>"
+                    ]
+                },
+                {
+                    "name": "Expr",
+                    "value": [
+                        "1"
+                    ],
+                    "meta": [
+                        0,
+                        2,
+                        "<input>"
+                    ]
+                },
+                {
+                    "name": "Expr",
+                    "value": [
+                        "2"
+                    ],
+                    "meta": [
+                        0,
+                        3,
+                        "<input>"
+                    ]
+                },
+                ")"
+            ],
+            "meta": [
+                0,
+                0,
+                "<input>"
+            ]
+        }
+    ],
+    "meta": [
+        0,
+        0,
+        "<input>"
+    ]
+}
