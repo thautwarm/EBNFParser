@@ -30,6 +30,7 @@ from .MetaInfo import MetaInfo
 from ..ErrorFamily import *
 from .PatternMatching import *
 from .ASTDef import Ast
+from .Optimize import optimize
 
 class Ignore:
     Value = 0
@@ -81,7 +82,7 @@ class Ref(BaseParser):
 class AstParser(BaseParser):
     def __init__(self, *ebnf, name=Undef, toIgnore: List[set] = Undef):
         # each in the cache will be processed into a parser.
-        self.cache = ebnf
+        self.cache = optimize(ebnf)
 
         # the possible output types for an series of input tokenized words.
         self.possibilities = []
@@ -145,6 +146,7 @@ class AstParser(BaseParser):
                         self.has_recur = True
 
                 else:
+                    print(e)
                     raise UnsolvedError("Unknown Parser Type.")
 
         if hasattr(self, 'cache'):
@@ -221,7 +223,7 @@ class AstParser(BaseParser):
 
 def resultMerge(result, r, parser, toIgnore):
 
-    if isinstance(parser, SeqParser):
+    if isinstance(parser, SeqParser) or isinstance(parser, DependentAstParser):
 
         if toIgnore is Undef:
             result.extend(r)
@@ -274,6 +276,8 @@ def leftRecursion(objs, meta, RecurCase, RecurInfo):
     else:
         # Fail to match any case.
         return Const.UnMatched
+
+class DependentAstParser(AstParser):pass
 
 class SeqParser(AstParser):
 
