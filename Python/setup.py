@@ -5,6 +5,7 @@ Created on Fri Oct  6 00:51:38 2017
 
 @author: misakawa
 """
+
 from setuptools import setup, find_packages
 
 
@@ -20,12 +21,10 @@ setup(name='EBNFParser',
       author='thautwarm',
       author_email='twshere@outlook.com',
       include_package_data=True,
-      packages=['Misakawa', 'Ruikowa'],
+      packages=['Ruikowa'],
       entry_points={
                 'console_scripts':{
-			'parserGenerator=Misakawa.Command:main',
 			'ruiko=Ruikowa.Command:main'}
-		
                 },
       platforms='any',
       classifiers=['Programming Language :: Python :: 3.6',
