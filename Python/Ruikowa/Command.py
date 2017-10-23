@@ -61,7 +61,7 @@ if args.o:
     head_from, _ = os.path.split(sys.argv[0])
     head_to, __ParserFile__ = os.path.split(outp)
 
-    with open(f'{head_to}/testLang.py', 'w', encoding='utf8') as testlang:
+    with open('{head_to}/testLang.py'.format(head_to=head_to), 'w', encoding='utf8') as testlang:
         testlang.write(testLangFile(__ParserFile__))
 
     def getRaw(inp):
