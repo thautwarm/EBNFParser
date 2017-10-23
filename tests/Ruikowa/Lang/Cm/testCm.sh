@@ -1,3 +1,4 @@
+cd Cm/
 ruiko grammar ./parser.py -comment True
 python testLang.py statements "
 var f : auto = (i:i32, inner:[i32 => i32])->{inner(i)};

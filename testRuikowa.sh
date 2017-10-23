@@ -1,9 +1,10 @@
-if test -z $1
+if test -n $1
 then
-	cd   tests/Ruikowa/Lang/Cm
-	bash testCm.sh
-else
 	bash INSTALL.sh
-	cd   tests/Ruikowa/Lang/Cm
-	bash testCm.sh
 fi
+
+cd   tests/Ruikowa/Lang
+
+
+bash Cm/testCm.sh
+bash Lisp/testLisp.sh
