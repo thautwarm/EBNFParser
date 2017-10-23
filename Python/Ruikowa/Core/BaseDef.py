@@ -82,7 +82,7 @@ class Trace:
 
 
 
-    def push(self, elem):
+    def append(self, elem):
         # reuse the memory cache
         if self.length==self._Mem:
             self.length += 1
@@ -90,6 +90,17 @@ class Trace:
             self.content.append(elem)
         elif self.length < self._Mem:
             self.content[self.length] = elem
+            self.length += 1
+
+    def new(self, constructor):
+        # just can be used for Type `Trace[Contrainer[T]]`
+        # reuse the memory cache
+        if self.length==self._Mem:
+            self.length += 1
+            self._Mem   += 1
+            self.content.append(constructor())
+        elif self.length < self._Mem:
+            self.content[self.length].length = 0
             self.length += 1
 
     def pop(self):
