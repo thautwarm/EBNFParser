@@ -109,7 +109,21 @@
 				      "b"
 					 ]
 					```
-		- Support Python3.x !
+		- Support Python3.4+!
+
+	## what's new in EBNFParser 1.0.1:
+
+		- fix a bug in `Throw` syntax.
+			
+			The following syntax should define an ASTParser which will ignore the characters `'\n' and ','` in parsed results, however it used to ignore "'\\n'" and "','". 
+			a Throw ['\n', ','] ::= ... 
+		
+			Now this problem has been fixed.
+		
+		
+		
+
+
 		 
 
 

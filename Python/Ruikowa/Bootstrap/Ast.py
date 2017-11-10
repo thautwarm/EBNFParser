@@ -35,29 +35,29 @@ def autoToken(info, LiteralParserInfo):
             .format(name = name,
                     value = value) \
                 if name else \
-            "LiteralParser({value}, name='{ESC_STR}')"\
-            .format(value=value,
-                    ESC_STR = esc(value)))
+                "LiteralParser({value}, name='{ESC_STR}')"\
+                .format(value=value,
+                        ESC_STR = esc(value)))
 
     elif prefix is 'R':
         lazy_define = lambda name=Undef:\
             ("{name} = LiteralParser({value}, name = '{name}', isRegex = True)" \
              .format(name=name,
                      value=value) \
-                 if name else \
-            "LiteralParser({value}, name='{ESC_STR}', isRegex = True)" \
-             .format(value=value,
-                     ESC_STR=esc(value)))
+                if name else \
+                "LiteralParser({value}, name='{ESC_STR}', isRegex = True)" \
+                .format(value=value,
+                        ESC_STR=esc(value)))
 
     elif prefix is 'C':
         lazy_define = lambda name=Undef:\
             ("{name} = CharParser({value}, name = '{name}')" \
              .format(name=name,
                      value=value) \
-                 if name else \
-            "CharParser({value}, name='{ESC_STR}')" \
-             .format(value=value,
-                     ESC_STR=esc(value)))
+                if name else \
+                "CharParser({value}, name='{ESC_STR}')" \
+                .format(value=value,
+                        ESC_STR=esc(value)))
 
     return lazy_define, action
 
@@ -65,12 +65,17 @@ def autoToken(info, LiteralParserInfo):
 def ast_for_stmts(stmts, info = Undef):
     if info is Undef:
         info = dict(keywd = [], regex = [], liter = [])
+        # `info` saves the information to make tokenizer.
 
     assert stmts.name == 'Stmt'
     res = []   
-    to_compile= []
+    to_compile = []
+
+    # tokenizer definition.
+    # If is `Undef`, tokenizer won't be defined in grammar file.
     codesDefToken = Undef
-    DefTokenInEBNF= True
+
+    defTokenInEBNF= True
 
     if stmts[0].name is 'TokenDef':
         """ 
@@ -79,30 +84,34 @@ def ast_for_stmts(stmts, info = Undef):
                     (Codes|Name)
                     ] 
         """
-        usingType =  stmts[0][1]
-        if usingType.startswith('{{'):
+        tokenDefinition = stmts[0][1] # tokenizer definition can be found at grammar file.
+        if tokenDefinition.startswith('{{'):
             codesDefToken = stmts[0][1][2:-2]
         else:
-            path = os.path.join(*filter(lambda x:x,  usingType.split('.')))
+            path = os.path.join(*filter(lambda x:x,  tokenDefinition.split('.')))
 
             with open("./{path}".format(path = path)) as read_from:
                 codesDefToken = read_from.read()
-        DefTokenInEBNF    = False      
-        stmts.reverse();stmts.pop();stmts.reverse()
+
+        defTokenInEBNF = False
+
+        stmts.reverse();stmts.pop();stmts.reverse() # popleft.
 
     for eq in stmts:
         define, action = ast_for_equal(eq, info)
+        #  The meaning of `action` can be found at function `autoToken`.
+        #  `action` is for automatically making tokenizer.
 
         if action is Undef:
             # so it's an AstParser.
             to_compile.append(eq[0])
 
-        elif DefTokenInEBNF:
+        elif defTokenInEBNF:
             action()
 
         res.append(define)
 
-    tks = info if DefTokenInEBNF else codesDefToken
+    tks = info if defTokenInEBNF else codesDefToken
 
     return res, tks, to_compile
               
@@ -126,9 +135,11 @@ def ast_for_equal(eq, info):
         lazy_define, action = autoToken(info, (prefix, value))
         return lazy_define(name), action
 
-
     else:
+
+        # `toIgnore` will indicate which patterns of the parsed results to be ignored.
         toIgnore = Undef
+
         if isinstance(case, Ast):
             toIgnore = case[2:-1]
 
@@ -136,20 +147,26 @@ def ast_for_equal(eq, info):
         if toIgnore is Undef:
             return "{name} = AstParser({DEFINITIONS}, name = '{name}')"\
                     .format(name = name,
-                            DEFINITIONS=','.join(value)
+                            DEFINITIONS = ','.join(value)
                     ), Undef
 
         else:
+
+            # ignore a string or an ast.
+            # e.g: <AstParser> Throw ['<String>', <name_of_AST_parser>] ::= ...
             toIgnore = [{ignore
-                        for ignore in toIgnore if not ignore.startswith('\'')
+                            for ignore in toIgnore if not ignore.startswith('\'')
                         },
                         {ignore
-                        for ignore in toIgnore if    ignore.startswith('\'')
+                            for ignore in toIgnore if     ignore.startswith('\'')
                         }]
-            return "{name} = AstParser({DEFINITIONS}, name = '{name}', toIgnore = {toIgnore})" \
+
+            return "{name} = AstParser({DEFINITIONS}, name = '{name}', toIgnore = [{toIgnore}])" \
                    .format(name=name,
                            DEFINITIONS=','.join(value),
-                           toIgnore  = toIgnore
+                           # If just use `set.__str__` method to generate the codes, "\n" will be transformed to '\\n'
+                           toIgnore   = ",".join([f'{{{",".join(toIgnore[0])}}}',
+                                                  f'{{{",".join(toIgnore[1])}}}'])
                     ), Undef
             
     
@@ -168,22 +185,22 @@ def ast_for_atomExpr(atomExpr, info):
         case = atomExpr[1][0]
 
         if   case is '*':
-            res = ast_for_trailer('[{res}]'.format(res = res), info)
+            res = ast_for_trailer('[{res}]'.format(res = res))
         elif case is '+':
-            res = ast_for_trailer('[{res}]'.format(res = res), atleast = 1, info = info)
+            res = ast_for_trailer('[{res}]'.format(res = res), atleast = 1)
         elif case is '{':
             atleast = atomExpr[1][1]
             case    = atomExpr[1][2]
             if case is '}':
                 res = ast_for_trailer('[{res}]'.format(res = res),
-                                      atleast = atleast,
-                                      info = info)
+                                      atleast = atleast)
+
             else:
                 atmost = case
                 res = ast_for_trailer('[{res}]'.format(res = res),
                                       atleast = atleast,
-                                      atmost = atmost,
-                                      info = info)
+                                      atmost  = atmost)
+
     return res
 
 def ast_for_atom(atom, info):
@@ -196,16 +213,15 @@ def ast_for_atom(atom, info):
             =>
             regex       keyword    single-char
             """
-            assert  liter.name == 'AstStr'
+            assert liter.name == 'AstStr'
             string = liter[0]
-            LiteralParserInfo = Undef
             if not string.startswith('\''):
                 prefix = string[0]
                 string = string[1:]
             else:
                 prefix = Undef
 
-            lazy_define, action = autoToken(info, (prefix, string))
+            lazy_define, action = autoToken(info, LiteralParserInfo=(prefix, string))
             action()
             return lazy_define()
 
@@ -218,10 +234,9 @@ def ast_for_atom(atom, info):
         case = atom[0]
         if   case is '[':
             return ast_for_trailer("{DEFINITIONS}"\
-                                        .format(DEFINITIONS = ','.join(ast_for_expr(atom[1], info = info))),
+                                        .format(DEFINITIONS = ','.join(ast_for_expr(atom[1], info))),
                                    atleast = 0,
-                                   atmost = 1,
-                                   info = info)
+                                   atmost  = 1)
         elif case is '(':
             or_exprs = ast_for_expr(atom[1], info = info)
             if len(or_exprs) is 1:
@@ -229,13 +244,12 @@ def ast_for_atom(atom, info):
             return ast_for_trailer("{DEFINITIONS}"\
                                         .format(DEFINITIONS=','.join(or_exprs)),
                                    atleast = 1,
-                                   atmost = 1,
-                                   info = info)
+                                   atmost  = 1)
         else:
             ErrorFamily.UnsolvedError("Unsolved Atom Parsed Ast.")
 
 
-def ast_for_trailer(series_expr, info, atleast = 0, atmost = Undef):
+def ast_for_trailer(series_expr, atleast = 0, atmost = Undef):
     if atleast is 0:
         if atmost is Undef:
             return "SeqParser({series_expr})"\

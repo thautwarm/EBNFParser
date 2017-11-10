@@ -9,8 +9,8 @@ Created on Tue Oct 17 10:16:52 2017
 from ..ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser, CharParser
 lit = LiteralParser
 Str    = lit("[A-Z]{0,1}'[\w|\W]*?'", name = 'Str', isRegex=True)
-Name   = lit('[a-zA-Z_\u4e00-\u9fa5][a-zA-Z0-9\u4e00-\u9fa5\.]*', name = 'Name',isRegex=True)
-Number = lit('\d+',name = 'Number',isRegex=True)
+Name   = lit('[a-zA-Z_\u4e00-\u9fa5][a-zA-Z0-9\u4e00-\u9fa5\.]*', name = 'Name', isRegex=True)
+Number = lit('\d+', name = 'Number', isRegex=True)
 LBB =    CharParser('{')
 LB  =    CharParser('[')
 LP  =    CharParser('(')

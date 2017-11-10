@@ -6,6 +6,8 @@ Created on Fri Oct 20 21:10:08 2017
 @author: misakawa
 """
 
+import numba as nb
+
 class Node:
     def __init__(self, content = None):
         self.next = None
@@ -23,28 +25,30 @@ class LinkedList:
         else:
             self.head = None
             self.end  = None
+    @nb.autojit
     def appendNode(self, node):
         try:
             self.end.next = node
         except AttributeError:
             self.head = self.end = node
         self.end = node
-    
+    @nb.autojit
     def append(self, v):
         self.appendNode(Node(v))
-        
+    @nb.autojit
     def appendLeftNode(self, node):
         node.next = self.head
         self.head = node
         if self.end is None:
             self.end = node
+    @nb.autojit
     def appendLeft(self, v):
         self.appendLeftNode(Node(v))
-    
+
     def extend(self, linkedlist):
         self.end.next = linkedlist.head
         self.end      = linkedlist.end
-        
+    
     def extendLeft(self, linkedlist):
         linkedlist.end.next = self.head
         self.head           = linkedlist.head
