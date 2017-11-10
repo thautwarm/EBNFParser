@@ -11,8 +11,8 @@ Parse Many, Any, Every
 
 ## Multi-Language-Versions
 
-- [Python Project(Support Python 3.4+)](https://github.com/thautwarm/EBNFParser/tree/master/Python) (v 1.0)
-    - [What's new in EBNFParser 1.0](https://github.com/thautwarm/EBNFParser/tree/master/Python/release-note)
+- [Python Project(Support Python 3.4+)](https://github.com/thautwarm/EBNFParser/tree/master/Python) (v 1.0.1)
+    - [What's new in EBNFParser 1.0.1](https://github.com/thautwarm/EBNFParser/tree/master/Python/release-note)
     - [Old Version : Misakawa](https://github.com/thautwarm/EBNFParser/tree/master/Misakawa.md)
 
 

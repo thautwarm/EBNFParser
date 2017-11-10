@@ -11,12 +11,12 @@ Parse Many, Any, Every
 Multi-Language-Versions
 -----------------------
 
--  `Python
-   Project <https://github.com/thautwarm/EBNFParser/tree/master/Python>`__
-   (v 1.0)
+-  `Python Project(Support Python
+   3.4+) <https://github.com/thautwarm/EBNFParser/tree/master/Python>`__
+   (v 1.0.1)
 
    -  `What's new in EBNFParser
-      1.0 <https://github.com/thautwarm/EBNFParser/tree/master/Python/release-note>`__
+      1.0.1 <https://github.com/thautwarm/EBNFParser/tree/master/Python/release-note>`__
    -  `Old Version :
       Misakawa <https://github.com/thautwarm/EBNFParser/tree/master/Misakawa.md>`__
 
