@@ -1,4 +1,5 @@
-|Build Status| |GPLv3.0 License| |PyPI version|
+|Build Status| |PyPI version| |Chinese Doc| |Release Note| |GPLv3.0
+License|
 
 EBNFParser
 ==========
@@ -6,7 +7,7 @@ EBNFParser
 Parse Many, Any, Every
 ----------------------
 
-`HomePage <https://github.com/thautwarm/EBNFParser>`__
+`HomePage <https://github.com/thautwarm/EBNFParsver>`__
 
 Multi-Language-Versions
 -----------------------
@@ -169,7 +170,11 @@ License
 
 .. |Build Status| image:: https://travis-ci.org/thautwarm/EBNFParser.svg?branch=master
    :target: https://travis-ci.org/thautwarm/EBNFParser
-.. |GPLv3.0 License| image:: https://img.shields.io/badge/license-GPLv3.0-Green.svg
-   :target: https://github.com/thautwarm/EBNFParser/blob/master/LICENSE
 .. |PyPI version| image:: https://img.shields.io/pypi/v/EBNFParser.svg
    :target: https://pypi.python.org/pypi/EBNFParser
+.. |Chinese Doc| image:: https://img.shields.io/badge/docs-RuikowaEBNF-yellow.svg?style=flat
+   :target: https://github.com/thautwarm/EBNFParser/blob/master/Ruikowa.zh.md
+.. |Release Note| image:: https://img.shields.io/badge/note-release-orange.svg
+   :target: https://github.com/thautwarm/EBNFParser/blob/master/Python/release-note
+.. |GPLv3.0 License| image:: https://img.shields.io/badge/license-GPLv3.0-Green.svg?style=flat
+   :target: https://github.com/thautwarm/EBNFParser/blob/master/LICENSE

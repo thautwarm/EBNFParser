@@ -1,7 +1,8 @@
 [![Build Status](https://travis-ci.org/thautwarm/EBNFParser.svg?branch=master)](https://travis-ci.org/thautwarm/EBNFParser)
-[![GPLv3.0 License](https://img.shields.io/badge/license-GPLv3.0-Green.svg)](https://github.com/thautwarm/EBNFParser/blob/master/LICENSE)
 [![PyPI version](https://img.shields.io/pypi/v/EBNFParser.svg)](https://pypi.python.org/pypi/EBNFParser)
-
+[![Chinese Doc](https://img.shields.io/badge/docs-RuikowaEBNF-yellow.svg?style=flat)](https://github.com/thautwarm/EBNFParser/blob/master/Ruikowa.zh.md)
+[![Release Note](https://img.shields.io/badge/note-release-orange.svg)](https://github.com/thautwarm/EBNFParser/blob/master/Python/release-note)
+[![GPLv3.0 License](https://img.shields.io/badge/license-GPLv3.0-Green.svg?style=flat)](https://github.com/thautwarm/EBNFParser/blob/master/LICENSE)
 
 # EBNFParser
 Parse Many, Any, Every
