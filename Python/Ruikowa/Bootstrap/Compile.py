@@ -18,7 +18,10 @@ import re
 """
 parserTemplate = """
 from Ruikowa.ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser, CharParser, MetaInfo, DependentAstParser
-from etoken import token 
+try:
+    from .etoken import token
+except:
+    from etoken import token
 import re
 namespace     = globals()
 recurSearcher = set()
