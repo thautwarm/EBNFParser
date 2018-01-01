@@ -163,8 +163,8 @@ def ast_for_equal(eq, info):
                    .format(name=name,
                            DEFINITIONS=','.join(value),
                            # If just use `set.__str__` method to generate the codes, "\n" will be transformed to '\\n'
-                           toIgnore   = ",".join([f'{{{",".join(toIgnore[0])}}}',
-                                                  f'{{{",".join(toIgnore[1])}}}'])
+                           toIgnore   = ",".join(['{{{}}}'.format(",".join(toIgnore[0])),
+                                                  '{{{}}}'.format(",".join(toIgnore[1]))])
                     ), Undef
             
     
