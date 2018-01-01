@@ -12,7 +12,7 @@ from .. import ErrorFamily
 import re, os
 
 # make escape string.
-esc = lambda str: str.replace("'",r"\'").replace('"',r'\"')
+esc = lambda str: str.replace("'", r"\'").replace('"', r'\"')
 
 def autoToken(info, LiteralParserInfo):
 
@@ -31,13 +31,14 @@ def autoToken(info, LiteralParserInfo):
 
     if prefix is Undef or prefix is 'K' or prefix is 'L':
         lazy_define = lambda name=Undef:\
-            ("{name} = LiteralParser({value}, name = '{name}')" \
-            .format(name = name,
-                    value = value) \
+            ("{name} = LiteralParser({value}, name = '{name}', isRegex = {isRegex})" \
+            .format(name=name,
+                    value="'{}'".format(value[8:-1]) if value.startswith('\'regex::') else value,
+                    isRegex=value.startswith('Regex::')) \
                 if name else \
                 "LiteralParser({value}, name='{ESC_STR}')"\
                 .format(value=value,
-                        ESC_STR = esc(value)))
+                        ESC_STR=esc(value)))
 
     elif prefix is 'R':
         lazy_define = lambda name=Undef:\
@@ -78,17 +79,17 @@ def ast_for_stmts(stmts, info = Undef):
     defTokenInEBNF= True
 
     if stmts[0].name is 'TokenDef':
-        """ 
-            TokenDef[
-                    'Token'
-                    (Codes|Name)
-                    ] 
-        """
-        tokenDefinition = stmts[0][1] # tokenizer definition can be found at grammar file.
+        #
+        #   TokenDef[
+        #           'Token'
+        #           (Codes|Name)
+        #           ]
+        #
+        tokenDefinition = stmts[0][1]  # tokenizer definition can be found at grammar file.
         if tokenDefinition.startswith('{{'):
             codesDefToken = stmts[0][1][2:-2]
         else:
-            path = os.path.join(*filter(lambda x:x,  tokenDefinition.split('.')))
+            path = os.path.join(*filter(lambda x: x,  tokenDefinition.split('.'))) + '.py'
 
             with open("./{path}".format(path = path)) as read_from:
                 codesDefToken = read_from.read()
@@ -114,9 +115,6 @@ def ast_for_stmts(stmts, info = Undef):
     tks = info if defTokenInEBNF else codesDefToken
 
     return res, tks, to_compile
-              
-           
-#     groupBy(lambda x : )
 
 
 def ast_for_equal(eq, info):

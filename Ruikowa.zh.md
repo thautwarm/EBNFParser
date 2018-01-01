@@ -124,7 +124,7 @@ EBNFParser 使用的EBNF方言简介。
     对非正则串， 在token时不会存在永远被访问不到的情形，如下
 
     ```
-    a ::= 't' | 'tt';
+    a ::= L't' | L'tt';
     ```
 
     以上情况下，**如果不对`t`和`tt`参与tokenizer生成的顺序做调整**，那么所有的tt都会被分成两个`t`, 也就是说你将永远得不到`tt`这个词！  
@@ -137,6 +137,27 @@ EBNFParser 使用的EBNF方言简介。
     ```
     a ::=  R'\w+\.\w+' | R'\w';
     ```
+
+    **进阶提示**: 使用字符前缀控制自动token。
+    ```
+    a := K'keyword1';
+    b := K'regex::\w+';
+    c := L'keyword2';
+    d := C'x';
+    e := R'\w+';
+    ``` 
+    以上定义了五个字面量parser, 其中对tokenizer有贡献的是`c, d, e`。   
+    其中
+    - `C`前缀表示对单字符字面量parser进行优化。影响auto token. 
+    - `L`前缀定义原始字面量parser。影响auto token。  
+    - `R`表示定义正则字面量parser。影响auto token。
+    - `K`前缀表示定义只用于匹配，不影响auto token。`K'regex::xxx'`表示使用正则匹配。
+    - 无前缀默认转换为`K`前缀。
+    
+    上述的`a`定义的一个原始字面量parser只能用于匹配，同理，`b`定义的正则字面量parser也不会对自动分词有影响。
+    
+    
+
 
 - Custom Tokenizer  
  
@@ -161,7 +182,12 @@ EBNFParser 使用的EBNF方言简介。
     }}
     ```
     
-    你也可以把token定义写在别的文件里，比如在grammar所在目录下，token文件夹的test文件里。  
+    你也可以把token定义写在别的文件里，比如在grammar所在目录下，token文件夹的test.py文件里。  
+    ```
+    grammar
+    token\
+        test.py
+    ```
 
     然后grammar里面这样写:
     ```
@@ -172,7 +198,7 @@ EBNFParser 使用的EBNF方言简介。
 - 忽略部分parsed结果  
 
     ```
-    a Throw ['\n', b] ::= c b d '\n'
+    a Throw ['\n', b] ::= c b d '\n';
     ```
     得到的结果只是`c d`，**能够忽略的**只有**AST和非正则定义的字面量**(看官可以想一下: 如果支持忽略正则，会明显影响性能
 
