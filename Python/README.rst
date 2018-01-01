@@ -7,7 +7,7 @@ EBNFParser
 Parse Many, Any, Every
 ----------------------
 
-`HomePage <https://github.com/thautwarm/EBNFParsver>`__
+`HomePage <https://github.com/thautwarm/EBNFParser>`__
 
 Multi-Language-Versions
 -----------------------
@@ -147,9 +147,7 @@ Usage
 
        python testLang.py <AST Name> "<your codes>"
 
--  APIs
-
-   I'll write a documentation for EBNFParser's APIs very sooner.
+-  `APIs <https://github.com/thautwarm/EBNFParser/blob/master/api.md>`__
 
 Source
 ------
