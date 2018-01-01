@@ -135,9 +135,7 @@ Now I'm going to tell you how to use `EBNFParser` to write a parser for `Lisp` q
     python testLang.py <AST Name> "<your codes>"
     ```
 
-- APIs  
-
-    I'll write a documentation for EBNFParser's APIs very sooner.
+- [APIs](https://github.com/thautwarm/EBNFParser/blob/master/api.md)  
 
 
 ## Source

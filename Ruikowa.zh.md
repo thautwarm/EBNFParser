@@ -203,7 +203,10 @@ EBNFParser 使用的EBNF方言简介。
     得到的结果只是`c d`，**能够忽略的**只有**AST和非正则定义的字面量**(看官可以想一下: 如果支持忽略正则，会明显影响性能
 
 
+## 如何使用自动生成的Parser
 
+- 见[API简介](https://github.com/thautwarm/EBNFParser/blob/master/api.md)  
+- [简短而完整的示例](https://github.com/thautwarm/EBNFParser/blob/master/tests/Ruikowa/Lang/Lisp/test_api.py)
 
 
 

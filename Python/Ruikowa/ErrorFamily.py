@@ -37,10 +37,10 @@ def handle_error(parser):
             if len(objs) > c + 10:
                 info += '...'
             raise SyntaxError('''
-Syntax Error at row {r}
+Syntax Error at {filename} row {r}
    Error startswith :
 {info}
-'''.format(r = r, info = info))
+'''.format(r = r, info = info, filename=meta.fileName))
         else:
             if not partial and len(objs) != meta.count:
                 warnings.warn("Parsing unfinished.")
