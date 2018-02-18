@@ -10,7 +10,7 @@ import re
 from ..Core.BaseDef import Const, Trace
 
 
-def Generate_RegexPatten_From(mode:str, escape:bool=False)->re._pattern_type:
+def Generate_RegexPatten_From(mode: str, escape: bool=False):
     return re.compile(re.escape(mode)) if escape else re.compile(mode)
 
 
