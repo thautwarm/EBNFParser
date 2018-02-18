@@ -1,0 +1,13 @@
+use Token.Std.{
+	Name
+};
+
+Tag ::= '<' Name '>'
+EndTag ::= '</' Name '>'
+Block ::=  <Tag as [_, begin, _]>
+				Block*
+			<EndTag as [_, @begin, _]> # use context-sensitive syntax
+			| Not (Tag | EndTag) # use negative matching
+
+
+

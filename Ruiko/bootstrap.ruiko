@@ -1,0 +1,31 @@
+use Token.Std.{
+	Name,
+	String,
+	Codes,
+	Number
+}
+
+Definition ::= Name '::=' OrExp ['where' Codes] 
+OrExp ::= AndExp ('|', AndExp)
+AndExp ::= NotExp+
+NotExp ::= 'Not' Exp
+Exp ::= AtomExp | '<' AtomExp ['by' (Name | Codes)+] ['as' (Name | Codes)] ['then' (Name | Codes)+]'>'
+Trailer ::= '{' Number{1 2} '}' | '+' | '*'
+AtomExp ::= Atom [Trailer]
+Atom ::= Name | Indent | Dedent | String | Codes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
