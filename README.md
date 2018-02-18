@@ -9,13 +9,13 @@ Parse Many, Any, Every
 ---------
 [HomePage](https://github.com/thautwarm/EBNFParser)
 
+* **The License will be changed to `MIT` sooner**.
 
 ## Multi-Language-Versions
 
 - [Python Project(Support Python 3.4+)](https://github.com/thautwarm/EBNFParser/tree/master/Python) (v 1.0.1)
     - [What's new in EBNFParser 1.0.1](https://github.com/thautwarm/EBNFParser/tree/master/Python/release-note)
     - [Old Version : Misakawa](https://github.com/thautwarm/EBNFParser/tree/master/Misakawa.md)
-
 
 
 --------------------
