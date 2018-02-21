@@ -1,18 +1,23 @@
-//
-// Created by misakawa on 18-2-21.
-//
+/*
+#ifndef FLOWERQ_IO
+    #include "IO.hpp"
+#endif
+*/
+#ifndef FLOWERQ_IO
+#define FLOWERQ_IO
 
-#ifndef CFLOWERQ_IO_H
-#define CFLOWERQ_IO_H
-#ifndef CFLOWERQ_COMPOSITION_H
-
-#include "string"
-#include "Composition.hpp"
-
+#ifndef FLOWERQ_MATCH
+    #include "Match.hpp"
 #endif
 
-namespace cfarfar {
-    namespace IO {
+#include <iostream>
+#include <tuple>
+#include <string>
+namespace flowerq{
+
+    namespace IO{
+
+        
 
         std::string
         inspect(int e) {
@@ -57,51 +62,45 @@ namespace cfarfar {
         }
 
         template<typename T>
-        std::string _inspect(std::tuple<T> tp) {
-            return inspect(std::get<0>(tp));
+        std::string inspect(T t);
+        
+        
+        template<typename T>
+        std::string tuple_inspect(std::tuple<T> tp){
+            return inspect<T>(std::get<0> (tp));
         }
 
-        template<typename T, typename ...VARARGS>
-        std::string _inspect(std::tuple<T, VARARGS...> tp) {
-            return inspect(std::get<0>(tp)) + ", " + _inspect(dependency::tail(tp));
+        template<typename T, typename G>
+        std::string tuple_inspect(std::tuple<T, G> tp){
+            return inspect<T>(std::get<0> (tp)) + ", " + inspect<G>(std::get<1> (tp));
+        }
+
+        template<typename T, typename... VARARGS>
+        std::string tuple_inspect(std::tuple<T, VARARGS...> tp){
+            return inspect<T>(std::get<0> (tp)) + ", " + tuple_inspect(dependency::tail(tp));
         }
 
         template<typename T>
         std::string inspect(std::tuple<T> tp) {
-            return "(" + inspect(std::get<0>(tp)) + ",)";
+            return "(" + tuple_inspect(tp) + ",)";
         }
 
         template<typename ...VARARGS>
         std::string inspect(std::tuple<VARARGS...> tp) {
-            return "(" + _inspect(tp) + ")";
+            return "(" + tuple_inspect(tp) + ")";
         }
-
-
+        
         template<typename T>
-        std::string inspect(List<T> list) {
-
-            const int n = list.len();
-            if (n == 0) {
-                return "List<0>[]";
-            }
-
-            T head;
-            List<T> tail;
-            auto tp = list.destruct();
-            pattern::match(tp, head, tail);
-            std::string res = "List<" + std::to_string(list.len()) + ">[" + inspect(head);
-            tail.forEach([=, &res](T e) {
-                res += ", " + inspect(e);
-            });
-            return res + "]";
+        std::string inspect(T lst) {
+            return lst.to_string();
         }
 
         template<typename T>
         void puts(T t) {
-
             std::string res = inspect(t);
             std::cout << res << '\t';
         }
+        
 
         template<typename T>
         void putstrln(T t) {
@@ -113,8 +112,6 @@ namespace cfarfar {
         void putstrln() {
             printf("\n");
         }
-    }
-
+     }
 }
-
-#endif //CFLOWERQ_IO_H
+#endif
