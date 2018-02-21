@@ -57,4 +57,19 @@ public:
     }
 
 };
+
+    template<typename T>
+    static void del(Node<T> &list) {
+        del(list.Next);
+        list.Next = nullptr;
+    }
+
+    template<typename T>
+    static void del(Node<T> *list_ptr) {
+        if (list_ptr == nullptr)
+            return;
+        Node<T> *next_ptr = list_ptr->Next;
+        delete list_ptr;
+        del(next_ptr);
+    }
     

@@ -27,6 +27,12 @@ namespace flowerq{
     template<typename T>
     class List;
 
+    template<typename A>
+    static void del(List<A>* list_ptr);
+
+    template<typename A>
+    static void del(List<A> &list);
+
     namespace list{
         template<typename A>
         static List<A> create();
@@ -39,6 +45,7 @@ namespace flowerq{
 
         template<typename A>
         static List<A> cons(List<A> list, A value);
+
     }
     #pragma endregion
 
@@ -183,12 +190,28 @@ namespace flowerq{
         template<typename A>
         friend List<A> list::cons(List<A> list, A value);
 
+        template<typename A>
+        friend void del(List<A>* list_ptr);
+
+        template<typename A>
+        friend void del(List<A> &list);
+
     };
 
 
     // define ways to construct list.
     #include "List.Constructor.hpp"
 
+    template<typename A>
+    void del(List<A>* list_ptr){
+        del(list_ptr->head_ptr);
+        delete list_ptr;
+    }
+
+    template<typename A>
+    void del(List<A> &list){
+        del(list.head_ptr);
+    }
 
 }
 #endif
