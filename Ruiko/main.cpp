@@ -51,9 +51,11 @@ int main() {
     cfarfar::IO::putstrln("matched:");
     cfarfar::IO::puts(t1);
     cfarfar::IO::puts(t2);
-    cfarfar::IO::puts(t3);
+    cfarfar::IO::putstrln(t3);
 
     cfarfar::del(x);
     cfarfar::del(z);
 
+    cfarfar::IO::putstrln(std::make_tuple(1, 2, 3));
+    cfarfar::IO::putstrln(std::make_tuple(1));
 }

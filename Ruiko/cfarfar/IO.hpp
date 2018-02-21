@@ -56,10 +56,26 @@ namespace cfarfar {
             return e ? "true" : "false";
         }
 
-        template<typename T, typename G>
-        std::string inspect(std::tuple<T, G> tp) {
-            return "(" + inspect(std::get<0>(tp)) + ", " + inspect(std::get<1>(tp)) + ")";
-        };
+        template<typename T>
+        std::string _inspect(std::tuple<T> tp) {
+            return inspect(std::get<0>(tp));
+        }
+
+        template<typename T, typename ...VARARGS>
+        std::string _inspect(std::tuple<T, VARARGS...> tp) {
+            return inspect(std::get<0>(tp)) + ", " + _inspect(dependency::tail(tp));
+        }
+
+        template<typename T>
+        std::string inspect(std::tuple<T> tp) {
+            return "(" + inspect(std::get<0>(tp)) + ",)";
+        }
+
+        template<typename ...VARARGS>
+        std::string inspect(std::tuple<VARARGS...> tp) {
+            return "(" + _inspect(tp) + ")";
+        }
+
 
         template<typename T>
         std::string inspect(List<T> list) {
