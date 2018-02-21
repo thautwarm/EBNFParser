@@ -2,4 +2,5 @@ __pycache__/
 .spyproject/
 Attempts-which-failed/
 .vscode/
-.idea/
+*.idea/
+Ruiko/cmake-build-debug/
