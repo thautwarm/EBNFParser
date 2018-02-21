@@ -29,16 +29,16 @@ namespace flowerq{
 
     namespace list{
         template<typename A>
-        List<A> create();
+        static List<A> create();
 
         template<typename A>
-        List<A> create(A value);
+        static List<A> create(A value);
 
         template<typename A, typename ...VARARGS>
-        List<A> create(A value, VARARGS... varargs);
+        static List<A> create(A value, VARARGS... varargs);
 
         template<typename A>
-        List<A> cons(List<A> list, A value);
+        static List<A> cons(List<A> list, A value);
     }
     #pragma endregion
 

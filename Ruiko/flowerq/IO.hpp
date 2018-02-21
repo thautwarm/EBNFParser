@@ -72,12 +72,12 @@ namespace flowerq{
 
         template<typename T, typename G>
         std::string tuple_inspect(std::tuple<T, G> tp){
-            return inspect<T>(std::get<0> (tp)) + ", " + inspect<G>(std::get<1> (tp));
+            return inspect(std::get<0> (tp)) + ", " + inspect(std::get<1> (tp));
         }
 
         template<typename T, typename... VARARGS>
         std::string tuple_inspect(std::tuple<T, VARARGS...> tp){
-            return inspect<T>(std::get<0> (tp)) + ", " + tuple_inspect(dependency::tail(tp));
+            return inspect<T>(std::get<0> (tp)) + ", " + tuple_inspect<VARARGS...>(dependency::tail(tp));
         }
 
         template<typename T>
@@ -87,7 +87,7 @@ namespace flowerq{
 
         template<typename ...VARARGS>
         std::string inspect(std::tuple<VARARGS...> tp) {
-            return "(" + tuple_inspect(tp) + ")";
+            return "(" + tuple_inspect<VARARGS...>(tp) + ")";
         }
         
         template<typename T>

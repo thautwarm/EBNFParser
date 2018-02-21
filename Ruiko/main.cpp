@@ -4,13 +4,13 @@
 int main() {
     using namespace flowerq;
 
-    IO::putstrln(list::create(1, 2, 3, 4, 5));
+    // IO::putstrln(list::create(1, 2, 3, 4, 5));
     
     auto lst = list::create(1, 2, 3, 4, 5);
 
-    IO::putstrln(list::create(list::create(1, 2, 3, 5), list::create(2, 3, 4)));
+    // IO::putstrln(list::create(list::create(1, 2, 3, 5), list::create(2, 3, 4)));
     // IO::putstrln(std::make_tuple(lst));
-    IO::inspect(lst.destruct());
+    IO::putstrln(lst.destruct());
 
     // auto new_lst = list::cons(lst, 2);
     
