@@ -43,10 +43,18 @@ namespace cfarfar {
             return list_ptr;
         }
 
+        static List<T> *_new_ptr(T value) {
+            auto list_ptr = new List<T>(value);
+            list_ptr->Next = nullptr;
+            return list_ptr;
+        }
+
 
         List() {
             _length = 0;
         };
+
+        List<T> &operator=(const List<T> &other);
 
 
         union {
@@ -78,7 +86,7 @@ namespace cfarfar {
             return new_list;
         }
 
-        Tuple<T, List<T>> destruct() {
+        std::tuple<T, List<T>> destruct() {
             return tuple::create(head(), tail());
         };
 
@@ -138,15 +146,15 @@ namespace cfarfar {
         }
 
         template<typename G>
-        List<Tuple<T, G>> zip(List<G> traversal) {
-            List<Tuple<T, G>> new_list = List<Tuple<T, G>>();
+        List<std::tuple<T, G>> zip(List<G> traversal) {
+            List<std::tuple<T, G>> new_list = List<std::tuple<T, G>>();
 
             List<T> *other_list_ptr = &traversal, *src_list_ptr = this;
-            List<Tuple<T, G>> *new_list_ptr = &new_list;
+            List<std::tuple<T, G>> *new_list_ptr = &new_list;
 
             while ((src_list_ptr = src_list_ptr->Next) != nullptr &&
                    (other_list_ptr = other_list_ptr->Next) != nullptr) {
-                new_list_ptr->Next = new List<Tuple<T, G>>(
+                new_list_ptr->Next = new List<std::tuple<T, G>>(
                         tuple::create(src_list_ptr->value, other_list_ptr->value));
                 new_list_ptr = new_list_ptr->Next;
             }
@@ -166,8 +174,9 @@ namespace cfarfar {
 
 
         static List<T> create(T value) {
-            auto new_list = List<T>(value);
-            new_list.Next = nullptr;
+            auto new_list = List<T>();
+            new_list.Next = _new_ptr(value);
+            new_list._set_length(1);
             return new_list;
         }
 
@@ -180,6 +189,11 @@ namespace cfarfar {
             return new_list;
         }
     };
+
+
+
+
+
 
 //        void forEach(void action(int)) {
 //            List<T> *list_ptr = this;
@@ -229,7 +243,6 @@ namespace cfarfar {
 //        }
 
 
-
     template<typename T>
     static void del(List<T> &list) {
         del(list.Next);
@@ -244,6 +257,20 @@ namespace cfarfar {
         delete list_ptr;
         del(next_ptr);
     }
+
+    template<typename T>
+    List<T> &List<T>::operator=(const List<T> &other) {
+        this->_length = other._length;
+        this->Next = other.Next;
+        return *this;
+    }
+
+//    template<typename T>
+//    List<T> &List<T>::operator=(const List<T> &other) {
+//        del(this);
+//        *this = other;
+//        return *this;
+//    }
 
     namespace list {
 
