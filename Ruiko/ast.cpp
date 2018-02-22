@@ -1,5 +1,6 @@
 #include "flowerq/List.hpp"
 #include "flowerq/IO.hpp"
+#include "flowerq/Macro.hpp"
 #include <string>
 #define DEBUB
 
@@ -8,7 +9,7 @@ class Mixed;
 using Ast = flowerq::List<Mixed>;
 
 #ifdef DEBUB
-    typedef std::string TokenType;
+    typedef StringBuff TokenType;
 #else
     typedef int TokenType;
 #endif
@@ -19,16 +20,16 @@ public:
     int lineno;
     int colno;
     TokenType name;
-    std::string value;
-    Token(int lineno, int colno, TokenType name, std::string value){
+    StringBuff value;
+    Token(int lineno, int colno, TokenType name, StringBuff value){
         this->lineno = lineno;
         this->colno = colno;
         this->name = name;
         this->value = value;
     }
     
-    std::string to_string(){
-        return flowerq::IO::inspect(this->name) + "[" + flowerq::IO::inspect(this->value) + "]";
+    StringBuff toString(){
+        return flowerq::IO::inspect(this->name) + rstr("[") + flowerq::IO::inspect(this->value) + rstr("]");
     }
     Token() = default;
 
@@ -44,11 +45,11 @@ public:
         return ast_ptr == nullptr;
     }
 
-    std::string to_string(){
+    StringBuff toString(){
         if (is_primitive()){
-            return token_ptr -> to_string();
+            return token_ptr -> toString();
         }
-        return ast_ptr -> to_string();
+        return ast_ptr -> toString();
     }
 
     Mixed() = default;

@@ -6,7 +6,7 @@ int main(){
     Token tk;
     Mixed m;
     m.token_ptr = &tk;
-    tk.name = "definition";
-    tk.value = "def";
+    tk.name = rstr("definition");
+    tk.value = rstr("def");
     IO::puts(tk);
 }
