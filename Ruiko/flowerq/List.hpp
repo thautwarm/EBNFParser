@@ -6,14 +6,10 @@
 #ifndef FLOWERQ_LIST
 #define FLOWERQ_LIST
 
-#ifndef FLOWERQ_IO
-    #include "IO.hpp"
-#endif
 
-#ifndef FLOWERQ_MATCH
-    #include "Match.hpp"
-#endif
-
+#include "Macro.hpp"
+#include "IO.hpp"
+#include "Match.hpp"
 #include <functional>
 
 
@@ -33,6 +29,10 @@ namespace flowerq{
     template<typename A>
     static void del(List<A> &list);
 
+
+    template<typename A, typename B>
+    static List<std::tuple<A, B>> zip(List<A> list1, List<B> list2);
+
     namespace list{
         template<typename A>
         static List<A> create();
@@ -44,8 +44,7 @@ namespace flowerq{
         static List<A> create(A value, VARARGS... varargs);
 
         template<typename A>
-        static List<A> cons(List<A> list, A value);
-
+        static List<A> cons(A value, List<A> list);
     }
     #pragma endregion
 
@@ -54,13 +53,27 @@ namespace flowerq{
     template<typename T>
     class List{
 
-    private:
+    protected:
         Node<T>* head_ptr; // the head ptr does not contain values but the length of list.
-
     public:
 
         int length(){
             return head_ptr->size;
+        }
+
+        T at(int idx){
+            Node<T> *list_ptr = this->head_ptr->Next;
+            int i = 0;
+            while(i++ < idx){
+                if (list_ptr == nullptr){
+                    const char* err_info = "Runtime IndexError: List ended before found the index.";
+                    printf("%s\n", err_info);
+                    const auto err = std::runtime_error(err_info);
+                    throw err;
+                }
+                list_ptr = list_ptr->Next;
+            }
+            return list_ptr->value;
         }
 
         T head(){
@@ -82,85 +95,13 @@ namespace flowerq{
             return std::make_tuple(head(), tail());
         };
 
-        void forEach(std::function<void(T)> action) {
-            Node<T> *list_ptr = this->head_ptr->Next;
-            while (list_ptr != nullptr) {
-                action(list_ptr->value);
-                list_ptr = list_ptr->Next;
-            }
-        }
+        #include "List.BaseMethods.hpp"
 
-        template<typename G>
-        List<G> map(std::function<G(T)> fn){
-            
-            const int n = length();
-            List<G> new_list;
-            Node<G>* src_list_ptr = new_list.head_ptr = Node<G>::_new_head(n);
-            if (n == 0){
-                src_list_ptr -> Next = nullptr;
-                return new_list;
-            }
-            this->forEach([&](T e){
-                src_list_ptr->Next = new Node<G>(fn(e));
-                src_list_ptr = src_list_ptr -> Next;
-            });
-            src_list_ptr -> Next = nullptr;
-            return new_list;
-        }
-
-        List<T> filter(std::function<bool(T)> predicate){
-            const int n = length();
-            List<T> new_list;
-            Node<T>* src_list_ptr = new_list.head_ptr = Node<T>::_new_head();
-            if (n == 0){
-                src_list_ptr -> Next = nullptr;
-                return new_list;
-            }
-            int length = 0;
-            this->forEach([&](T e){
-                if (predicate(e)){
-                    ++ length;
-                    src_list_ptr->Next = new Node<T>(e);
-                    src_list_ptr = src_list_ptr -> Next;
-                }
-            });
-            src_list_ptr -> Next = nullptr;
-            new_list.head_ptr->size = length;
-            return new_list;
-        }
-
-        template<typename G>
-        G reduce(std::function<G(G, T)> fold_fn, G start_elem) {
-            this->forEach([&](int e) {
-                start_elem = fold_fn(start_elem, e);
-            });
-            return start_elem;
-        }
-
-        template<typename G>
-        List<std::tuple<T, G>> zip(List<G> traversal) {
-
-            List<std::tuple<T, G>> new_list;
-
-            auto new_head_ptr = new_list -> head_ptr = Node<std::tuple<T, G>>::_new_head(std::min(length(), traversal.length()));
-
-            Node<T> *src_list_ptr = this->head_ptr, *other_list_ptr = traversal->head_ptr;
-
-            while((src_list_ptr = src_list_ptr->Next) != nullptr &&
-                   (other_list_ptr = other_list_ptr->Next) != nullptr) {
-                new_head_ptr->Next = new Node<std::tuple<T, G>>(
-                        std::make_tuple(src_list_ptr->value, other_list_ptr->value));
-                new_head_ptr = new_head_ptr->Next;
-            }
-            new_head_ptr->Next = nullptr;
-            return new_list;
-        };
-
-        std::string to_string(){
+        StringBuff toString(){
 
             const int n = length();
             if (n == 0){
-                return "List<0>[]";
+                return rstr("List<0>[]");
             }
 
             T head;
@@ -168,13 +109,12 @@ namespace flowerq{
             auto tp = destruct();
             pattern::match(tp, head, tail);
             
-            std::string res = "List<" + std::to_string(n) + ">[" + IO::inspect(head);
+            StringBuff res = rstr("List<") + to_string(n) + rstr(">[") + IO::inspect(head);
             
             tail.forEach([=, &res](T e) {
-                res += ", " + IO::inspect(e);
+                res += rstr(", ") + IO::inspect(e);
             });
-
-            return res + "]";
+            return res + rstr("]"); 
         }
 
 
@@ -188,7 +128,7 @@ namespace flowerq{
         friend List<A> list::create(A value, VARARGS... varargs);
 
         template<typename A>
-        friend List<A> list::cons(List<A> list, A value);
+        friend List<A> list::cons(A value, List<A> list);
 
         template<typename A>
         friend void del(List<A>* list_ptr);
@@ -196,9 +136,26 @@ namespace flowerq{
         template<typename A>
         friend void del(List<A> &list);
 
+        template<typename A, typename B>
+        friend List<std::tuple<A, B>> zip(List<A> list1, List<B> list2);
     };
 
 
+    template<typename A, typename B>
+    List<std::tuple<A, B>> zip(List<A> list1, List<B> list2){
+        const int len = std::min(list1.length(), list2.length());
+        List<std::tuple<A, B>> new_list;
+        auto h = new_list.head_ptr = Node<std::tuple<A, B>>::_new_head(len);
+
+        Node<A> *h1 = list1.head_ptr->Next;
+        Node<B> *h2 = list2.head_ptr->Next;
+        for(int i=0; i < len; ++i){
+            h -> Next = new Node<std::tuple<A, B>>(std::make_tuple(h1->value, h2->value));
+            h = h->Next;
+        }
+        h -> Next = nullptr;
+        return new_list;
+    }
     // define ways to construct list.
     #include "List.Constructor.hpp"
 

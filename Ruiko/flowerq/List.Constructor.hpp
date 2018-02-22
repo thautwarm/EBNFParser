@@ -24,8 +24,8 @@ static List<A> list::create(A value, VARARGS... varargs){
 }
 
 template<typename A>
-static List<A> list::cons(List<A> list, A value){
-    auto new_list = List<A>();
+static List<A> list::cons(A value, List<A> list){
+    List<A> new_list;
     auto node = Node<A>::_new_ptr(value);
     node -> Next = list.head_ptr->Next;
     new_list.head_ptr = Node<A>::_new_head(list.length() + 1, node);    
