@@ -8,10 +8,11 @@
 
 #include "Match.hpp"
 #include "Macro.hpp"
+
 #include <iostream>
 #include <tuple>
+#include <functional>
 namespace flowerq{
-
     namespace IO{
 
         StringBuff
@@ -134,6 +135,9 @@ namespace flowerq{
         void putstrln() {
             printf("\n");
         }
-     }
+
+        #include "IO.File.hpp"
+        
+    }
 }
 #endif

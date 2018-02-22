@@ -56,4 +56,4 @@ G reduce(std::function<G(G, T)> fold_fn, G start_elem) {
 template<typename G>
 List<std::tuple<T, G>> zip(List<G> traversal) {
     return flowerq::zip(*this, traversal);
-};
+}

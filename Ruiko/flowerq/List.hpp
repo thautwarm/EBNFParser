@@ -48,8 +48,6 @@ namespace flowerq{
     }
     #pragma endregion
 
-
-
     template<typename T>
     class List{
 
@@ -59,6 +57,41 @@ namespace flowerq{
 
         int length(){
             return head_ptr->size;
+        }
+
+        template<class J = T>
+        typename std::enable_if<!std::is_same<J, Char>::value, StringBuff>::type
+        toString(){
+            
+            const int n = length();
+            if (n == 0){
+                return rstr("List<0>[]");
+            }
+
+            T head;
+            List<T> tail;
+            auto tp = destruct();
+            pattern::match(tp, head, tail);
+            
+            StringBuff res = rstr("List<") + to_string(n) + rstr(">[") + IO::inspect(head);
+            
+            tail.forEach([=, &res](T e) {
+                res += rstr(", ") + IO::inspect(e);
+            });
+
+            return res + rstr("]"); 
+
+        }
+
+        template<class J = T>
+        typename std::enable_if<std::is_same<J, Char>::value, StringBuff>::type
+        toString(){
+            Char *buffer = new Char[length()];
+            int idx = 0;
+            forEach([&](Char& ch){
+                buffer[idx++] = ch;
+            });
+            return buffer;
         }
 
         T at(int idx){
@@ -97,25 +130,7 @@ namespace flowerq{
 
         #include "List.BaseMethods.hpp"
 
-        StringBuff toString(){
-
-            const int n = length();
-            if (n == 0){
-                return rstr("List<0>[]");
-            }
-
-            T head;
-            List<T> tail;
-            auto tp = destruct();
-            pattern::match(tp, head, tail);
-            
-            StringBuff res = rstr("List<") + to_string(n) + rstr(">[") + IO::inspect(head);
-            
-            tail.forEach([=, &res](T e) {
-                res += rstr(", ") + IO::inspect(e);
-            });
-            return res + rstr("]"); 
-        }
+        
 
 
         template<typename A>
@@ -158,6 +173,10 @@ namespace flowerq{
     }
     // define ways to construct list.
     #include "List.Constructor.hpp"
+    
+    using Str = List<Char>;
+    // not sure whether to use haskell like string.
+    // if so, string concat could be slow a lot.
 
     template<typename A>
     void del(List<A>* list_ptr){
