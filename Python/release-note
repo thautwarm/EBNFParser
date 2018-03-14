@@ -121,7 +121,12 @@
 			Now this problem has been fixed.
 		
 		
-		
+	## what's new in EBNFParser 1.0.3:
+
+		- fix a bug in `Throw` syntax:
+
+			There is a bug that ignoring the specific AST in previous versions could be incorrect. Fixed now.
+			
 
 
 		 

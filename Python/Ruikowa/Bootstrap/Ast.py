@@ -69,7 +69,7 @@ def ast_for_stmts(stmts, info = Undef):
         # `info` saves the information to make tokenizer.
 
     assert stmts.name == 'Stmt'
-    res = []   
+    res = []
     to_compile = []
 
     # tokenizer definition.
@@ -163,11 +163,11 @@ def ast_for_equal(eq, info):
                    .format(name=name,
                            DEFINITIONS=','.join(value),
                            # If just use `set.__str__` method to generate the codes, "\n" will be transformed to '\\n'
-                           toIgnore   = ",".join(['{{{}}}'.format(",".join(toIgnore[0])),
+                           toIgnore   = ",".join(['{{{}}}'.format(",".join(map(lambda _: '"{}"'.format(_), toIgnore[0]))),
                                                   '{{{}}}'.format(",".join(toIgnore[1]))])
                     ), Undef
-            
-    
+
+
 def ast_for_expr(expr, info):
     return [ast_for_or(or_expr, info) for or_expr in expr if or_expr is not '|']
 
@@ -175,7 +175,7 @@ def ast_for_or(or_expr, info):
     return '[{res}]'.format(res = ','.join(ast_for_atomExpr(atomExpr, info) for atomExpr in or_expr))
 
 def ast_for_atomExpr(atomExpr, info):
-    
+
     res =  ast_for_atom(atomExpr[0], info)
 
     if len(atomExpr) is 2:
