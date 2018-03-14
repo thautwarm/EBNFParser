@@ -126,7 +126,11 @@
 		- fix a bug in `Throw` syntax:
 
 			There is a bug that ignoring the specific AST in previous versions could be incorrect. Fixed now.
-			
+	
+	## what's new in EBNFParser 1.0.4:
+
+		- make `SyntaxError` caught by `handle_error` be a more specific `DSLSyntaxError`.
+
 
 
 		 
