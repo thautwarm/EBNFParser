@@ -44,7 +44,7 @@ class MetaInfo:
         else:
             self.trace = Trace()
             self.trace.append(Trace())
-        self.rdx   = rdx
+        self.rdx      = rdx
         self.history  = []
         self.fileName = fileName if fileName else "<input>"
 
@@ -100,13 +100,14 @@ ROW_IDX : {ROW_DIX}
 TRACE   :
 {TRACE}
 --------------------
-""".format(COUNT = self.count,
+""".format(COUNT   = self.count,
            ROW_DIX = self.rdx,
            TRACE   = '\n'.join(
                ['['+(','.join([item.name for item in unit ]))+']'for unit in self.trace])
            )
 
-
+    def max_fetched(self):
+        return self.trace.mem()
 
 """
 use list as trace

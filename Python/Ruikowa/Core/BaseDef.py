@@ -61,7 +61,7 @@ class Trace:
 
 
     def __iter__(self):
-        yield from [elem for elem in self.content[:self.length]]
+        yield from self.content[:self.length]
 
 
     def __getitem__(self, item):
@@ -106,6 +106,9 @@ class Trace:
             if elem is obj:
                 return idx
         return Undef
+
+    def mem(self):
+        return self._Mem
 
 
         
