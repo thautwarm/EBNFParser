@@ -106,6 +106,7 @@ TRACE   :
                ['['+(','.join([item.name for item in unit ]))+']'for unit in self.trace])
            )
 
+    @property
     def max_fetched(self):
         return self.trace.mem()
 

@@ -131,7 +131,9 @@
 
 		- make `SyntaxError` caught by `handle_error` be a more specific `DSLSyntaxError`.
 
+    ## what's new in EBNFParser 1.0.5:
 
+		- add a new api `MetaInfo.max_fetched` to get max possible parsed words count, for making interactive tools.
 
 		 
 
