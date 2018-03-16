@@ -135,6 +135,15 @@
 
 		- add a new api `MetaInfo.max_fetched` to get max possible parsed words count, for making interactive tools.
 
+	## quite a exciting step in EBNFParser 1.1
+
+	    - support escape literal now:
+
+	        single.Quote := '\'';
+	    
+
+
+
 		 
 
 

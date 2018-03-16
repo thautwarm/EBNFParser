@@ -31,32 +31,32 @@ def autoToken(info, LiteralParserInfo):
 
     if prefix is Undef or prefix is 'K' or prefix is 'L':
         lazy_define = lambda name=Undef:\
-            ("{name} = LiteralParser({value}, name = '{name}', isRegex = {isRegex})" \
+            ("{name} = LiteralParser({value}, name = \"{name}\", isRegex = {isRegex})" \
             .format(name=name,
                     value="'{}'".format(value[8:-1]) if value.startswith('\'regex::') else value,
                     isRegex=value.startswith('Regex::')) \
                 if name else \
-                "LiteralParser({value}, name='{ESC_STR}')"\
+                "LiteralParser({value}, name=\"{ESC_STR}\")"\
                 .format(value=value,
                         ESC_STR=esc(value)))
 
     elif prefix is 'R':
         lazy_define = lambda name=Undef:\
-            ("{name} = LiteralParser({value}, name = '{name}', isRegex = True)" \
+            ("{name} = LiteralParser({value}, name = \"{name}\", isRegex = True)" \
              .format(name=name,
                      value=value) \
                 if name else \
-                "LiteralParser({value}, name='{ESC_STR}', isRegex = True)" \
+                "LiteralParser({value}, name=\"{ESC_STR}\", isRegex = True)" \
                 .format(value=value,
                         ESC_STR=esc(value)))
 
     elif prefix is 'C':
         lazy_define = lambda name=Undef:\
-            ("{name} = CharParser({value}, name = '{name}')" \
+            ("{name} = CharParser({value}, name = \"{name}\")" \
              .format(name=name,
                      value=value) \
                 if name else \
-                "CharParser({value}, name='{ESC_STR}')" \
+                "CharParser({value}, name=\"{ESC_STR}\")" \
                 .format(value=value,
                         ESC_STR=esc(value)))
 
@@ -143,7 +143,7 @@ def ast_for_equal(eq, info):
 
         value = ast_for_expr(eq[-2], info)
         if toIgnore is Undef:
-            return "{name} = AstParser({DEFINITIONS}, name = '{name}')"\
+            return "{name} = AstParser({DEFINITIONS}, name = \"{name}\")"\
                     .format(name = name,
                             DEFINITIONS = ','.join(value)
                     ), Undef
@@ -159,7 +159,7 @@ def ast_for_equal(eq, info):
                             for ignore in toIgnore if     ignore.startswith('\'')
                         }]
 
-            return "{name} = AstParser({DEFINITIONS}, name = '{name}', toIgnore = [{toIgnore}])" \
+            return "{name} = AstParser({DEFINITIONS}, name = \"{name}\", toIgnore = [{toIgnore}])" \
                    .format(name=name,
                            DEFINITIONS=','.join(value),
                            # If just use `set.__str__` method to generate the codes, "\n" will be transformed to '\\n'

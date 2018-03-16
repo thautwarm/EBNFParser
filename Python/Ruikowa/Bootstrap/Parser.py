@@ -5,10 +5,10 @@ Created on Tue Oct 17 10:16:52 2017
 
 @author: misakawa
 """
-
+import warnings
 from ..ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralParser, CharParser
 lit = LiteralParser
-Str    = lit("[A-Z]{0,1}'[\w|\W]*?'", name = 'Str', isRegex=True)
+Str    = lit(r"[A-Z]'([^\\']+|\\.)*'|'([^\\']+|\\.)*'", name = 'Str', isRegex=True)
 Name   = lit('[a-zA-Z_\u4e00-\u9fa5][a-zA-Z0-9\u4e00-\u9fa5\.]*', name = 'Name', isRegex=True)
 Number = lit('\d+', name = 'Number', isRegex=True)
 LBB =    CharParser('{')
@@ -31,7 +31,7 @@ TokenSign   = lit('Token')
 
 Codes       = lit('\{\{[\w\W]+?\}\}', isRegex=True)
 
-AstStr    = AstParser([Str], name = 'AstStr')
+AstStr      = AstParser([Str], name = 'AstStr')
 namespace     = globals()
 recurSearcher = set()
 
@@ -98,32 +98,62 @@ Stmt  = AstParser(
 
 Stmt.compile(namespace, recurSearcher)
 
-
 import re as _re
+import warnings
+
+
 def _escape(*strs):
     return '|'.join([_re.escape(str) for str in strs])
-token = _re.compile('|'.join(
-        [
-        "[A-Z]{0,1}'[\w\W]*?'",
-        '\{\{[\w\W]+?\}\}',
-        _escape('|',
-                '{',
-                '}',
-                ';',
-                '[',
-                ']',
-                '(',
-                ')',
-                '+',
-                '*',
-                ':=',
-                '::=',
-                '.'),
-        "[a-zA-Z_\u4e00-\u9fa5][a-zA-Z0-9\u4e00-\u9fa5\.]*",
-        "\d+",
-        ]
-        ))
 
+
+_comment_sign = _re.compile(r'(((/\*)+?[\w\W]+?(\*/)+))')
+
+Tokenizers = (
+    _re.compile(r"[A-Z]'([^\\']+|\\.)*?'|'([^\\']+|\\.)*?'"),
+    _re.compile('\{\{[\w\W]+?\}\}'),  # codes
+    _re.compile(_escape('|',
+                        '{',
+                        '}',
+                        ';',
+                        '[',
+                        ']',
+                        '(',
+                        ')',
+                        '+',
+                        '*',
+                        ':=',
+                        '::=',
+                        '.')),
+    _re.compile("[a-zA-Z_\u4e00-\u9fa5][a-zA-Z0-9\u4e00-\u9fa5\.]*"),  # symbol
+    _re.compile("\d+"),  # number)
+)
+
+
+def _token(inp):
+    if not inp:
+        return ()
+
+    inp = _comment_sign.sub('', inp).strip(' \r\n\t,')
+    while True:
+        for i, each in enumerate(Tokenizers):
+            m = each.match(inp)
+
+            if m:
+                w = m.group()
+                yield w
+
+                inp = inp[m.end():].strip(' \r\n\t,')
+                if not inp:
+                    return
+                break
+        else:
+            warnings.warn('no token def {}'.format(inp[0].encode()))
+            inp = inp[1:]
+
+
+def token(inp):
+    res = tuple(_token(inp))
+    return res
 
 
 
