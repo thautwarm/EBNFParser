@@ -23,7 +23,7 @@ print(result)
 if args.o:
     import json
     with open(f"{args.o}.json", 'w', encoding = 'utf8') as JSONFile:
-        json.dump(result.dumpToJSON(), JSONFile, indent = 4)
+        json.dump(result.dump_to_json(), JSONFile, indent = 4)
     with open(f"{args.o}Ast", 'w', encoding = 'utf8') as OriginAstFile:
         OriginAstFile.write(result.dump())
     

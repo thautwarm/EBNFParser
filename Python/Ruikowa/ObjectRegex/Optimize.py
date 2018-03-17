@@ -1,9 +1,9 @@
 def analyze(ebnf):
+    if len(ebnf) is 1 or not all(ebnf):
+        return None
 
-    if len(ebnf) is 1 or not all(ebnf): return None
-
-    groups   =  dict()
-    groupOrder =  []
+    groups = dict()
+    groupOrder = []
 
     for case in ebnf:
         groupId = case[0].name
@@ -15,28 +15,24 @@ def analyze(ebnf):
         else:
             groups[groupId].append(case)
 
-    if len(groupOrder) is 1: return None
+    if len(groupOrder) is 1:
+        return None
 
     return groups, groupOrder
 
-def grammarRemake(groups, groupOrder):
-    from .Node import DependentAstParser
-    return [([groups[groupId][0][0], DependentAstParser(
-                  *[case[1:] for case in groups[groupId]])]
-                if len(groups[groupId])>1 else
-              groups[groupId][0])
+
+def grammar_remake(groups, groupOrder):
+    from .Node import AccompaniedAstParser
+    return [([groups[groupId][0][0], AccompaniedAstParser(
+        *[case[1:] for case in groups[groupId]])]
+             if len(groups[groupId]) > 1 else
+             groups[groupId][0])
             for groupId in groupOrder]
+
 
 def optimize(ebnf):
     analyzed = analyze(ebnf)
     if analyzed is None:
         return ebnf
     groups, groupOrder = analyzed
-    return grammarRemake(groups, groupOrder)
-
-
-
-
-
-
-
+    return grammar_remake(groups, groupOrder)

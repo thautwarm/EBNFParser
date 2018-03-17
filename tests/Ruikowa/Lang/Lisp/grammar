@@ -1,13 +1,8 @@
-Atom    := R'[^\(\)\s\`]+'; # use Regex
-# define a literal parser. `Atom::= R'[^\(\)\s\']+'` is ok, but the ast parsed from the two is a little different with each other.
+Atom    := R'[^\(\)\s\`]+';
+Expr  Throw ['\n'] ::= Atom
+    | Quote
+    | '(' (NEWLINE* Expr* NEWLINE*)* ')' ;
 
-Expr  Throw ['\n'] 
-::= Atom 
-    | Quote 
-    | C'(' (NEWLINE* Expr* NEWLINE*)* C')' ; 
-    
-# C-prefix announces a character parser.
-
-Quote ::=  C'`' Expr ;
-NEWLINE := C'\n' ;
-Stmt Throw ['\n'] ::= (NEWLINE* Expr* NEWLINE*)* ;
+Quote Throw [NEWLINE] ::=  '`' Expr 'cont';
+NEWLINE     := R'\n+';
+Stmt Throw [NEWLINE] ::= (NEWLINE* Expr* NEWLINE*)* ;

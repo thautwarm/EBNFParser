@@ -1,0 +1,22 @@
+Stmts    ::= TokenDef{0, 1} Equals*;
+
+TokenDef ::= 'Token' (Name | Codes);
+
+Equals   ::= Name ':='  Str ';' |
+             Name [Throw] '::=' Expr ';';
+
+Throw    ::= 'Throw' '[' (Name | Str)* ']';
+
+Expr     ::= Or ('|' Or)*;
+
+Or       ::= AtomExpr+;
+
+AtomExpr ::= Atom Trailer*;
+
+Atom     ::=  Str         |
+              Name        |
+              '(' Expr ')'|
+              '[' Expr ']';
+Trailer  ::= '*' | '+' | '{' Number{1 2} '}';
+
+

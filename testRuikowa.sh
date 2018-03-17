@@ -6,5 +6,5 @@ fi
 cd   tests/Ruikowa/Lang
 
 
-bash Cm/testCm.sh
+# bash Cm/testCm.sh
 bash Lisp/testLisp.sh

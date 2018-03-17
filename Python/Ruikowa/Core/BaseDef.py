@@ -5,7 +5,6 @@ Created on Sat Oct 14 17:46:02 2017
 
 @author: misakawa
 """
-import warnings
 from ..ErrorFamily import *
 # ====== Define Generic Type Params =============
 
@@ -100,7 +99,7 @@ class Trace:
     def pop(self):
         self.length -= 1
         assert self.length>=0
-            
+
     def where(self, obj):
         for idx, elem in enumerate(self.content[:self.length]):
             if elem is obj:
@@ -111,7 +110,7 @@ class Trace:
         return self._Mem
 
 
-        
-    
-    
+
+
+
 

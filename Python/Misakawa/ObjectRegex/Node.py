@@ -92,7 +92,7 @@ class Ast:
         
     def dumpToJSON(self):
         JSON = dict(name  = self.name,
-                    value = self.value if self.type is str else [value.dumpToJSON() for value in self.value],
+                    value = self.value if self.type is str else [value.dump_to_json() for value in self.value],
                     meta  = self.meta
                     )
         return JSON

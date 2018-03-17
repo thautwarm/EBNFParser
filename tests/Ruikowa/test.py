@@ -33,7 +33,7 @@ namespace = globals()
 seset     = set()
 ASeq.compile(namespace, seset)
 x = MetaInfo()
-print(ASeq.match(['a', 'd','d','d','d','d','g'], x).dumpToJSON())
+print(ASeq.match(['a', 'd','d','d','d','d','g'], x).dump_to_json())
 
 
 

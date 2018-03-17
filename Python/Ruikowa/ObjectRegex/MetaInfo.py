@@ -8,7 +8,6 @@ Created on Sat Oct 14 18:54:45 2017
 from ..Core.BaseDef import *
 
 
-
 class MetaInfo:
     """
     Meta information when parsing.
@@ -36,7 +35,7 @@ class MetaInfo:
 
     """
 
-    def __init__(self, count=0, rdx=0, trace=None, fileName=None):
+    def __init__(self, count=0, trace=None, fileName=None):
 
         self.count = count
         if trace:
@@ -44,8 +43,7 @@ class MetaInfo:
         else:
             self.trace = Trace()
             self.trace.append(Trace())
-        self.rdx      = rdx
-        self.history  = []
+        self.history = []
         self.fileName = fileName if fileName else "<input>"
 
     def new(self):
@@ -56,21 +54,19 @@ class MetaInfo:
         """
         Save a record of parsing history in order to trace back.
         """
-        self.history.append((self.count, self.rdx, self.trace[self.count].length))
+        self.history.append((self.count, self.trace[self.count].length))
 
     def rollback(self):
         """
         Trace back.
         """
         try:
-            count, rdx, length = self.history.pop()
+            count, length = self.history.pop()
         except IndexError:
             return None
         self.count = count
-        self.rdx   = rdx
-        self.trace.length = count+1
+        self.trace.length = count + 1
         self.trace[count].length = length
-
 
     def pull(self):
         """
@@ -90,25 +86,24 @@ class MetaInfo:
                      FileName)
                     from current meta information.
         """
-        return (self.rdx, self.count, self.fileName)
+        return (self.count, self.fileName)
 
     def __str__(self):
         return """
 --------------------
 COUNT   : {COUNT}
-ROW_IDX : {ROW_DIX}
 TRACE   :
 {TRACE}
 --------------------
-""".format(COUNT   = self.count,
-           ROW_DIX = self.rdx,
-           TRACE   = '\n'.join(
-               ['['+(','.join([item.name for item in unit ]))+']'for unit in self.trace])
+""".format(COUNT=self.count,
+           TRACE='\n'.join(
+               ['[' + (','.join([item.name for item in unit])) + ']' for unit in self.trace])
            )
 
     @property
     def max_fetched(self):
         return self.trace.mem()
+
 
 """
 use list as trace

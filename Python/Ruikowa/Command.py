@@ -1,4 +1,3 @@
-
 def main():
     # !/usr/bin/env python3
     # -*- coding: utf-8 -*-
@@ -8,8 +7,7 @@ def main():
     @author: misakawa
     """
 
-    testLangFile = lambda fileName: \
-"""
+    testLangFile = lambda fileName: """
 from Ruikowa.ErrorFamily import handle_error
 from Ruikowa.ObjectRegex.MetaInfo import MetaInfo
 from """ + fileName.replace('.py', '') + """ import *
@@ -49,13 +47,10 @@ if args.o:
                            help='EBNF file which defines your grammar.')
     cmdparser.add_argument("OutputFile", metavar='out_filename', type=str,
                            help='generated python file(s) that makes a parser for your language.')
-    cmdparser.add_argument("-comment", default=False, type=bool, help="generate testLang.py?")
-    cmdparser.add_argument("-multiline", default=False, type=bool, help="generate testLang.py?")
-    cmdparser.add_argument("-test", default=True, type=bool, help="This is an option that has been deprecated.")
     cmdparser.add_argument("-lang", default="Unnamed", type=str, help="Name your own language with this param.")
 
     args = cmdparser.parse_args()
-    inp, outp, is_test = args.InputFile, args.OutputFile, args.test
+    inp, outp = args.InputFile, args.OutputFile
 
     import sys, os
 
@@ -64,49 +59,13 @@ if args.o:
 
     with open('{head_to}/testLang.py'.format(head_to=head_to), 'w', encoding='utf8') as testlang:
         testlang.write(testLangFile(__ParserFile__))
-
-    def getRaw(inp):
-        with open(inp, 'r', encoding='utf8') as file:
-            ret = file.read()
-        return ret
-
-    # ============
-    # about preprocessing
-    regexCommentRemove = lambda string: re.compile('#[\w\W]*?\n').sub('', string)
-    regexMultiLineSupport = lambda string: string
-
-    def selectMode(mode):
-        toDo = []
-        if 'comment' in mode:
-            toDo.append(regexCommentRemove)
-        if 'multiline' in mode:
-            warnings.warn("Deprecated: option `multuline` makes no sense in the new version.")
-            toDo.append(regexMultiLineSupport)
-        return toDo
-
-    def transform(raw, mode):
-        for f in selectMode(mode):
-            raw = f(raw)
-        return raw
-
-    # ================
+    bootstrap_comp(inp, args.lang)
+    # with open(outp, 'w', encoding='utf8') as parserFile, \
+    #         open(os.path.join(os.path.split(outp)[0], 'etoken.py'), 'w', encoding='utf8') as tokenFile:
+    #     bootstrap_comp(inp, args.lang)
+    #     parserFile.write(parser)
+    #     tokenFile.write(token)
 
 
-    mode = []
-    if args.comment:
-        mode.append('comment')
-    if args.multiline:
-        mode.append('multiline')
-
-    with open(outp, 'w', encoding='utf8') as parserFile, \
-            open(os.path.join(
-                os.path.split(outp)[0], 'etoken.py'),
-                'w',
-                encoding='utf8')            as tokenFile:
-        parser, token = bootstrap_comp(
-            transform(getRaw(inp), mode)
-            , args.lang)
-        parserFile.write(parser)
-        tokenFile.write(token)
-
-if __name__ == '__main__': main()
+if __name__ == '__main__':
+    main()

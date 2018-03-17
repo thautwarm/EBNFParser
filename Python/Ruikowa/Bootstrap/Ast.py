@@ -1,269 +1,211 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Oct 19 15:26:59 2017
-
-@author: misakawa
-"""
-DEBUG = True
-from ..ObjectRegex.Node import Ast
+import linq
+import os
+from collections import namedtuple, OrderedDict
+from typing import List
+from .Token import NameEnum, Tokenizer
+from ..ObjectRegex.Tokenizer import Mode, TokenSpec
 from ..Core.BaseDef import *
-from .. import ErrorFamily
-import re, os
+from ..ErrorFamily import UnsupportedStringPrefix
+from ..ObjectRegex.Node import Ast
+from ..color import Colored
+from ..io import grace_open
 
-# make escape string.
-esc = lambda str: str.replace("'", r"\'").replace('"', r'\"')
+SeqParserParams = namedtuple('DA', ['at_least', 'at_most'])
 
-def autoToken(info, LiteralParserInfo):
+T = 'Union[Ast, List[Union[Ast, Tokenizer]]]'
 
-    prefix, value = LiteralParserInfo
 
-    if prefix is 'R':  # Regex
-        action = lambda:info['regex'].append(value)
-    elif prefix is 'L':  # Literal
-        action = lambda:info['liter'].append("'{ESCAPED}'".format(ESCAPED=re.escape(value[1:-1])))
-    elif prefix is Undef or prefix is 'K':  # Keyword
-        action = lambda:info['keywd'].append(value)
-    elif prefix is 'C':
-        action = lambda:info['char'].append("'{ESCAPED}'".format(ESCAPED=re.escape(value[1:-1])))
+def get_string_and_mode(prefix_string: str):
+    if prefix_string[0] is not '\'':
+        return prefix_string[0], prefix_string[1:]
     else:
-        raise UnsolvedError("Invalid Str Prefix {PREFIX}".format(PREFIX=value))
-
-    if prefix is Undef or prefix is 'K' or prefix is 'L':
-        lazy_define = lambda name=Undef:\
-            ("{name} = LiteralParser({value}, name = \"{name}\", isRegex = {isRegex})" \
-            .format(name=name,
-                    value="'{}'".format(value[8:-1]) if value.startswith('\'regex::') else value,
-                    isRegex=value.startswith('Regex::')) \
-                if name else \
-                "LiteralParser({value}, name=\"{ESC_STR}\")"\
-                .format(value=value,
-                        ESC_STR=esc(value)))
-
-    elif prefix is 'R':
-        lazy_define = lambda name=Undef:\
-            ("{name} = LiteralParser({value}, name = \"{name}\", isRegex = True)" \
-             .format(name=name,
-                     value=value) \
-                if name else \
-                "LiteralParser({value}, name=\"{ESC_STR}\", isRegex = True)" \
-                .format(value=value,
-                        ESC_STR=esc(value)))
-
-    elif prefix is 'C':
-        lazy_define = lambda name=Undef:\
-            ("{name} = CharParser({value}, name = \"{name}\")" \
-             .format(name=name,
-                     value=value) \
-                if name else \
-                "CharParser({value}, name=\"{ESC_STR}\")" \
-                .format(value=value,
-                        ESC_STR=esc(value)))
-
-    return lazy_define, action
+        return None, prefix_string
 
 
-def ast_for_stmts(stmts, info = Undef):
-    if info is Undef:
-        info = dict(keywd = [], regex = [], liter = [])
-        # `info` saves the information to make tokenizer.
+def surround_with_double_quotes(string):
+    return '"{}"'.format(string)
 
-    assert stmts.name == 'Stmt'
-    res = []
-    to_compile = []
 
-    # tokenizer definition.
-    # If is `Undef`, tokenizer won't be defined in grammar file.
-    codesDefToken = Undef
+class Compiler:
+    def __init__(self):
+        self.token_func_src = None
 
-    defTokenInEBNF= True
+        self.token_spec = TokenSpec()
 
-    if stmts[0].name is 'TokenDef':
-        #
-        #   TokenDef[
-        #           'Token'
-        #           (Codes|Name)
-        #           ]
-        #
-        tokenDefinition = stmts[0][1]  # tokenizer definition can be found at grammar file.
-        if tokenDefinition.startswith('{{'):
-            codesDefToken = stmts[0][1][2:-2]
+        self.token_definitions = []
+        self.combined_parsers = []
+
+        self._current_indent = None
+        self._current_name = None
+        self._current_events = None
+        self._current_anonymous_count = 0
+
+    def ast_for_stmts(self, stmts: T) -> None:
+        """
+        Stmts    ::= TokenDef{0, 1} Equals*;
+        """
+
+        if not stmts:
+            raise ValueError('no ast found!')
+        head, *equals = stmts
+
+        if head.name is NameEnum.AV_Token:
+            self.ast_for_token_def(head)
         else:
-            path = os.path.join(*filter(lambda x: x,  tokenDefinition.split('.'))) + '.py'
+            self.ast_for_equals(head)
 
-            with open("./{path}".format(path = path)) as read_from:
-                codesDefToken = read_from.read()
+        for each in equals:
+            self.ast_for_equals(each)
 
-        defTokenInEBNF = False
-
-        stmts.reverse();stmts.pop();stmts.reverse() # popleft.
-
-    for eq in stmts:
-        define, action = ast_for_equal(eq, info)
-        #  The meaning of `action` can be found at function `autoToken`.
-        #  `action` is for automatically making tokenizer.
-
-        if action is Undef:
-            # so it's an AstParser.
-            to_compile.append(eq[0])
-
-        elif defTokenInEBNF:
-            action()
-
-        res.append(define)
-
-    tks = info if defTokenInEBNF else codesDefToken
-
-    return res, tks, to_compile
-
-
-def ast_for_equal(eq, info):
-    assert eq.name == 'Equals'
-    case = eq[1]
-    name = eq[0]
-    if case == ':=':
-        value = eq[2]
-
-        if not value.startswith('\''):
-            prefix = value[0]
-            value  = value[1:]
-        else:
-            prefix = Undef
-
-        lazy_define, action = autoToken(info, (prefix, value))
-        return lazy_define(name), action
-
-    else:
-
-        # `toIgnore` will indicate which patterns of the parsed results to be ignored.
-        toIgnore = Undef
-
-        if isinstance(case, Ast):
-            toIgnore = case[2:-1]
-
-        value = ast_for_expr(eq[-2], info)
-        if toIgnore is Undef:
-            return "{name} = AstParser({DEFINITIONS}, name = \"{name}\")"\
-                    .format(name = name,
-                            DEFINITIONS = ','.join(value)
-                    ), Undef
+    def ast_for_token_def(self, token_def: T):
+        global token_func_src
+        content = token_def[1]
+        if content.name is NameEnum.Name:
+            path = os.path.join(*
+                                map(lambda _: '..' if _ == 'parent' else _,
+                                    content.string.split('.')))
+            token_func_src = grace_open(path).read()
+            return
 
         else:
+            token_func_src = content.string[2:-2]
 
-            # ignore a string or an ast.
-            # e.g: <AstParser> Throw ['<String>', <name_of_AST_parser>] ::= ...
-            toIgnore = [{ignore
-                            for ignore in toIgnore if not ignore.startswith('\'')
-                        },
-                        {ignore
-                            for ignore in toIgnore if     ignore.startswith('\'')
-                        }]
-
-            return "{name} = AstParser({DEFINITIONS}, name = \"{name}\", toIgnore = [{toIgnore}])" \
-                   .format(name=name,
-                           DEFINITIONS=','.join(value),
-                           # If just use `set.__str__` method to generate the codes, "\n" will be transformed to '\\n'
-                           toIgnore   = ",".join(['{{{}}}'.format(",".join(map(lambda _: '"{}"'.format(_), toIgnore[0]))),
-                                                  '{{{}}}'.format(",".join(toIgnore[1]))])
-                    ), Undef
-
-
-def ast_for_expr(expr, info):
-    return [ast_for_or(or_expr, info) for or_expr in expr if or_expr is not '|']
-
-def ast_for_or(or_expr, info):
-    return '[{res}]'.format(res = ','.join(ast_for_atomExpr(atomExpr, info) for atomExpr in or_expr))
-
-def ast_for_atomExpr(atomExpr, info):
-
-    res =  ast_for_atom(atomExpr[0], info)
-
-    if len(atomExpr) is 2:
-
-        case = atomExpr[1][0]
-
-        if   case is '*':
-            res = ast_for_trailer('[{res}]'.format(res = res))
-        elif case is '+':
-            res = ast_for_trailer('[{res}]'.format(res = res), atleast = 1)
-        elif case is '{':
-            atleast = atomExpr[1][1]
-            case    = atomExpr[1][2]
-            if case is '}':
-                res = ast_for_trailer('[{res}]'.format(res = res),
-                                      atleast = atleast)
-
+    def ast_for_equals(self, equals: T):
+        if equals[-2].name is NameEnum.Str:
+            name, _, str_tk, _ = equals
+            name = name.string
+            str_tk: 'Tokenizer'
+            mode, string = get_string_and_mode(str_tk.string)
+            if mode is 'R':
+                mode = Mode.regex
+            elif len(string) is 3:
+                mode = Mode.char
             else:
-                atmost = case
-                res = ast_for_trailer('[{res}]'.format(res = res),
-                                      atleast = atleast,
-                                      atmost  = atmost)
-
-    return res
-
-def ast_for_atom(atom, info):
-    n = len(atom)
-    if n is 1:
-        liter = atom[0]
-        if isinstance(liter, Ast):
-            """
-            R'target' | 'target' | C'\n' | C 'c'
-            =>
-            regex       keyword    single-char
-            """
-            assert liter.name == 'AstStr'
-            string = liter[0]
-            if not string.startswith('\''):
-                prefix = string[0]
-                string = string[1:]
+                mode = Mode.const
+            self.token_spec.append(name, mode, string, name_unique=True)
+            self.token_definitions.append("{} = LiteralNameParser({})".format(name, string))
+        else:
+            if equals[1].name is NameEnum.Throw:
+                name, throw, _, expr, _ = equals
+                name: 'Tokenizer'
+                throw: 'T' = self.ast_for_throw(throw)
+                grouped = linq.Flow(throw).GroupBy(lambda x: x.name is NameEnum.Str).Unboxed()
             else:
-                prefix = Undef
+                name, _, expr, _ = equals
+                name: 'Tokenizer'
+                grouped = {True: (), False: ()}
 
-            lazy_define, action = autoToken(info, LiteralParserInfo=(prefix, string))
-            action()
-            return lazy_define()
+            indent = '             ' + " " * len(name.string)
+            self.combined_parsers.append(
+                '{name} = AstParser({possibilities},\n'
+                '{indent}name="{name}",\n'
+                '{indent}to_ignore=({name_ignore}, {lit_ignore}))'
+                ''.format(
+                    indent=indent,
+                    name=name.string,
+                    possibilities=(',\n{}'.format(indent)).join(self.ast_for_expr(expr)),
+                    lit_ignore="{{{}}}".format(', '.join(map(lambda _: _.string, grouped[True]))),
+                    name_ignore="{{{}}}".format(', '.join(map(lambda _: '"' + _.string + '"', grouped[False])))
+                ))
+
+    def ast_for_throw(self, throw: T):
+        _, _, *items, _ = throw
+        return items
+
+    def ast_for_expr(self, expr: T):
+        return (self.ast_for_or(each) for each in expr[::2])
+
+    def ast_for_or(self, or_expr: T):
+
+        return '[{}]'.format(', '.join(self.ast_for_atom_expr(each) for each in or_expr))
+
+    def ast_for_atom_expr(self, atom_expr: T):
+        if len(atom_expr) is 1:
+            atom = atom_expr[0]
+            atom: 'Ast'
+            maybe_tk, default_attrs = self.ast_for_atom(atom)
+            default_attrs: 'SeqParserParams'
+            if maybe_tk.__class__ is Tokenizer:
+                if maybe_tk.name is NameEnum.Name:
+                    return "Ref('{}')".format(maybe_tk.string)
+                else:
+                    mode, string = get_string_and_mode(maybe_tk.string)
+                    if not mode:
+                        if len(string) is 3 and string[1] not in self.token_spec:
+                            self.token_spec.append(':char', Mode.char, string)
+                            return string
+                        for k, mode, v in self.token_spec.source:
+                            if mode is Mode.const and v is string:
+                                break
+                        else:
+                            self.token_spec.append(':const', Mode.const, string)
+                        return string
+
+                    if mode is 'R':
+                        for k, mode, v in self.token_spec.source:
+                            if mode is Mode.regex and v == string:
+                                return "Ref('{}')".format(k)
+
+                        name: str = ':anonymous{}'.format(self._current_anonymous_count)
+                        self._current_anonymous_count += 1
+                        warnings.warn(
+                            Colored.LightBlue +
+                            '\nFor efficiency of the parser, '
+                            'we do not do regex matching when parsing(only in tokenizing we use regex), '
+                            'you are now creating a anonymous regex literal parser '
+                            '{}<{}>{} when defining combined parser{}\n'
+                            .format(Colored.Red, name, Colored.LightBlue, Colored.Clear))
+
+                        self.token_spec.append(name, Mode.regex, string, name_unique=True)
+
+                        return "Ref('{}')".format(name)
+                    raise UnsupportedStringPrefix(mode)
+
+            return ('SeqParser({possibilities}, '
+                    'at_least={at_least},'
+                    'at_most={at_most})'
+                    .format(possibilities=', '.join(maybe_tk),
+                            at_least=default_attrs.at_least,
+                            at_most=default_attrs.at_most))
+
 
         else:
-            return "Ref('{Name}')".format(Name=liter)
+            atom, trailer = atom_expr
+            maybe_tk, _ = self.ast_for_atom(atom)
+            attrs = self.ast_for_trailer(trailer)
+            if maybe_tk.__class__ is Tokenizer:
+                return ('SeqParser([{atom}], '
+                        'at_least={at_least},'
+                        'at_most={at_most})'
+                    .format(
+                    atom='Ref("{}")'.format(maybe_tk.string) if maybe_tk.name is NameEnum.Name else maybe_tk.string,
+                    at_least=attrs.at_least,
+                    at_most=attrs.at_most))
 
-    else:
-        if DEBUG:
-            assert n is 3
-        case = atom[0]
-        if   case is '[':
-            return ast_for_trailer("{DEFINITIONS}"\
-                                        .format(DEFINITIONS = ','.join(ast_for_expr(atom[1], info))),
-                                   atleast = 0,
-                                   atmost  = 1)
-        elif case is '(':
-            or_exprs = ast_for_expr(atom[1], info = info)
-            if len(or_exprs) is 1:
-                return or_exprs[0][1:-1]
-            return ast_for_trailer("{DEFINITIONS}"\
-                                        .format(DEFINITIONS=','.join(or_exprs)),
-                                   atleast = 1,
-                                   atmost  = 1)
+            return ('SeqParser({possibilities}, '
+                    'at_least={at_least}, '
+                    'at_most={at_most})'
+                    .format(possibilities=','.join(maybe_tk),
+                            at_least=attrs.at_least,
+                            at_most=attrs.at_most))
+
+    def ast_for_atom(self, atom: 'Ast'):
+        if atom[0].string is '(':
+            return self.ast_for_expr(atom[1]), SeqParserParams(1, 1)
+        elif atom[0].string is '[':
+            return self.ast_for_expr(atom[1]), SeqParserParams(0, 1)
+
+        return atom[0], None
+
+    def ast_for_trailer(self, trailer):
+        if len(trailer) is 1:
+            trailer: 'Tokenizer' = trailer[0]
+            return SeqParserParams(0, 'Undef') if trailer.string is '*' else SeqParserParams(1, 'Undef')
         else:
-            ErrorFamily.UnsolvedError("Unsolved Atom Parsed Ast.")
-
-
-def ast_for_trailer(series_expr, atleast = 0, atmost = Undef):
-    if atleast is 0:
-        if atmost is Undef:
-            return "SeqParser({series_expr})"\
-                .format(series_expr = series_expr)
-        else:
-            return "SeqParser({series_expr}, atmost = {atmost})"\
-                .format(series_expr=series_expr, atmost = atmost)
-    else:
-        if atmost is Undef:
-            return "SeqParser({series_expr}, atleast = {atleast})"\
-                .format(series_expr=series_expr,atleast=atleast)
-        else:
-            if int(atleast) is int(atmost)  is 1:
-                return "DependentAstParser({series_expr})" \
-                .format(series_expr=series_expr, atleast=atleast, atmost=atmost)
-
-            return "SeqParser({series_expr}, atleast = {atleast}, atmost = {atmost})"\
-                .format(series_expr=series_expr,atleast=atleast,atmost=atmost)
-
+            _, *numbers, _ = trailer
+            numbers: 'List[Tokenizer]'
+            if len(numbers) is 2:
+                a, b = numbers
+                return SeqParserParams(a.string, a.string)
+            else:
+                return SeqParserParams(numbers[0].string, 'Undef')
