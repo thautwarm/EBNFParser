@@ -83,18 +83,19 @@ class Compiler:
 
     def ast_for_equals(self, equals: T):
         if equals[-2].name is NameEnum.Str:
-            name, _, str_tk, _ = equals
+            name, _, *str_tks, _ = equals
             name = name.string
-            str_tk: 'Tokenizer'
-            mode, string = get_string_and_mode(str_tk.string)
-            if mode is 'R':
-                mode = Mode.regex
-            elif len(string) is 3:
-                mode = Mode.char
-            else:
-                mode = Mode.const
-            self.token_spec.append(name, mode, string, name_unique=True)
-            self.literal_parser_definitions.append("{} = LiteralNameParser('{}')".format(name, name))
+            for str_tk in str_tks:
+                str_tk: 'Tokenizer'
+                mode, string = get_string_and_mode(str_tk.string)
+                if mode is 'R':
+                    mode = Mode.regex
+                elif len(string) is 3:
+                    mode = Mode.char
+                else:
+                    mode = Mode.const
+                self.token_spec.append(name, mode, string, name_unique=False)
+                self.literal_parser_definitions.append("{} = LiteralNameParser('{}')".format(name, name))
         else:
             if equals[1].name is NameEnum.Throw:
                 name, throw, _, expr, _ = equals

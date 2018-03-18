@@ -59,7 +59,7 @@ token_table = (
     ("Number", regex_matcher("\d+")),
 
     # do not match
-    ("Space", regex_matcher('\s+')),
+    ("Space", regex_matcher('\s+|,')),
 
 )
 

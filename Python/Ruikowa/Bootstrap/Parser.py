@@ -35,7 +35,7 @@ TokenDef = AstParser(
 
 Equals = AstParser(
     [Name, SeqParser([Ref('Throw')], at_most=1), '::=', Ref('Expr'), ';'],
-    [Name, ':=', Str, ';'],
+    [Name, ':=', SeqParser([Str]), ';'],
     name='Equals')
 
 Throw = AstParser(

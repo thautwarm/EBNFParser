@@ -13,6 +13,9 @@ if False:
     from typing import Sequence, Optional
     from .ObjectRegex.Tokenizer import Tokenizer
 
+use_py_error = False
+use_py_warnings = False
+
 import warnings
 
 
@@ -32,12 +35,28 @@ class DSLSyntaxError(SyntaxError):
     pass
 
 
-class UnsupportedStringPrefix(Exception):
+if use_py_warnings:
+    Warnings = warnings
+else:
+    class Warnings:
+        @classmethod
+        def warn(cls, *msg):
+            print(Colored.LightBlue, 'UserWarning:', *msg)
+
+if use_py_error:
+    class Error:
+        def __init__(self, *args):
+            print(Colored.Purple, '{}: '.format(self.__class__.__name__), *args)
+else:
+    Error = Exception
+
+
+class UnsupportedStringPrefix(Error):
     def __init__(self, mode, msg=''):
-        Exception.__init__(self,
-                           '\n' + msg + '\n' +
-                           Colored.LightBlue + "Unsupported string prefix " + Colored.Red + '{}'
-                           .format(mode) + Colored.LightBlue + "." + Colored.Clear)
+        Error.__init__(self,
+                       '\n' + msg + '\n' +
+                       Colored.LightBlue + "Unsupported string prefix " + Colored.Red + '{}'
+                       .format(mode) + Colored.LightBlue + "." + Colored.Clear)
 
 
 def find_location(filename, where: 'Tokenizer', src_code: str = None):
@@ -50,9 +69,9 @@ def find_location(filename, where: 'Tokenizer', src_code: str = None):
                                                      filename, where.lineno + 1) + Colored.Clear
 
 
-class UniqueNameConstraintError(Exception):
+class UniqueNameConstraintError(Error):
     def __init__(self, name, msg=''):
-        Exception.__init__(self,
-                           '\n' + msg + '\n' +
-                           Colored.Blue + "Name " + Colored.Red + '{}'
-                           .format(name) + Colored.Blue + "should be unique." + Colored.Clear)
+        Error.__init__(self,
+                       '\n' + msg + '\n' +
+                       Colored.Blue + "Name " + Colored.Red + '{}'
+                       .format(name) + Colored.Blue + "should be unique." + Colored.Clear)

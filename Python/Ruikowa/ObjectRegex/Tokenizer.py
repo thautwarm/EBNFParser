@@ -6,12 +6,12 @@ try:
 except ModuleNotFoundError:
     pass
 
-import warnings
 import re
 import json
 import linq
 from collections import defaultdict
 from ..ErrorFamily import UniqueNameConstraintError
+from ..ErrorHandler import Colored, Warnings as warnings
 
 
 class Mode:
@@ -33,7 +33,9 @@ class TokenSpec:
             self.source.append((name, mode, string))
             self.names.add(name)
             return
-
+        if name in self.names and mode is Mode.regex:
+            warnings.warn(Colored.Yellow + "Sharing one name" + Colored.Red + " '{}' ".format(
+                name) + Colored.Yellow + "with multiple regex literal parsers." + Colored.Clear)
         self.source.append((name, mode, string))
         self.names.add(name)
 
@@ -59,7 +61,7 @@ class TokenSpec:
             self.source
         ).Filter(
             lambda name, mode, b: mode is not Mode.char and (
-                        name.isidentifier() or name[0] is ':' and name[1:].isidentifier())
+                    name.isidentifier() or name[0] is ':' and name[1:].isidentifier())
         ).Group(
             lambda name, mode, string: (name, string if mode is Mode.regex else mode)
         ).Unboxed()

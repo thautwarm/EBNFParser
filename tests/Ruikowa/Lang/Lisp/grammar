@@ -1,9 +1,10 @@
 Ignore [N]
-N := R'\s+';
+N := R'\n', R'\t', ' ';
 
 Atom    := R'[^\(\)\s\`]?'; # use Regex
 Expr  ::= Atom
         | Quote
         | '(' Expr* ')';
+
 Quote ::=  '`' Expr ;
 Stmt  ::= Expr*;

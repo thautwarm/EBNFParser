@@ -23,12 +23,13 @@ setup(name='EBNFParser',
       packages=['Ruikowa'],
       entry_points={
           'console_scripts': [
-              'ruiko2=Ruikowa.Command:main']
+              'misakawa=Ruikowa.Command:main']
       },
+    install_requires=[
+        'Linq==0.3.1'
+    ],
       platforms='any',
       classifiers=[
-          'Programming Language :: Python :: 3.4',
-          'Programming Language :: Python :: 3.5',
           'Programming Language :: Python :: 3.6',
           'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: Implementation :: CPython'],

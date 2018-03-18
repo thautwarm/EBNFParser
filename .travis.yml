@@ -6,6 +6,7 @@ python:
   - "3.6-dev"
   - "3.7-dev"
 script:
+  - pip install Linq
   - bash ./testRuikowa.sh installAndTest
 
 
