@@ -3,6 +3,7 @@ if False:
     from typing import Sequence, Optional
     from .ObjectRegex.Tokenizer import Tokenizer
 from .ErrorFamily import *
+from pprint import pprint
 
 
 class ErrorHandler:
@@ -11,13 +12,15 @@ class ErrorHandler:
         self.parse_func = parse_func
         self.token_func = token_func
 
-    def from_file(self, filename: str, meta: 'MetaInfo' = None, partial=False):
+    def from_file(self, filename: str, meta: 'MetaInfo' = None, partial=False, print_token=False):
         with open(filename, 'r', encoding='utf8') as f:
             raw_string = f.read()
         return self.from_source_code(filename, raw_string, meta, partial)
 
-    def from_source_code(self, filename: str, src_code: str, meta: 'MetaInfo' = None, partial=False):
+    def from_source_code(self, filename: str, src_code: str, meta: 'MetaInfo' = None, partial=False, print_token=False):
         tokens: 'Sequence[Tokenizer]' = tuple(self.token_func(src_code))
+        if print_token:
+            pprint(tokens)
         return self.from_tokens(filename, src_code, tokens, meta, partial)
 
     def from_tokens(self, filename: str, src_code: str, tokens: 'Sequence[Tokenizer]', meta: 'MetaInfo', partial=False):
@@ -29,8 +32,6 @@ class ErrorHandler:
             raise CheckConditionError("Meta Information not defined yet!")
 
         res = self.parse_func(tokens, meta=meta)
-        print(res)
-
         if res is None or (not partial and len(tokens) != meta.count):
             max_fetched = meta.max_fetched
             try:

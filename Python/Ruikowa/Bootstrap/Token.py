@@ -16,18 +16,19 @@ class NameEnum:
     Number = unique_literal_cache_pool['Number']
     Newline = unique_literal_cache_pool['Newline']
 
+    TokenIgnore = unique_literal_cache_pool['TokenIgnore']
     Single = unique_literal_cache_pool['Single']
     Eq = unique_literal_cache_pool['Eq']
     TokenRelated = unique_literal_cache_pool['TokenRelated']
 
-    AV_Token = unique_literal_cache_pool['AutoValue-Token']
+    TokenDef = unique_literal_cache_pool['TokenDef']
     Throw = unique_literal_cache_pool['Throw']
 
 
 token_table = (
     # match by value
     ("TokenRelated", str_matcher(
-        ("Token", "Throw")
+        ("Token", "Throw", "Ignore")
     )),
     # match by value
     ("Single", char_matcher(

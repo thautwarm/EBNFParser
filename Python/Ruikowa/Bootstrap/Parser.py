@@ -17,8 +17,15 @@ Codes = LiteralNameParser('Codes')
 namespace = globals()
 recurSearcher = set()
 
+TokenIgnore = AstParser(
+    ['Ignore',
+     '[',
+     SeqParser([Name], [Str]),
+     ']'],
+    name='TokenIgnore')
+
 Stmts = AstParser(
-    [SeqParser([Ref('TokenDef')], at_most=1),
+    [SeqParser([Ref('TokenIgnore')], [Ref('TokenDef')], at_most=1),
      SeqParser([Ref('Equals')])],
     name='Stmts')
 
@@ -57,6 +64,7 @@ Atom = AstParser(
     ['(', Ref('Expr'), ')'],
     ['[', Ref('Expr'), ')'],
     name='Atom')
+
 Trailer = AstParser(
     ['+'],
     ['*'],

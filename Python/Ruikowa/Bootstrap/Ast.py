@@ -1,16 +1,17 @@
 import linq
 import os
 from collections import namedtuple, OrderedDict
-from typing import List
+from typing import List, Tuple
 from .Token import NameEnum, Tokenizer
 from ..ObjectRegex.Tokenizer import Mode, TokenSpec
 from ..Core.BaseDef import *
-from ..ErrorFamily import UnsupportedStringPrefix
+from ..ErrorFamily import UnsupportedStringPrefix, find_location
 from ..ObjectRegex.Node import Ast
 from ..color import Colored
 from ..io import grace_open
 
 SeqParserParams = namedtuple('DA', ['at_least', 'at_most'])
+CompilingNodes = namedtuple('CN', ['reachable', 'alone'])
 
 T = 'Union[Ast, List[Union[Ast, Tokenizer]]]'
 
@@ -27,16 +28,20 @@ def surround_with_double_quotes(string):
 
 
 class Compiler:
-    def __init__(self):
+    def __init__(self, filename: str = None, src_code: str = None):
+        self.src = src_code
+        self.filename = filename
+
         self.token_func_src = None
-
         self.token_spec = TokenSpec()
+        self.token_ignores = ('{}', '{}')
 
-        self.token_definitions = []
+        self.literal_parser_definitions = []
         self.combined_parsers = []
 
+        self.compile_helper = CompilingNodes(set(), set())
         self._current_indent = None
-        self._current_name = None
+        self._current__combined_parser_name = None
         self._current_events = None
         self._current_anonymous_count = 0
 
@@ -44,31 +49,37 @@ class Compiler:
         """
         Stmts    ::= TokenDef{0, 1} Equals*;
         """
-
         if not stmts:
             raise ValueError('no ast found!')
         head, *equals = stmts
 
-        if head.name is NameEnum.AV_Token:
+        if head.name is NameEnum.TokenDef:
             self.ast_for_token_def(head)
+        elif head.name is NameEnum.TokenIgnore:
+            self.ast_for_token_ignore(head)
         else:
             self.ast_for_equals(head)
 
         for each in equals:
             self.ast_for_equals(each)
 
+    def ast_for_token_ignore(self, token_ignore: T):
+        _, _, *items, _ = token_ignore
+        grouped = linq.Flow(items).GroupBy(lambda x: x.name is NameEnum.Str).Unboxed()
+        lit_ignore = "{{{}}}".format(', '.join(map(lambda _: _.string, grouped[True])))
+        name_ignore = "{{{}}}".format(', '.join(map(lambda _: '"' + _.string + '"', grouped[False])))
+        self.token_ignores = (name_ignore, lit_ignore)
+
     def ast_for_token_def(self, token_def: T):
-        global token_func_src
         content = token_def[1]
         if content.name is NameEnum.Name:
             path = os.path.join(*
                                 map(lambda _: '..' if _ == 'parent' else _,
                                     content.string.split('.')))
-            token_func_src = grace_open(path).read()
+            self.token_func_src = grace_open(path).read()
             return
-
         else:
-            token_func_src = content.string[2:-2]
+            self.token_func_src = content.string[2:-2]
 
     def ast_for_equals(self, equals: T):
         if equals[-2].name is NameEnum.Str:
@@ -83,7 +94,7 @@ class Compiler:
             else:
                 mode = Mode.const
             self.token_spec.append(name, mode, string, name_unique=True)
-            self.token_definitions.append("{} = LiteralNameParser({})".format(name, string))
+            self.literal_parser_definitions.append("{} = LiteralNameParser('{}')".format(name, name))
         else:
             if equals[1].name is NameEnum.Throw:
                 name, throw, _, expr, _ = equals
@@ -94,6 +105,9 @@ class Compiler:
                 name, _, expr, _ = equals
                 name: 'Tokenizer'
                 grouped = {True: (), False: ()}
+            self._current__combined_parser_name = name.string
+            if name.string not in self.compile_helper.reachable:
+                self.compile_helper.alone.add(name.string)
 
             indent = '             ' + " " * len(name.string)
             self.combined_parsers.append(
@@ -127,7 +141,15 @@ class Compiler:
             default_attrs: 'SeqParserParams'
             if maybe_tk.__class__ is Tokenizer:
                 if maybe_tk.name is NameEnum.Name:
+
+                    if maybe_tk.string in self.compile_helper.alone:
+                        self.compile_helper.alone.remove(maybe_tk.string)
+
+                    if maybe_tk.name not in self.compile_helper.reachable:
+                        self.compile_helper.reachable.add(maybe_tk.string)
+
                     return "Ref('{}')".format(maybe_tk.string)
+
                 else:
                     mode, string = get_string_and_mode(maybe_tk.string)
                     if not mode:
@@ -144,9 +166,16 @@ class Compiler:
                     if mode is 'R':
                         for k, mode, v in self.token_spec.source:
                             if mode is Mode.regex and v == string:
+
+                                if k in self.compile_helper.alone:
+                                    self.compile_helper.alone.remove(k)
+
+                                if k not in self.compile_helper.reachable:
+                                    self.compile_helper.reachable.add(k)
+
                                 return "Ref('{}')".format(k)
 
-                        name: str = ':anonymous{}'.format(self._current_anonymous_count)
+                        name: str = 'anonymous_{}'.format(self._current_anonymous_count)
                         self._current_anonymous_count += 1
                         warnings.warn(
                             Colored.LightBlue +
@@ -157,9 +186,16 @@ class Compiler:
                             .format(Colored.Red, name, Colored.LightBlue, Colored.Clear))
 
                         self.token_spec.append(name, Mode.regex, string, name_unique=True)
+                        self.literal_parser_definitions.append("{} = LiteralNameParser('{}')".format(name, name))
+
+                        if name in self.compile_helper.alone:
+                            self.compile_helper.alone.remove(name)
+
+                        if name not in self.compile_helper.reachable:
+                            self.compile_helper.reachable.add(name)
 
                         return "Ref('{}')".format(name)
-                    raise UnsupportedStringPrefix(mode)
+                    raise UnsupportedStringPrefix(mode, find_location(self.filename, maybe_tk, self.src))
 
             return ('SeqParser({possibilities}, '
                     'at_least={at_least},'
@@ -175,7 +211,7 @@ class Compiler:
             attrs = self.ast_for_trailer(trailer)
             if maybe_tk.__class__ is Tokenizer:
                 return ('SeqParser([{atom}], '
-                        'at_least={at_least},'
+                        'at_least={at_least}, '
                         'at_most={at_most})'
                     .format(
                     atom='Ref("{}")'.format(maybe_tk.string) if maybe_tk.name is NameEnum.Name else maybe_tk.string,

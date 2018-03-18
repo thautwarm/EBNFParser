@@ -33,7 +33,26 @@ class DSLSyntaxError(SyntaxError):
 
 
 class UnsupportedStringPrefix(Exception):
-    def __init__(self, mode):
+    def __init__(self, mode, msg=''):
         Exception.__init__(self,
+                           '\n' + msg + '\n' +
                            Colored.LightBlue + "Unsupported string prefix " + Colored.Red + '{}'
                            .format(mode) + Colored.LightBlue + "." + Colored.Clear)
+
+
+def find_location(filename, where: 'Tokenizer', src_code: str = None):
+    if src_code:
+        row = src_code.splitlines()[where.lineno]
+    else:
+        row = ''
+
+    return "{}{}{}{} ---- at file {} line {}".format(Colored.Green, row[:where.colno], Colored.Red, row[where.colno:],
+                                                     filename, where.lineno + 1) + Colored.Clear
+
+
+class UniqueNameConstraintError(Exception):
+    def __init__(self, name, msg=''):
+        Exception.__init__(self,
+                           '\n' + msg + '\n' +
+                           Colored.Blue + "Name " + Colored.Red + '{}'
+                           .format(name) + Colored.Blue + "should be unique." + Colored.Clear)

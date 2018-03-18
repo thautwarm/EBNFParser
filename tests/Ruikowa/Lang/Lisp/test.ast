@@ -1,0 +1,15 @@
+Stmt[
+    Expr[
+        [name: :char, string: "("]
+        Expr[
+            [name: Atom, string: "+"]
+        ]
+        Expr[
+            [name: Atom, string: "1"]
+        ]
+        Expr[
+            [name: Atom, string: "2"]
+        ]
+        [name: :char, string: ")"]
+    ]
+]

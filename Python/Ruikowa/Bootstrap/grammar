@@ -1,4 +1,6 @@
-Stmts    ::= TokenDef{0, 1} Equals*;
+Stmts    ::= [TokenIgnore | TokenDef] Equals*;
+
+TokenIgnore ::= 'Ignore' '{' (Name|Str)* '}';
 
 TokenDef ::= 'Token' (Name | Codes);
 

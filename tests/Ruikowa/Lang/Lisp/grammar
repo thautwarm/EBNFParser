@@ -1,8 +1,9 @@
-Atom    := R'[^\(\)\s\`]+';
-Expr  Throw ['\n'] ::= Atom
-    | Quote
-    | '(' (NEWLINE* Expr* NEWLINE*)* ')' ;
+Ignore [N]
+N := R'\s+';
 
-Quote Throw [NEWLINE] ::=  '`' Expr 'cont';
-NEWLINE     := R'\n+';
-Stmt Throw [NEWLINE] ::= (NEWLINE* Expr* NEWLINE*)* ;
+Atom    := R'[^\(\)\s\`]?'; # use Regex
+Expr  ::= Atom
+        | Quote
+        | '(' Expr* ')';
+Quote ::=  '`' Expr ;
+Stmt  ::= Expr*;

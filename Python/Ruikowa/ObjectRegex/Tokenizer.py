@@ -11,6 +11,7 @@ import re
 import json
 import linq
 from collections import defaultdict
+from ..ErrorFamily import UniqueNameConstraintError
 
 
 class Mode:
@@ -27,15 +28,16 @@ class TokenSpec:
     def append(self, name, mode, string, name_unique=False):
         if name_unique:
             if name in self.names:
-                return
-            else:
-                self.source.append((name, mode, string))
+                raise UniqueNameConstraintError(name)
+
+            self.source.append((name, mode, string))
             self.names.add(name)
             return
+
         self.source.append((name, mode, string))
         self.names.add(name)
 
-    def to_token_table(self):
+    def to_token_table(self, indent=15):
         groups = linq.Flow(self.source).Group(
             lambda name, mode, string: (name, string if mode is Mode.regex else mode)).Unboxed()
 
@@ -50,11 +52,17 @@ class TokenSpec:
 
             return '(unique_literal_cache_pool["{}"], str_matcher(({})))'.format(name, match_mode)
 
-        return "({})".format(',\n'.join(make_each(each) for each in groups))
+        return "({})".format(',\n{indent}'.format(indent=' ' * indent).join(make_each(each) for each in groups))
 
     def to_name_enum(self):
-        groups = linq.Flow(self.source).Filter(lambda a, mode, b: mode is not Mode.char).Group(
-            lambda name, mode, string: (name, string if mode is Mode.regex else mode)).Unboxed()
+        groups = linq.Flow(
+            self.source
+        ).Filter(
+            lambda name, mode, b: mode is not Mode.char and (
+                        name.isidentifier() or name[0] is ':' and name[1:].isidentifier())
+        ).Group(
+            lambda name, mode, string: (name, string if mode is Mode.regex else mode)
+        ).Unboxed()
 
         indent = ' ' * 4
 
@@ -63,11 +71,11 @@ class TokenSpec:
 
             if mode is Mode.regex:
                 if name[0] is ':':
-                    return 'anonymous_{name} = unique_literal_cache_pool["{name}"]'.format(name=name)
+                    return '{name} = unique_literal_cache_pool["{name}"]'.format(name=name[1:])
                 return '{name} = unique_literal_cache_pool["{name}"]'.format(name=name)
 
             return '\n{}'.format(indent).join(
-                'const_{name} = unique_literal_cache_pool["{name}"]'.format(name=string[1:-1]) for _, _, string in
+                'const_{name} = unique_literal_cache_pool["{name}"]'.format(name=name) for _, _, string in
                 group)
 
         enum_class_spec = """
@@ -117,6 +125,7 @@ class Tokenizer:
         while True:
             for name, pat in token_table:
                 w = pat(raw_string, pos)
+
                 if w:
                     row_inc = w.count('\n')
                     length = len(w)
@@ -135,15 +144,17 @@ class Tokenizer:
                     if n == pos:
                         return
                     break
+
             else:
-                warnings.warn('no token def {}'.format(raw_string[0].encode()))
-                if raw_string[0] is '\n':
+                warnings.warn('no token def {}'.format(raw_string[pos].encode()))
+                if raw_string[pos] is '\n':
                     colno = 0
                     lineno += 1
                 else:
                     colno += 1
                 pos += 1
-                raw_string = raw_string[1:]
+                if n == pos:
+                    return
 
 
 def char_matcher(mode):
@@ -177,7 +188,7 @@ def str_matcher(mode):
     """
 
     def f_raw(inp_str, pos):
-        return unique_literal_cache_pool[mode] if mode == inp_str.startswith(mode, pos) else None
+        return unique_literal_cache_pool[mode] if inp_str.startswith(mode, pos) else None
 
     def f_collection(inp_str, pos):
         for each in mode:
@@ -187,9 +198,11 @@ def str_matcher(mode):
 
     if isinstance(mode, str):
         return f_raw
+
     if len(mode) is 1:
         mode = mode[0]
         return f_raw
+
     return f_collection
 
 
