@@ -1,17 +1,17 @@
-[![Build Status](https://travis-ci.org/thautwarm/EBNFParser.svg?branch=master)](https://travis-ci.org/thautwarm/EBNFParser)
+[![Build Status](https://travis-ci.org/thautwarm/EBNFParser.svg?branch=boating-new)](https://travis-ci.org/thautwarm/EBNFParser)
 [![PyPI version](https://img.shields.io/pypi/v/EBNFParser.svg)](https://pypi.python.org/pypi/EBNFParser)
-[![Chinese Doc](https://img.shields.io/badge/docs-RuikowaEBNF-yellow.svg?style=flat)](https://github.com/thautwarm/EBNFParser/blob/master/Ruikowa.zh.md)
-[![Release Note](https://img.shields.io/badge/note-release-orange.svg)](https://github.com/thautwarm/EBNFParser/blob/master/Python/release-note)
-[![MIT License](https://img.shields.io/badge/license-MIT-Green.svg?style=flat)](https://github.com/thautwarm/EBNFParser/blob/master/LICENSE)
+[![Chinese Doc](https://img.shields.io/badge/docs-RuikowaEBNF-yellow.svg?style=flat)](https://github.com/thautwarm/EBNFParser/blob/boating-new/Ruikowa.zh.md)
+[![Release Note](https://img.shields.io/badge/note-release-orange.svg)](https://github.com/thautwarm/EBNFParser/blob/boating-new/Python/release-note)
+[![MIT License](https://img.shields.io/badge/license-MIT-Green.svg?style=flat)](https://github.com/thautwarm/EBNFParser/blob/boating-new/LICENSE)
 
 # EBNFParser
 Parse Many, Any, Every
 ---------
 [HomePage](https://github.com/thautwarm/EBNFParser)
 
-- [Python Project(Support Python 3.6+)](https://github.com/thautwarm/EBNFParser/tree/master/Python) (v 2.0)
-    - [Old Version : Misakawa(v0.x)](https://github.com/thautwarm/EBNFParser/tree/master/Misakawa.md)
-    - [Old Version : Ruikowa(v1.x)](https://github.com/thautwarm/EBNFParser/tree/master/README.md)
+- [Python Project(Support Python 3.6+)](https://github.com/thautwarm/EBNFParser/tree/boating-new/Python) (v 2.0)
+    - [Old Version : Misakawa(v0.x)](https://github.com/thautwarm/EBNFParser/tree/boating-new/Misakawa.md)
+    - [Old Version : Ruikowa(v1.x)](https://github.com/thautwarm/EBNFParser/tree/boating-new/README.md)
 
 
 --------------------
@@ -154,9 +154,9 @@ Before EBNFParser 1.1.
 
 ## Source
 
-- [Source of Ruikowa](https://github.com/thautwarm/EBNFParser/tree/master/Python/Ruikowa)
-- [Core : Node.py](https://github.com/thautwarm/EBNFParser/tree/master/Python/Ruikowa/ObjectRegex/Node.py)
-- [Bootstrap Compiler](https://github.com/thautwarm/EBNFParser/tree/master/Python/Ruikowa/Bootstrap)
+- [Source of Ruikowa](https://github.com/thautwarm/EBNFParser/tree/boating-new/Python/Ruikowa)
+- [Core : Node.py](https://github.com/thautwarm/EBNFParser/tree/boating-new/Python/Ruikowa/ObjectRegex/Node.py)
+- [Bootstrap Compiler](https://github.com/thautwarm/EBNFParser/tree/boating-new/Python/Ruikowa/Bootstrap)
 
 Will support C# and Rem.
 

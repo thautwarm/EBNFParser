@@ -9,13 +9,13 @@ Parse Many, Any, Every
 `HomePage <https://github.com/thautwarm/EBNFParser>`__
 
 -  `Python Project(Support Python
-   3.6+) <https://github.com/thautwarm/EBNFParser/tree/master/Python>`__
+   3.6+) <https://github.com/thautwarm/EBNFParser/tree/boating-new/Python>`__
    (v 2.0)
 
    -  `Old Version :
-      Misakawa(v0.x) <https://github.com/thautwarm/EBNFParser/tree/master/Misakawa.md>`__
+      Misakawa(v0.x) <https://github.com/thautwarm/EBNFParser/tree/boating-new/Misakawa.md>`__
    -  `Old Version :
-      Ruikowa(v1.x) <https://github.com/thautwarm/EBNFParser/tree/master/README.md>`__
+      Ruikowa(v1.x) <https://github.com/thautwarm/EBNFParser/tree/boating-new/README.md>`__
 
 --------------
 
@@ -168,11 +168,11 @@ Source
 ------
 
 -  `Source of
-   Ruikowa <https://github.com/thautwarm/EBNFParser/tree/master/Python/Ruikowa>`__
+   Ruikowa <https://github.com/thautwarm/EBNFParser/tree/boating-new/Python/Ruikowa>`__
 -  `Core :
-   Node.py <https://github.com/thautwarm/EBNFParser/tree/master/Python/Ruikowa/ObjectRegex/Node.py>`__
+   Node.py <https://github.com/thautwarm/EBNFParser/tree/boating-new/Python/Ruikowa/ObjectRegex/Node.py>`__
 -  `Bootstrap
-   Compiler <https://github.com/thautwarm/EBNFParser/tree/master/Python/Ruikowa/Bootstrap>`__
+   Compiler <https://github.com/thautwarm/EBNFParser/tree/boating-new/Python/Ruikowa/Bootstrap>`__
 
 Will support C# and Rem.
 
@@ -181,13 +181,13 @@ License
 
 `MIT <./LICENSE>`__
 
-.. |Build Status| image:: https://travis-ci.org/thautwarm/EBNFParser.svg?branch=master
+.. |Build Status| image:: https://travis-ci.org/thautwarm/EBNFParser.svg?branch=boating-new
    :target: https://travis-ci.org/thautwarm/EBNFParser
 .. |PyPI version| image:: https://img.shields.io/pypi/v/EBNFParser.svg
    :target: https://pypi.python.org/pypi/EBNFParser
 .. |Chinese Doc| image:: https://img.shields.io/badge/docs-RuikowaEBNF-yellow.svg?style=flat
-   :target: https://github.com/thautwarm/EBNFParser/blob/master/Ruikowa.zh.md
+   :target: https://github.com/thautwarm/EBNFParser/blob/boating-new/Ruikowa.zh.md
 .. |Release Note| image:: https://img.shields.io/badge/note-release-orange.svg
-   :target: https://github.com/thautwarm/EBNFParser/blob/master/Python/release-note
+   :target: https://github.com/thautwarm/EBNFParser/blob/boating-new/Python/release-note
 .. |MIT License| image:: https://img.shields.io/badge/license-MIT-Green.svg?style=flat
-   :target: https://github.com/thautwarm/EBNFParser/blob/master/LICENSE
+   :target: https://github.com/thautwarm/EBNFParser/blob/boating-new/LICENSE
