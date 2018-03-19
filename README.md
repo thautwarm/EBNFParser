@@ -158,8 +158,7 @@ Before EBNFParser 1.1.
 - [Core : Node.py](https://github.com/thautwarm/EBNFParser/tree/master/Python/Ruikowa/ObjectRegex/Node.py)
 - [Bootstrap Compiler](https://github.com/thautwarm/EBNFParser/tree/master/Python/Ruikowa/Bootstrap)
 
-Will support C# and Elixir sooner.
-
+Will support C# and Rem.
 
 ## License  
 [MIT](./LICENSE)
