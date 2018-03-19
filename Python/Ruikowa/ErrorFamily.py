@@ -47,6 +47,7 @@ if use_py_error:
     class Error:
         def __init__(self, *args):
             print(Colored.Purple, '{}: '.format(self.__class__.__name__), *args)
+            raise Exception(self.__class__.__name__)
 else:
     Error = Exception
 

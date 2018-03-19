@@ -1,10 +1,10 @@
 Stmts    ::= [TokenIgnore | TokenDef] Equals*;
 
-TokenIgnore ::= 'Ignore' '{' (Name|Str)* '}';
+TokenIgnore ::= 'Ignore' '[' (Name|Str)* ']';
 
 TokenDef ::= 'Token' (Name | Codes);
 
-Equals   ::= Name ':='  Str + ';' |
+Equals   ::= Name ':='  Str + ';'|
              Name [Throw] '::=' Expr ';';
 
 Throw    ::= 'Throw' '[' (Name | Str)* ']';
@@ -19,6 +19,7 @@ Atom     ::=  Str         |
               Name        |
               '(' Expr ')'|
               '[' Expr ']';
+
 Trailer  ::= '*' | '+' | '{' Number{1 2} '}';
 
 

@@ -5,7 +5,7 @@
       "name": "Expr",
       "value": [
         {
-          "name": ":char",
+          "name": "auto_const",
           "string": "(",
           "lineno": 1,
           "colno": 5
@@ -44,10 +44,28 @@
           ]
         },
         {
-          "name": ":char",
+          "name": "auto_const",
           "string": ")",
           "lineno": 1,
           "colno": 11
+        },
+        {
+          "name": "someConst",
+          "string": "as",
+          "lineno": 1,
+          "colno": 14
+        },
+        {
+          "name": "someConst",
+          "string": "we",
+          "lineno": 1,
+          "colno": 17
+        },
+        {
+          "name": "someConst",
+          "string": "can",
+          "lineno": 1,
+          "colno": 21
         }
       ]
     }

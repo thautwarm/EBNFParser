@@ -142,9 +142,17 @@
 	        single.Quote := '\'';
 	    
 
+    # EBNFParser 2.0
 
+        Fast, powerful and human-friendly with intelligent and comfortable error alert.
 
-		 
+        - all the matchings now could be made by address comparing(use `is` and `not`).
+
+        - better auto-tokenizer which can handle every scene belonging to Context-Free Syntax.
+
+        - use object tokenizer for precise error raising.
+
+        - codes refactored and follow PEP8 strictly. More readable.
 
 
 

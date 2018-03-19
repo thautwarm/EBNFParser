@@ -7,7 +7,7 @@ Created on Sat Oct 14 19:23:04 2017
 """
 
 from .Tokenizer import Tokenizer
-from typing import List, Union
+from typing import List, Union, Sequence, Iterator, Collection
 
 if False:
     from .MetaInfo import MetaInfo
@@ -16,9 +16,10 @@ INDENT_UNIT = ' ' * 4
 
 
 class Ast(list):
+    # List[Union[Tokenizer, Ast]]
 
     def __init__(self, meta: 'MetaInfo', name: str):
-        super(Ast, self).__init__()
+        list.__init__(self)
         self.name = name
         self.meta = meta
 
@@ -26,6 +27,12 @@ class Ast(list):
         self.reverse()
         self.append(obj)
         self.reverse()
+
+    def __iter__(self) -> 'Iterator[Union[Tokenizer, Ast]]':
+        return list.__iter__(self)
+
+    def __getitem__(self, item) -> 'Union[Tokenizer, Ast]':
+        return list.__getitem__(self, item)
 
     def __str__(self):
         return self.dump()

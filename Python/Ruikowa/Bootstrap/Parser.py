@@ -61,8 +61,8 @@ AtomExpr = AstParser(
 Atom = AstParser(
     [Str],
     [Name],
+    ['[', Ref('Expr'), ']'],
     ['(', Ref('Expr'), ')'],
-    ['[', Ref('Expr'), ')'],
     name='Atom')
 
 Trailer = AstParser(
@@ -72,3 +72,4 @@ Trailer = AstParser(
     name='Trailer')
 
 Stmts.compile(namespace, recurSearcher)
+

@@ -14,10 +14,26 @@ from .ASTDef import Ast
 from .Optimize import optimize
 from .Tokenizer import unique_lit_name
 
+from ..Config import Debug
+
 
 class Ignore:
     Value = 0
     Name = 1
+
+
+def debug(msg):
+    def wrap(func):
+        def call(self, *args, **kwargs):
+            print(f'begin {self.__class__.__name__}[{self.name}] from {msg}')
+            res = func(self, *args, **kwargs)
+
+            print(f'end {self.__class__.__name__}[{self.name}] from {msg} with {res}')
+            return res
+
+        return call
+
+    return wrap
 
 
 class BaseParser(ABC):
@@ -62,11 +78,14 @@ class Ref(BaseParser):
 
 
 class AstParser(BaseParser):
+
     def __init__(self, *ebnf, name=Undef, to_ignore=Undef):
         # each in the cache will be processed into a parser.
         ebnf = tuple(
             tuple(
-                LiteralValueParser(':const', each) if isinstance(each, str) else each for each in p)
+                LiteralValueParser(unique_literal_cache_pool['auto_const'],
+                                   unique_literal_cache_pool[each]) if isinstance(each, str) else each
+                for each in p)
             for p in ebnf)
         self.cache = optimize(ebnf)
 
@@ -79,7 +98,9 @@ class AstParser(BaseParser):
         # the identity of a parser.
 
         self.name = name if name is not Undef else \
-            ' | '.join(' '.join(map(lambda parser: parser.name, ebnf_i)) for ebnf_i in ebnf)
+            ' | '.join(
+                ' '.join(map(lambda parser: parser.mode if parser.__class__ is LiteralValueParser else parser.name,
+                             ebnf_i)) for ebnf_i in ebnf)
 
         # is this parser compiled, must be False when initializing.
         self.compiled = False
@@ -101,22 +122,25 @@ class AstParser(BaseParser):
             self.possibilities.append([])
 
             for e in es:
-
-                if e.__class__ in LiteralParsers:
-                    self.possibilities[-1].append(e)
-                    unique_lit_name(e)
-
+                if e.__class__ is LiteralNameParser:
                     if e.name not in namespace:
+                        unique_lit_name(e)
                         namespace[e.name] = e.name
                     else:
                         e = namespace[e.name]
 
-                elif isinstance(e, Ref):
+                    self.possibilities[-1].append(e)
+
+                elif e.__class__ is LiteralValueParser:
+                    unique_lit_name(e)
+                    self.possibilities[-1].append(e)
+
+                elif e.__class__ is Ref:
                     unique_lit_name(e)
 
                     e = namespace[e.name]
 
-                    if isinstance(e, AstParser):
+                    if e.__class__ not in LiteralParsers:
                         e.compile(namespace, recur_searcher)
 
                     self.possibilities[-1].append(e)
@@ -147,7 +171,6 @@ class AstParser(BaseParser):
             self.compiled = True
 
     def match(self, objs, meta, recur=Undef):
-
         if self.has_recur and self in meta.trace[meta.count]:
             if isinstance(self, SeqParser) or recur is self:
                 return Const.UnMatched
@@ -174,13 +197,16 @@ class AstParser(BaseParser):
         meta.pull()
         return result
 
+    if Debug:
+        match = debug('pattern-matching')(match)
+
+    # @debug('pattern-matching')
     def pattern_match(self, objs, meta, possibility, recur=Undef):
 
         try:  # Not recur
             result = Ast(meta.clone(), self.name)
             for parser in possibility:
                 r = parser.match(objs, meta=meta, recur=recur)
-
                 # if `result` is still empty, it might not allow LR now.
                 if isinstance(r, Tokenizer) or isinstance(r, Ast):
                     result_merge(result, r, parser, self.to_ignore)
@@ -205,6 +231,9 @@ class AstParser(BaseParser):
                 return RecurInfo
 
             return left_recursion(objs, meta, possibility, RecurInfo)
+
+    if Debug:
+        pattern_match = debug('pattern-matching')(pattern_match)
 
 
 def result_merge(result, r, parser, to_ignore):
@@ -285,6 +314,7 @@ class SeqParser(AstParser):
         self.at_least = at_least
         self.at_most = at_most
 
+    # @debug('seqparser')
     def match(self, objs, meta, recur=Undef):
 
         result = Ast(meta.clone(), self.name)
@@ -302,21 +332,23 @@ class SeqParser(AstParser):
                 if matched_num >= self.at_most:
                     break
                 try:
-                    r = super(SeqParser, self).match(objs, meta=meta, recur=recur)
+                    r = AstParser.match(self, objs, meta=meta, recur=recur)
                 except IndexError:
                     break
 
                 if r is Const.UnMatched:
                     break
+
                 elif isinstance(r, RecursiveFound):
                     raise UnsolvedError("Cannot make left recursions in SeqParser!!!")
+
                 result.extend(r)
                 matched_num += 1
         else:
             """ ast{a} | [ast] | ast* """
             while True:
                 try:
-                    r = super(SeqParser, self).match(objs, meta=meta, recur=recur)
+                    r = AstParser.match(self, objs, meta=meta, recur=recur)
                 except IndexError:
                     break
 
@@ -335,3 +367,6 @@ class SeqParser(AstParser):
 
         meta.pull()
         return result
+
+    if Debug:
+        match = debug('pattern-matching')(match)

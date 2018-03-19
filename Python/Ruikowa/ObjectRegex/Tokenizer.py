@@ -16,7 +16,7 @@ from ..ErrorHandler import Colored, Warnings as warnings
 
 class Mode:
     regex = 0
-    const = 1
+    keyword = const = 1
     char = 2
 
 
@@ -40,6 +40,10 @@ class TokenSpec:
         self.names.add(name)
 
     def to_token_table(self, indent=15):
+        generated_tokens = set()
+        _join = f',\n{" "*indent}'.join
+        if not self.source:
+            return '()'
         groups = linq.Flow(self.source).Group(
             lambda name, mode, string: (name, string if mode is Mode.regex else mode)).Unboxed()
 
@@ -48,45 +52,69 @@ class TokenSpec:
             if mode is Mode.regex:
                 return '(unique_literal_cache_pool["{name}"], regex_matcher({string}))'.format(name=name, string=string)
 
-            match_mode = ', '.join(sorted(tuple(string for _, _, string in group), reverse=True))
+            modes = []
+            for _, _, string in group:
+
+                tp = (name, string)
+                if tp not in generated_tokens:
+                    modes.append(string)
+                    generated_tokens.add(tp)
+
+            if not modes:
+                return None
+
+            match_mode = ', '.join(sorted(modes, reverse=True))
+
             if mode is Mode.char:
                 return '(unique_literal_cache_pool["{}"], char_matcher(({})))'.format(name, match_mode)
 
             return '(unique_literal_cache_pool["{}"], str_matcher(({})))'.format(name, match_mode)
 
-        return "({})".format(',\n{indent}'.format(indent=' ' * indent).join(make_each(each) for each in groups))
+        token_items = linq.Flow(groups).Map(make_each).Filter(lambda x: x).Then(_join).Unboxed()
+        return '({})'.format(token_items)
 
     def to_name_enum(self):
-        groups = linq.Flow(
-            self.source
-        ).Filter(
-            lambda name, mode, b: mode is not Mode.char and (
-                    name.isidentifier() or name[0] is ':' and name[1:].isidentifier())
-        ).Group(
-            lambda name, mode, string: (name, string if mode is Mode.regex else mode)
-        ).Unboxed()
+
+        if not self.source:
+            return ""
 
         indent = ' ' * 4
+        _join = f'\n{indent}'.join
 
-        def make_each(group: 'List[Tuple[str, int, str]]'):
-            name, mode, string = group[0]
+        value_enums = linq.Flow(
+            self.source
+        ).Filter(
+            lambda name, mode, string: mode is not Mode.regex and (
+                string[1:-1].isidentifier())
+        ).Map(
+            lambda a, _, b: (a, b)
+        ).Then(
+            set
+        ).Map(
+            lambda name, string: f'{name}_{string[1:-1]} = unique_literal_cache_pool[{string}]'
+        ).Then(
+            _join
+        ).Unboxed()
 
-            if mode is Mode.regex:
-                if name[0] is ':':
-                    return '{name} = unique_literal_cache_pool["{name}"]'.format(name=name[1:])
-                return '{name} = unique_literal_cache_pool["{name}"]'.format(name=name)
-
-            return '\n{}'.format(indent).join(
-                'const_{name} = unique_literal_cache_pool["{name}"]'.format(name=name) for _, _, string in
-                group)
+        name_enums = linq.Flow(
+            self.names
+        ).Map(
+            lambda _: f"{_} = unique_literal_cache_pool['{_}']"
+        ).Then(
+            _join
+        ).Unboxed()
 
         enum_class_spec = """
 class UNameEnum:
+# names
+{}{}
+# values
 {}{}
         """.format(indent,
-                   '\n{}'
-                   .format(indent)
-                   .join(make_each(each) for each in groups))
+                   name_enums,
+                   indent,
+                   value_enums)
+
         return enum_class_spec
 
     def __contains__(self, item):
@@ -117,7 +145,10 @@ class Tokenizer:
         return '[name: {}, string: "{}"]'.format(self.name, self.string)
 
     @staticmethod
-    def from_raw_strings(raw_string: str, token_table: 'Iterable', to_ignore=({}, {})):
+    def from_raw_strings(raw_string: str, token_table: 'Iterable', to_ignore=({}, {}), cast_map=None):
+        if cast_map is None:
+            cast_map = {}
+
         if not raw_string:
             return ()
         lineno = 0
@@ -127,7 +158,6 @@ class Tokenizer:
         while True:
             for name, pat in token_table:
                 w = pat(raw_string, pos)
-
                 if w:
                     row_inc = w.count('\n')
                     length = len(w)
@@ -141,7 +171,12 @@ class Tokenizer:
                     pos += length
 
                     if name not in to_ignore[0] and w not in to_ignore[1]:
-                        yield Tokenizer(unique_literal_cache_pool[name], w, lineno, colno)
+                        if w in cast_map:
+                            name = cast_map[w]
+                            w = unique_literal_cache_pool[w]
+                            yield Tokenizer(name, w, lineno, colno)
+                        else:
+                            yield Tokenizer(unique_literal_cache_pool[name], w, lineno, colno)
 
                     if n == pos:
                         return
@@ -157,6 +192,7 @@ class Tokenizer:
                 pos += 1
                 if n == pos:
                     return
+                break
 
 
 def char_matcher(mode):

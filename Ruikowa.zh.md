@@ -1,4 +1,5 @@
 EBNFParser 使用的EBNF方言简介。  
+版本适用: EBNFParser 1.1及以前的版本。    
 平白地描述这些知识，然后你能解决一切上下文无关文法的Parser.
 
 从示例中学习对很多朋友是非常有效的，所以我放上`Lisp`和`Cm`的Grammar:

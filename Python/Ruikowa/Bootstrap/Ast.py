@@ -36,6 +36,8 @@ class Compiler:
         self.token_spec = TokenSpec()
         self.token_ignores = ('{}', '{}')
 
+        self.generated_token_names = set()
+
         self.literal_parser_definitions = []
         self.combined_parsers = []
 
@@ -94,30 +96,35 @@ class Compiler:
                     mode = Mode.char
                 else:
                     mode = Mode.const
+
                 self.token_spec.append(name, mode, string, name_unique=False)
-                self.literal_parser_definitions.append("{} = LiteralNameParser('{}')".format(name, name))
+                if name not in self.generated_token_names:
+                    self.literal_parser_definitions.append("{} = LiteralNameParser('{}')".format(name, name))
+                    self.generated_token_names.add(name)
+
         else:
             if equals[1].name is NameEnum.Throw:
                 name, throw, _, expr, _ = equals
-                name: 'Tokenizer'
                 throw: 'T' = self.ast_for_throw(throw)
                 grouped = linq.Flow(throw).GroupBy(lambda x: x.name is NameEnum.Str).Unboxed()
             else:
                 name, _, expr, _ = equals
-                name: 'Tokenizer'
                 grouped = {True: (), False: ()}
-            self._current__combined_parser_name = name.string
-            if name.string not in self.compile_helper.reachable:
-                self.compile_helper.alone.add(name.string)
 
-            indent = '             ' + " " * len(name.string)
+            name = self._current__combined_parser_name = name.string
+            self.token_spec.names.add(name)
+
+            if name not in self.compile_helper.reachable:
+                self.compile_helper.alone.add(name)
+
+            indent = '             ' + " " * len(name)
             self.combined_parsers.append(
                 '{name} = AstParser({possibilities},\n'
                 '{indent}name="{name}",\n'
                 '{indent}to_ignore=({name_ignore}, {lit_ignore}))'
                 ''.format(
                     indent=indent,
-                    name=name.string,
+                    name=name,
                     possibilities=(',\n{}'.format(indent)).join(self.ast_for_expr(expr)),
                     lit_ignore="{{{}}}".format(', '.join(map(lambda _: _.string, grouped[True]))),
                     name_ignore="{{{}}}".format(', '.join(map(lambda _: '"' + _.string + '"', grouped[False])))
@@ -134,97 +141,98 @@ class Compiler:
 
         return '[{}]'.format(', '.join(self.ast_for_atom_expr(each) for each in or_expr))
 
+    def handle_atom_with_trailer(self, atom: T):
+        atom: 'Ast'
+        maybe_tk, default_attrs = self.ast_for_atom(atom)
+        default_attrs: 'SeqParserParams'
+        if maybe_tk.__class__ is Tokenizer:
+            if maybe_tk.name is NameEnum.Name:
+
+                if maybe_tk.string in self.compile_helper.alone:
+                    self.compile_helper.alone.remove(maybe_tk.string)
+
+                if maybe_tk.name not in self.compile_helper.reachable:
+                    self.compile_helper.reachable.add(maybe_tk.string)
+
+                return "Ref('{}')".format(maybe_tk.string)
+
+            else:
+                mode, string = get_string_and_mode(maybe_tk.string)
+                if not mode:
+                    if len(string) is 3 and string[1] not in self.token_spec:
+                        self.token_spec.append('auto_const', Mode.char, string)
+                        return string
+                    for k, mode, v in self.token_spec.source:
+                        if mode is Mode.const and v is string:
+                            break
+                    else:
+                        self.token_spec.append('auto_const', Mode.const, string)
+                    return string
+
+                if mode is 'R':
+                    for k, mode, v in self.token_spec.source:
+                        if mode is Mode.regex and v == string:
+
+                            if k in self.compile_helper.alone:
+                                self.compile_helper.alone.remove(k)
+
+                            if k not in self.compile_helper.reachable:
+                                self.compile_helper.reachable.add(k)
+
+                            return "Ref('{}')".format(k)
+
+                    name: str = 'anonymous_{}'.format(self._current_anonymous_count)
+                    self._current_anonymous_count += 1
+                    warnings.warn(
+                        Colored.LightBlue +
+                        '\nFor efficiency of the parser, '
+                        'we do not do regex matching when parsing(only in tokenizing we use regex), '
+                        'you are now creating a anonymous regex literal parser '
+                        '{}<{}>{} when defining combined parser{}\n'
+                        .format(Colored.Red, name, Colored.LightBlue, Colored.Clear))
+
+                    self.token_spec.append(name, Mode.regex, string, name_unique=True)
+                    self.literal_parser_definitions.append("{} = LiteralNameParser('{}')".format(name, name))
+
+                    if name in self.compile_helper.alone:
+                        self.compile_helper.alone.remove(name)
+
+                    if name not in self.compile_helper.reachable:
+                        self.compile_helper.reachable.add(name)
+
+                    return "Ref('{}')".format(name)
+                raise UnsupportedStringPrefix(mode, find_location(self.filename, maybe_tk, self.src))
+
+        return dict(possibilities=', '.join(maybe_tk),
+                    at_least=default_attrs.at_least,
+                    at_most=default_attrs.at_most)
+
     def ast_for_atom_expr(self, atom_expr: T):
         if len(atom_expr) is 1:
-            atom = atom_expr[0]
-            atom: 'Ast'
-            maybe_tk, default_attrs = self.ast_for_atom(atom)
-            default_attrs: 'SeqParserParams'
-            if maybe_tk.__class__ is Tokenizer:
-                if maybe_tk.name is NameEnum.Name:
+            res = self.handle_atom_with_trailer(atom_expr[0])
+            if res.__class__ is dict:
+                return ('SeqParser({possibilities}, '
+                        'at_least={at_least},'
+                        'at_most={at_most})'.format(**res))
+            return res
 
-                    if maybe_tk.string in self.compile_helper.alone:
-                        self.compile_helper.alone.remove(maybe_tk.string)
+        atom, trailer = atom_expr
+        res = self.handle_atom_with_trailer(atom)
+        attrs = self.ast_for_trailer(trailer)
 
-                    if maybe_tk.name not in self.compile_helper.reachable:
-                        self.compile_helper.reachable.add(maybe_tk.string)
-
-                    return "Ref('{}')".format(maybe_tk.string)
-
-                else:
-                    mode, string = get_string_and_mode(maybe_tk.string)
-                    if not mode:
-                        if len(string) is 3 and string[1] not in self.token_spec:
-                            self.token_spec.append(':char', Mode.char, string)
-                            return string
-                        for k, mode, v in self.token_spec.source:
-                            if mode is Mode.const and v is string:
-                                break
-                        else:
-                            self.token_spec.append(':const', Mode.const, string)
-                        return string
-
-                    if mode is 'R':
-                        for k, mode, v in self.token_spec.source:
-                            if mode is Mode.regex and v == string:
-
-                                if k in self.compile_helper.alone:
-                                    self.compile_helper.alone.remove(k)
-
-                                if k not in self.compile_helper.reachable:
-                                    self.compile_helper.reachable.add(k)
-
-                                return "Ref('{}')".format(k)
-
-                        name: str = 'anonymous_{}'.format(self._current_anonymous_count)
-                        self._current_anonymous_count += 1
-                        warnings.warn(
-                            Colored.LightBlue +
-                            '\nFor efficiency of the parser, '
-                            'we do not do regex matching when parsing(only in tokenizing we use regex), '
-                            'you are now creating a anonymous regex literal parser '
-                            '{}<{}>{} when defining combined parser{}\n'
-                            .format(Colored.Red, name, Colored.LightBlue, Colored.Clear))
-
-                        self.token_spec.append(name, Mode.regex, string, name_unique=True)
-                        self.literal_parser_definitions.append("{} = LiteralNameParser('{}')".format(name, name))
-
-                        if name in self.compile_helper.alone:
-                            self.compile_helper.alone.remove(name)
-
-                        if name not in self.compile_helper.reachable:
-                            self.compile_helper.reachable.add(name)
-
-                        return "Ref('{}')".format(name)
-                    raise UnsupportedStringPrefix(mode, find_location(self.filename, maybe_tk, self.src))
+        if res.__class__ is dict:
+            res.update(at_least=attrs.at_least, at_most=attrs.at_most)
 
             return ('SeqParser({possibilities}, '
                     'at_least={at_least},'
-                    'at_most={at_most})'
-                    .format(possibilities=', '.join(maybe_tk),
-                            at_least=default_attrs.at_least,
-                            at_most=default_attrs.at_most))
+                    'at_most={at_most})'.format(**res))
 
-
-        else:
-            atom, trailer = atom_expr
-            maybe_tk, _ = self.ast_for_atom(atom)
-            attrs = self.ast_for_trailer(trailer)
-            if maybe_tk.__class__ is Tokenizer:
-                return ('SeqParser([{atom}], '
-                        'at_least={at_least}, '
-                        'at_most={at_most})'
-                    .format(
-                    atom='Ref("{}")'.format(maybe_tk.string) if maybe_tk.name is NameEnum.Name else maybe_tk.string,
-                    at_least=attrs.at_least,
-                    at_most=attrs.at_most))
-
-            return ('SeqParser({possibilities}, '
-                    'at_least={at_least}, '
-                    'at_most={at_most})'
-                    .format(possibilities=','.join(maybe_tk),
-                            at_least=attrs.at_least,
-                            at_most=attrs.at_most))
+        return ('SeqParser({possibilities}, '
+                'at_least={at_least},'
+                'at_most={at_most})'
+                .format(possibilities=res if res[0] is '[' else f'[{res}]',
+                        at_most=attrs.at_most,
+                        at_least=attrs.at_least))
 
     def ast_for_atom(self, atom: 'Ast'):
         if atom[0].string is '(':

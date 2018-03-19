@@ -1,10 +1,16 @@
 Ignore [N]
-N := R'\n', R'\t', ' ';
 
-Atom    := R'[^\(\)\s\`]?'; # use Regex
-Expr  ::= Atom
-        | Quote
-        | '(' Expr* ')';
+someConst := 'as' 'we' 'can';
 
-Quote ::=  '`' Expr ;
-Stmt  ::= Expr*;
+
+N       := R'\n', R'\t', ' ';
+
+Atom    := R'[^\(\)\s\`]+'; # use Regex
+
+Expr    ::= Atom
+          | Quote
+          | '(' Expr* ')' ('as' 'we' 'can');
+
+
+Quote   ::=  '`' Expr ;
+Stmt    ::= Expr*;

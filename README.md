@@ -2,20 +2,16 @@
 [![PyPI version](https://img.shields.io/pypi/v/EBNFParser.svg)](https://pypi.python.org/pypi/EBNFParser)
 [![Chinese Doc](https://img.shields.io/badge/docs-RuikowaEBNF-yellow.svg?style=flat)](https://github.com/thautwarm/EBNFParser/blob/master/Ruikowa.zh.md)
 [![Release Note](https://img.shields.io/badge/note-release-orange.svg)](https://github.com/thautwarm/EBNFParser/blob/master/Python/release-note)
-[![GPLv3.0 License](https://img.shields.io/badge/license-GPLv3.0-Green.svg?style=flat)](https://github.com/thautwarm/EBNFParser/blob/master/LICENSE)
+[![MIT License](https://img.shields.io/badge/license-MIT-Green.svg?style=flat)](https://github.com/thautwarm/EBNFParser/blob/master/LICENSE)
 
 # EBNFParser
 Parse Many, Any, Every
 ---------
 [HomePage](https://github.com/thautwarm/EBNFParser)
 
-* **The License will be changed to `MIT` sooner**.
-
-## Multi-Language-Versions
-
-- [Python Project(Support Python 3.4+)](https://github.com/thautwarm/EBNFParser/tree/master/Python) (v 1.0.1)
-    - [What's new in EBNFParser 1.0.1](https://github.com/thautwarm/EBNFParser/tree/master/Python/release-note)
-    - [Old Version : Misakawa](https://github.com/thautwarm/EBNFParser/tree/master/Misakawa.md)
+- [Python Project(Support Python 3.6+)](https://github.com/thautwarm/EBNFParser/tree/master/Python) (v 2.0)
+    - [Old Version : Misakawa(v0.x)](https://github.com/thautwarm/EBNFParser/tree/master/Misakawa.md)
+    - [Old Version : Ruikowa(v1.x)](https://github.com/thautwarm/EBNFParser/tree/master/README.md)
 
 
 --------------------
@@ -46,12 +42,13 @@ Here is an example for you to get a knowledge of `Ruikowa` for parsing Java `swi
 
 Token Token.Java # use the token definition at source file `./Token/Java`.
 
-newline  ::= R'\n' # match by using regular expression
+Ignore [Space] # ignore tokens like Space;
+Space    := R'\s+'; # define tokenizer(s) with specific name `Space`
 
 switch   ::= 'switch' '(' expression ')' newline*
              '{'  
-                (case | newline  )*
-                [default newline*]
+                case*
+                [default]
              '}' ;
 
 case     ::= 'case' ':' body    ;
@@ -60,7 +57,7 @@ default  ::= 'default' ':' body ;
 
 body     ::= block | statement  ;
 
-block    ::= '{' (newline|statement)* '}' ;
+block    ::= '{' statement* '}' ;
 
 ...
 
@@ -76,29 +73,28 @@ Now I'm going to tell you how to use `EBNFParser` to write a parser for `Lisp` q
 - Write a file and name it as `lispGrammar` with following content.
 
     ```BNF
-    Atom    := R'[^\(\)\s\`]+'; # use Regex
-    # define a literal parser. `Atom::= R'[^\(\)\s\']+'` is ok, but the ast parsed from the two is a little different with each other.
 
-    Expr  Throw ['\n'] 
-        ::= Atom 
-            | Quote 
-            | C'(' (NEWLINE* Expr* NEWLINE*)* C')' ; 
-    # C-prefix announces a character parser.
+    Ignore [N]
+    N := R'\n', R'\t', ' ';
 
-    Quote ::=  C'`' Expr ;
-    NEWLINE := C'\n' ;
-    Stmt Throw ['\n'] ::= (NEWLINE* Expr* NEWLINE*)* ;
+    Atom    := R'[^\(\)\s\`]?'; # use Regex
+    Expr  ::= Atom
+            | Quote
+            | '(' Expr* ')';
+
+    Quote ::=  '`' Expr ;
+    Stmt  ::= Expr*;
 
     ```
 
 - Generate your parser and tokenizer.
 
-    `ruiko ./lispGrammar ./lispParser.py -comment True`
+    `ruiko ./lispGrammar ./lispParser.py`
 
 - Test your parser.
 
     ```shell
-    python testLang.py Stmt "(+ 1 2)" -o test
+    python testLang.py Stmt "(+ 1 2)" -o test.ast
     Stmt[
         Expr[
             "("
@@ -116,8 +112,7 @@ Now I'm going to tell you how to use `EBNFParser` to write a parser for `Lisp` q
     ]
     ```
 
-    Moreover, here is a result in `JSON` format at [test.json](https://github.com/thautwarm/EBNFParser/tree/master/tests/Ruikowa/Lang/Lisp/test.json).
-
+    Moreover, here is a result in `JSON` format at [test.json](https://github.com/thautwarm/EBNFParser/blob/boating-new/tests/Ruikowa/Lang/Lisp/test.json).
 
 ## Usage 
 
@@ -125,17 +120,36 @@ Now I'm going to tell you how to use `EBNFParser` to write a parser for `Lisp` q
     - `ruiko`.
 
     ```shell
-    ruiko <grammar File> 
-            <output Python File(endswith ".py")>
-            [-comment <True/False>] # whether any comments in your grammar file.
+    ruiko ./<grammar File> ./<output Python File(endswith ".py")>
+            [--testTk] # print tokenized words or not
     ```
     Use command `ruiko` to generate parser and token files, and then you can use `testLang.py` to test your parser.
 
     ```shell
-    python testLang.py <AST Name> "<your codes>"
+    python ./test_lang.py Stmt " (+ 1 2) " -o test.json --testTk
     ```
 
-- [APIs](https://github.com/thautwarm/EBNFParser/blob/master/api.md)  
+- Use `EBNFParser` in your own project.
+
+
+Here are some examples to refer:  
+
+EBNFParser 2.0
+
+- [Rem](https://github.com/thautwarm/Rem)  
+    The Rem programming language.
+
+Before EBNFParser 1.1.  
+
+- [DBG-Lang](https://github.com/thautwarm/dbg-lang)  
+    A DSL for SQL development in Python areas.
+
+- [Rem(Based EBNFParser1.1)](https://github.com/thautwarm/Rem/tree/backend-ebnfparser1.1)  
+    A full featured modern language to enhance program readability based on CPython.
+
+- [Lang.Red](https://github.com/thautwarm/lang.red)  
+    An attempt to making ASDL in CPython(unfinished yet)
+
 
 
 ## Source
@@ -148,7 +162,7 @@ Will support C# and Elixir sooner.
 
 
 ## License  
-[GPLv3.0](./LICENSE)
+[MIT](./LICENSE)
 
     
 

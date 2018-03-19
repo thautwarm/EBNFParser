@@ -10,6 +10,7 @@ from setuptools import setup, find_packages
 
 with open('./README.rst', encoding='utf-8') as f:
     readme = f.read()
+
 setup(name='EBNFParser',
       version='2.0',
       keywords='parser, parser framework, parser generator, gramamr, ast, tokenizer, EBNF, BNF',
@@ -23,11 +24,11 @@ setup(name='EBNFParser',
       packages=['Ruikowa'],
       entry_points={
           'console_scripts': [
-              'misakawa=Ruikowa.Command:main']
+              'ruiko=Ruikowa.Command:main']
       },
-    install_requires=[
-        'Linq==0.3.1'
-    ],
+      install_requires=[
+          'Linq==0.3.1'
+      ],
       platforms='any',
       classifiers=[
           'Programming Language :: Python :: 3.6',
