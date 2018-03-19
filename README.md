@@ -13,7 +13,8 @@ Parse Many, Any, Every
     - [Old Version : Misakawa(v0.x)](https://github.com/thautwarm/EBNFParser/tree/boating-new/Misakawa.md)
     - [Old Version : Ruikowa(v1.x)](https://github.com/thautwarm/EBNFParser/tree/boating-new/README.md)
 
-
+P.S: Everything except THIS README is out of date, you can refer [here] for more information.(https://github.com/thautwarm/ebnfparser-dev-notes/tree/master/code_examples).
+ 
 --------------------
 
 ## Install
