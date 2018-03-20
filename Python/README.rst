@@ -1,4 +1,4 @@
-|Build Status| |PyPI version| |Chinese Doc| |Release Note| |MIT License|
+|Build Status| |PyPI version| |Release Note| |MIT License|
 
 EBNFParser
 ==========
@@ -16,6 +16,10 @@ Parse Many, Any, Every
       Misakawa(v0.x) <https://github.com/thautwarm/EBNFParser/tree/boating-new/Misakawa.md>`__
    -  `Old Version :
       Ruikowa(v1.x) <https://github.com/thautwarm/EBNFParser/tree/boating-new/README.md>`__
+
+P.S: Everything except THIS README is out of date, you can refer [here]
+for more
+information.(https://github.com/thautwarm/ebnfparser-dev-notes/tree/master/code\_examples).
 
 --------------
 
@@ -51,9 +55,10 @@ Java ``switch`` syntax.
 .. code:: bnf
 
 
-    Token Token.Java # use the token definition at source file `./Token/Java`.
+    deftoken Token.Java # use the token definition at source file `./Token/Java`.
 
-    Ignore [Space] # ignore tokens like Space;
+    ignore [Space] # ignore tokens like Space;
+
     Space    := R'\s+'; # define tokenizer(s) with specific name `Space`
 
     switch   ::= 'switch' '(' expression ')' newline*
@@ -84,7 +89,8 @@ for ``Lisp`` quickly.
    .. code:: bnf
 
 
-       Ignore [N]
+       ignore [N]
+
        N := R'\n', R'\t', ' ';
 
        Atom    := R'[^\(\)\s\`]?'; # use Regex
@@ -185,8 +191,6 @@ License
    :target: https://travis-ci.org/thautwarm/EBNFParser
 .. |PyPI version| image:: https://img.shields.io/pypi/v/EBNFParser.svg
    :target: https://pypi.python.org/pypi/EBNFParser
-.. |Chinese Doc| image:: https://img.shields.io/badge/docs-RuikowaEBNF-yellow.svg?style=flat
-   :target: https://github.com/thautwarm/EBNFParser/blob/boating-new/Ruikowa.zh.md
 .. |Release Note| image:: https://img.shields.io/badge/note-release-orange.svg
    :target: https://github.com/thautwarm/EBNFParser/blob/boating-new/Python/release-note
 .. |MIT License| image:: https://img.shields.io/badge/license-MIT-Green.svg?style=flat
