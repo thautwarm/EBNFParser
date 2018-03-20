@@ -9,10 +9,12 @@ def _escape(*str_s):
 
 class NameEnum:
     keyword_as = unique_literal_cache_pool['as']
+    keyword_of = unique_literal_cache_pool['of']
     keyword_throw = unique_literal_cache_pool['throw']
     keyword_deftoken = unique_literal_cache_pool['deftoken']
     keyword_ignore = unique_literal_cache_pool['ignore']
 
+    Of = unique_literal_cache_pool['Of']
     Prefix = unique_literal_cache_pool['Prefix']
     Comments = unique_literal_cache_pool['Comments']
     Str = unique_literal_cache_pool['Str']
@@ -57,7 +59,7 @@ token_table = (
     ("Str", regex_matcher(re.compile(r"[A-Z]'([^\\']+|\\.)*?'|'([^\\']+|\\.)*?'"))),
     ("Codes", regex_matcher(re.compile(r'{{[\w\W]+?\}\}'))),
 
-    ("Name", regex_matcher("[a-zA-Z_\u4e00-\u9fa5][a-zA-Z0-9\u4e00-\u9fa5\.]*")),
+    ("Name", regex_matcher("[a-zA-Z_\u4e00-\u9fa5][a-zA-Z0-9_\u4e00-\u9fa5\.]*")),
     ("Number", regex_matcher("\d+")),
 
     # do not match
@@ -71,7 +73,9 @@ cast_map = {
     'as': keyword,
     'throw': keyword,
     'deftoken': keyword,
-    'ignore': keyword
+    'ignore': keyword,
+    'for': keyword,
+    'of': keyword
 }
 
 token_func = lambda _: Tokenizer.from_raw_strings(_,

@@ -55,8 +55,8 @@ class ErrorHandler:
 
             row = src_code.splitlines()[where.lineno]
             raise DSLSyntaxError(
-                "{}{}{}{} ---- at file {} line {}"
+                "{}{}{}{} ---- at file {} line {}{}"
                     .format(Colored.Green, row[:where.colno - 1], Colored.Red,
                             row[where.colno - 1:],
-                            filename, where.lineno + 1))
+                            filename, where.lineno + 1, Colored.Clear))
         return res

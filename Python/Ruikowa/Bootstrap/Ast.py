@@ -1,7 +1,7 @@
 import os
 import linq
 from collections import namedtuple
-from typing import List
+from typing import List, Tuple
 from .Token import NameEnum
 from ..Core.BaseDef import *
 from ..ErrorFamily import UnsupportedStringPrefix, find_location
@@ -16,7 +16,7 @@ CompilingNodes = namedtuple('CN', ['reachable', 'alone'])
 T = 'Union[Ast, List[Union[Ast, Tokenizer]]]'
 
 
-def get_string_and_mode(prefix_string: str):
+def get_string_and_mode(prefix_string: str) -> 'Tuple[Optional[str],  str]':
     if prefix_string[0] is not '\'':
         return prefix_string[0], prefix_string[1:]
     else:
@@ -28,15 +28,17 @@ def surround_with_double_quotes(string):
 
 
 class Compiler:
+    # TODO: refactor and clear redundant items.
     def __init__(self, filename: str = None, src_code: str = None):
         self.src = src_code
         self.filename = filename
 
         self.token_func_src = None
         self.token_spec = TokenSpec()
-        self.token_ignores = ('{}', '{}')
+        self.token_ignores = ('{}', '{}')  # define what to ignore when tokenizing.
         self.prefix_mapping = {}
         self.cast_map = {}
+        self.c_macro = {}
 
         self.generated_token_names = set()
 
@@ -86,9 +88,10 @@ class Compiler:
             self.token_func_src = content.string[2:-2]
 
     def ast_for_equals(self, equals: T):
-
+        str_tks: 'List[Tokenizer]'
         if equals[-2].name is NameEnum.Str:
 
+            defining_cast_map = False
             if equals[1].name is NameEnum.Prefix:
                 name, prefix, _, *str_tks, _ = equals
                 prefix: 'Ast'
@@ -98,23 +101,49 @@ class Compiler:
                                                   " the length of prefix name should be 1 only." +
                                                   find_location(self.filename, prefix[1], self.src))
                 self.prefix_mapping[prefix_string] = name.string
+                defining_cast_map = True
+
+            elif equals[1].name is NameEnum.Of:
+
+                ref_name, of, _, *str_tks, _ = equals
+                name = of[1]
+                self.c_macro[ref_name.string] = name.string
+
             else:
                 name, _, *str_tks, _ = equals
 
             name = name.string
-            for str_tk in str_tks:
-                mode, string = get_string_and_mode(str_tk.string)
-                if mode is 'R':
-                    mode = Mode.regex
-                elif len(string) is 3:
-                    mode = Mode.char
-                else:
-                    mode = Mode.const
 
-                self.token_spec.append(name, mode, string, name_unique=False)
-                if name not in self.generated_token_names:
-                    self.literal_parser_definitions.append("{} = LiteralNameParser('{}')".format(name, name))
-                    self.generated_token_names.add(name)
+            if defining_cast_map:
+                # define cast map
+                for str_tk in str_tks:
+                    mode, string = get_string_and_mode(str_tk.string)
+                    if mode:
+                        raise UnsupportedStringPrefix(mode,
+                                                      'do not support setting prefix when defining custom prefix.' +
+                                                      find_location(self.filename, str_tk, self.src))
+                    self.cast_map[string] = name
+                    if str_tk.string[1:-1].isidentifier():
+                        self.token_spec.enums.__setitem__(f'{name}_{str_tk.string[1:-1]}', str_tk.string)
+            else:
+                # define how to tokenize
+                for str_tk in str_tks:
+                    mode, string = get_string_and_mode(str_tk.string)
+                    if mode is 'R':
+                        mode = Mode.regex
+                    elif len(string) is 3:
+                        mode = Mode.char
+                    else:
+                        mode = Mode.const
+                    self.token_spec.tokens.append((name, mode, string))
+                    if string[1:-1].isidentifier():
+                        self.token_spec.enums.__setitem__(f'{name}_{string[1:-1]}', string)
+
+            if name not in self.generated_token_names:
+                self.literal_parser_definitions.append("{} = LiteralNameParser('{}')".format(name, name))
+                self.generated_token_names.add(name)
+            self.token_spec.enums.__setitem__(name, f"'{name}'")
+
 
         else:
             if equals[1].name is NameEnum.Throw:
@@ -126,7 +155,7 @@ class Compiler:
                 grouped = {True: (), False: ()}
 
             name = self._current__combined_parser_name = name.string
-            self.token_spec.names.add(name)
+            self.token_spec.enums.__setitem__(name, f"'{name}'")
 
             if name not in self.compile_helper.reachable:
                 self.compile_helper.alone.add(name)
@@ -162,29 +191,33 @@ class Compiler:
         if maybe_tk.__class__ is Tokenizer:
             if maybe_tk.name is NameEnum.Name:
 
-                if maybe_tk.string in self.compile_helper.alone:
-                    self.compile_helper.alone.remove(maybe_tk.string)
+                name = self.c_macro.get(maybe_tk.string, maybe_tk.string)
 
-                if maybe_tk.name not in self.compile_helper.reachable:
-                    self.compile_helper.reachable.add(maybe_tk.string)
+                if name in self.compile_helper.alone:
+                    self.compile_helper.alone.remove(name)
 
-                return "Ref('{}')".format(maybe_tk.string)
+                if name not in self.compile_helper.reachable:
+                    self.compile_helper.reachable.add(name)
+
+                return "Ref('{}')".format(name)
 
             else:
                 mode, string = get_string_and_mode(maybe_tk.string)
                 if not mode:
-                    if len(string) is 3 and string[1] not in self.token_spec:
-                        self.token_spec.append('auto_const', Mode.char, string)
-                        return string
-                    for k, mode, v in self.token_spec.source:
-                        if mode is Mode.const and v is string:
+                    for k, mode, v in self.token_spec.tokens:
+                        # check if need to create a new token pattern
+                        if v is string and k == 'auto_const':
                             break
+
                     else:
-                        self.token_spec.append('auto_const', Mode.const, string)
+                        if len(string) is 3:
+                            self.token_spec.tokens.append(('auto_const', Mode.char, string))
+                        else:
+                            self.token_spec.tokens.append(('auto_const', Mode.const, string))
                     return string
 
                 if mode is 'R':
-                    for k, mode, v in self.token_spec.source:
+                    for k, mode, v in self.token_spec.tokens:
                         if mode is Mode.regex and v == string:
 
                             if k in self.compile_helper.alone:
@@ -205,7 +238,8 @@ class Compiler:
                         '{}<{}>{} when defining combined parser{}\n'
                         .format(Colored.Red, name, Colored.LightBlue, Colored.Clear))
 
-                    self.token_spec.append(name, Mode.regex, string, name_unique=True)
+                    self.token_spec.tokens.append((name, Mode.regex, string))
+                    self.token_spec.enums.__setitem__(name, f"'{name}'")
                     self.literal_parser_definitions.append("{} = LiteralNameParser('{}')".format(name, name))
 
                     if name in self.compile_helper.alone:
@@ -215,8 +249,11 @@ class Compiler:
                         self.compile_helper.reachable.add(name)
 
                     return "Ref('{}')".format(name)
-                elif mode not in self.prefix_mapping:
 
+                elif mode is 'L':
+                    return f"L({string})"
+
+                elif mode not in self.prefix_mapping:
                     raise UnsupportedStringPrefix(mode, "Prefix not defined."
                                                   + find_location(self.filename, maybe_tk, self.src))
 

@@ -28,6 +28,10 @@ Prefix = AstParser(
     [('keyword', 'as'), Name],
     name='Prefix')
 
+Of = AstParser(
+    [('keyword', 'of'), Name],
+    name='Of')
+
 Stmts = AstParser(
     [SeqParser([Ref('TokenIgnore')],
                [Ref('TokenDef')],
@@ -40,7 +44,7 @@ TokenDef = AstParser(
     name='TokenDef')
 
 Equals = AstParser(
-    [Name, SeqParser([Ref('Prefix')], at_most=1), ':=', SeqParser([Str]), ';'],
+    [Name, SeqParser([Ref('Prefix')], [Ref('Of')], at_most=1), ':=', SeqParser([Str]), ';'],
     [Name, SeqParser([Ref('Throw')], at_most=1), '::=', Ref('Expr'), ';'],
     name='Equals')
 

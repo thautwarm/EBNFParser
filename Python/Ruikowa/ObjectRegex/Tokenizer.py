@@ -1,5 +1,5 @@
 try:
-    from typing import Iterable, Tuple, List
+    from typing import Iterable, Tuple, List, Dict, Set
 
     if False:
         from re import __Regex
@@ -22,33 +22,20 @@ class Mode:
 
 class TokenSpec:
     def __init__(self):
-        self.source = []
-        self.names = set()
+        self.enums: 'Dict[str, str]' = {}
+        # enum name -> const string
 
-    def append(self, name, mode, string, name_unique=False):
-        if name_unique:
-            if name in self.names:
-                raise UniqueNameConstraintError(name)
-
-            self.source.append((name, mode, string))
-            self.names.add(name)
-            return
-        if name in self.names and mode is Mode.regex:
-            warnings.warn(Colored.Yellow + "Sharing one name" + Colored.Red + " '{}' ".format(
-                name) + Colored.Yellow + "with multiple regex literal parsers." + Colored.Clear)
-        self.source.append((name, mode, string))
-        self.names.add(name)
+        self.tokens: 'List[Tuple[str, int, str]]' = []
 
     def to_token_table(self, indent=15):
         generated_tokens = set()
         _join = f',\n{" "*indent}'.join
-        if not self.source:
+        if not self.tokens:
             return '()'
-        groups = linq.Flow(self.source).Group(
-            lambda name, mode, string: (name, string if mode is Mode.regex else mode)).Unboxed()
+        groups = linq.Flow(self.tokens).Group(lambda name, mode, string: (name, mode if mode is not Mode.regex else string)).Unboxed()
 
         def make_each(group: 'List[Tuple[str, int, str]]'):
-            name, mode, string = group[0]
+            name, mode, string = group.__iter__().__next__()
             if mode is Mode.regex:
                 return '(unique_literal_cache_pool["{name}"], regex_matcher({string}))'.format(name=name, string=string)
 
@@ -75,31 +62,15 @@ class TokenSpec:
 
     def to_name_enum(self):
 
-        if not self.source:
+        if not self.enums:
             return ""
-
-        indent = ' ' * 4
-        _join = f'\n{indent}'.join
-
-        value_enums = linq.Flow(
-            self.source
-        ).Filter(
-            lambda name, mode, string: mode is not Mode.regex and (
-                string[1:-1].isidentifier())
-        ).Map(
-            lambda a, _, b: (a, b)
-        ).Then(
-            set
-        ).Map(
-            lambda name, string: f'{name}_{string[1:-1]} = unique_literal_cache_pool[{string}]'
-        ).Then(
-            _join
-        ).Unboxed()
+        indent = f'\n{" "*4}'
+        _join = indent.join
 
         name_enums = linq.Flow(
-            self.names
+            self.enums.items()
         ).Map(
-            lambda _: f"{_} = unique_literal_cache_pool['{_}']"
+            lambda name, string: f"{name} = unique_literal_cache_pool[{string}]"
         ).Then(
             _join
         ).Unboxed()
@@ -108,17 +79,10 @@ class TokenSpec:
 class UNameEnum:
 # names
 {}{}
-# values
-{}{}
         """.format(indent,
-                   name_enums,
-                   indent,
-                   value_enums)
+                   name_enums)
 
         return enum_class_spec
-
-    def __contains__(self, item):
-        return item in self.names
 
 
 class Tokenizer:

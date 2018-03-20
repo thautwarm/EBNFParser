@@ -5,8 +5,10 @@ TokenIgnore ::= 'ignore' '[' (Name|Str)* ']';
 TokenDef ::= 'deftoken' (Name | Codes);
 
 Prefix   ::= 'as' Name;
+Of      ::= 'of' Name;
 
-Equals   ::= Name  [Prefix] ':='  Str + ';'|
+
+Equals   ::= Name  [Prefix|Of] ':='  Str + ';'|
              Name [Throw] '::=' Expr ';';
 
 Throw    ::= 'throw' '[' (Name | Str)* ']';
@@ -27,7 +29,7 @@ Trailer  ::= '*' | '+' | '{' Number{1 2} '}';
 /*
 
 keyword :
-    ['ignore', 'deftoken', 'as', 'throw']
+    ['ignore', 'deftoken', 'as', 'throw', 'of']
 */
 
 

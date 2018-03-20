@@ -123,9 +123,8 @@ class LiteralValueParser(BaseParser):
     for const char*
     """
 
-    def __init__(self, name, mode):
-        self.name = name
-        self.mode = mode
+    def __init__(self, mode):
+        self.name = self.mode = mode
 
     def match(self, tokens: 'Sequence[Tokenizer]', meta: 'MetaInfo', recur: 'Recur' = Undef):
         try:
@@ -173,7 +172,7 @@ class AstParser(BaseParser):
         # each in the cache will be processed into a parser.
         cases = tuple(
             tuple(
-                LiteralNameValueParser('auto_const', each) if isinstance(each, str) else
+                LiteralValueParser(each) if isinstance(each, str) else
                 LiteralNameValueParser(each[0], each[1]) if isinstance(each, tuple) else
                 each
                 for each in p)
