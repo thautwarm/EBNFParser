@@ -157,7 +157,18 @@
 
 
 
+	# 2.0.9
 
+		Add custom literal prefixes.
+
+		```
+		keyword as K := 'def' 'let';
+
+		some    ::= K'let' args '=' expr;
+		```
+
+		Take care that you cannot overload `R` prefix.
+		
 			
 			
 

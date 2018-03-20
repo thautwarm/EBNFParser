@@ -6,15 +6,6 @@ Created on Sat Oct 14 18:54:45 2017
 @author: misakawa
 """
 from ..Core.BaseDef import *
-from ..Config import Debug
-
-
-def debug(func):
-    def call(self):
-        print(func.__name__, self.count)
-        func(self)
-
-    return call if Debug else func
 
 
 class MetaInfo:
