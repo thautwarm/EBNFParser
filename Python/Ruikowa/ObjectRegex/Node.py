@@ -9,7 +9,6 @@ from abc import ABC, abstractmethod
 from typing import Union, List, Tuple, Collection
 from ..Core.BaseDef import *
 from .MetaInfo import MetaInfo
-from ..Tools import function_debugger
 from ..ErrorFamily import *
 from .ASTDef import Ast
 from .Optimize import optimize
@@ -30,6 +29,7 @@ def debug(msg):
     def wrap(func):
         def call(self, tokens: 'Sequence[Tokenizer]', meta: 'MetaInfo', *args, **kwargs):
             global DEBUG_INDENT
+            from ..Tools import function_debugger
             if not isinstance(self, AstParser):
                 now = tokens[meta.count]
                 if hasattr(self, 'mode'):
