@@ -16,6 +16,8 @@ from .Tokenizer import unique_lit_name, unique_lit_value, unique_literal_cache_p
 from ..Config import Debug
 
 if Debug:
+    from ..Tools import function_debugger
+
     DEBUG_INDENT = 1
     debugger = function_debugger('tag', 'content')
 
@@ -29,7 +31,6 @@ def debug(msg):
     def wrap(func):
         def call(self, tokens: 'Sequence[Tokenizer]', meta: 'MetaInfo', *args, **kwargs):
             global DEBUG_INDENT
-            from ..Tools import function_debugger
             if not isinstance(self, AstParser):
                 now = tokens[meta.count]
                 if hasattr(self, 'mode'):
