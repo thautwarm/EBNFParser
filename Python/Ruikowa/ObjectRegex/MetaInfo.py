@@ -6,6 +6,15 @@ Created on Sat Oct 14 18:54:45 2017
 @author: misakawa
 """
 from ..Core.BaseDef import *
+from ..Config import Debug
+
+
+def debug(func):
+    def call(self):
+        print(func.__name__, self.count)
+        func(self)
+
+    return call if Debug else func
 
 
 class MetaInfo:
@@ -43,40 +52,21 @@ class MetaInfo:
         else:
             self.trace = Trace()
             self.trace.append(Trace())
-        self.history = []
+        # self.history = []
         self.fileName = fileName if fileName else "<input>"
 
     def new(self):
         self.count += 1
         self.trace.new(Trace)
 
-    def branch(self):
-        """
-        Save a record of parsing history in order to trace back.
-        """
-        self.history.append((self.count, self.trace[self.count].length))
+    def commit(self):
+        return self.count, self.trace[self.count].length
 
-    def rollback(self):
-        """
-        Trace back.
-        """
-        try:
-            count, length = self.history.pop()
-        except IndexError:
-            return None
+    def rollback(self, history):
+        count, length = history
         self.count = count
         self.trace.length = count + 1
         self.trace[count].length = length
-
-    def pull(self):
-        """
-        Confirm the current parsing results.
-        Pop a record in parsing history.
-        """
-        try:
-            self.history.pop()
-        except IndexError:
-            raise Exception("pull no thing")
 
     def clone(self):
         """
@@ -86,7 +76,7 @@ class MetaInfo:
                      FileName)
                     from current meta information.
         """
-        return (self.count, self.fileName)
+        return self.count, self.fileName
 
     def __str__(self):
         return """

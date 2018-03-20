@@ -6,15 +6,19 @@ Created on Sat Oct 14 18:53:53 2017
 @author: misakawa
 """
 from abc import ABC, abstractmethod
+from typing import Union, List, Tuple, Collection
 from ..Core.BaseDef import *
 from .MetaInfo import MetaInfo
+from ..Tools import function_debugger
 from ..ErrorFamily import *
-from .PatternMatching import *
 from .ASTDef import Ast
 from .Optimize import optimize
-from .Tokenizer import unique_lit_name
-
+from .Tokenizer import unique_lit_name, unique_lit_value, unique_literal_cache_pool, Tokenizer
 from ..Config import Debug
+
+if Debug:
+    DEBUG_INDENT = 1
+    debugger = function_debugger('tag', 'content')
 
 
 class Ignore:
@@ -24,16 +28,62 @@ class Ignore:
 
 def debug(msg):
     def wrap(func):
-        def call(self, *args, **kwargs):
-            print(f'begin {self.__class__.__name__}[{self.name}] from {msg}')
-            res = func(self, *args, **kwargs)
+        def call(self, tokens: 'Sequence[Tokenizer]', meta: 'MetaInfo', *args, **kwargs):
+            global DEBUG_INDENT
+            if not isinstance(self, AstParser):
+                now = tokens[meta.count]
+                if hasattr(self, 'mode'):
+                    profile = f'{self.name}[{self.mode}] matching {now}'
+                else:
+                    profile = f'{self.name} matching {now}'
+            else:
+                profile = self.name
+            print(Colored.Purple2,
+                  debugger(dict(
+                      tag=f'start {self.__class__.__name__}',
+                      Profile=profile,
+                      Name=self.name,
+                      content=msg,
+                      Meta=meta.count),
+                      indent=DEBUG_INDENT * 4,
+                      inc_indent=2),
+                  Colored.Clear, '\n')
 
-            print(f'end {self.__class__.__name__}[{self.name}] from {msg} with {res}')
+            DEBUG_INDENT += 1
+            res = func(self, tokens, meta, *args, **kwargs)
+            DEBUG_INDENT -= 1
+
+            print(Colored.LightBlue,
+                  debugger(
+                      dict(
+                          tag=f'end {self.__class__.__name__}',
+                          Name=self.name,
+                          Profile=profile,
+                          content=msg,
+                          Return=True if res else False,
+                          Meta=meta.count),
+                      indent=DEBUG_INDENT * 4,
+                      inc_indent=1),
+                  Colored.Clear, '\n')
+
             return res
 
-        return call
+        return call if Debug else func
 
     return wrap
+
+
+ParserCollections = 'Union[LiteralNameParser, LiteralNameValueParser, LiteralValueParser, AstParser, SeqParser]'
+
+
+def parser_name_helper(
+        pattern: 'ParserCollections'):
+    if pattern.__class__ is LiteralNameValueParser:
+        return f"{pattern.name}['{pattern.mode}']"
+    elif pattern.__class__ is LiteralValueParser:
+        return f"'{pattern.mode}'"
+    else:
+        return pattern.name
 
 
 class BaseParser(ABC):
@@ -41,10 +91,10 @@ class BaseParser(ABC):
     name = Undef
     has_recur = Undef
 
-    def match(self, objs, meta, recur=Undef):
+    @abstractmethod
+    def match(self, tokens: 'Sequence[Tokenizer]', meta: 'MetaInfo', recur: 'Recur' = Undef):
         """Abstract Method"""
-        raise Exception("There is no access to an abstract method.")
-        # incomplete
+        raise NotImplemented
 
 
 class LiteralNameParser(BaseParser):
@@ -55,7 +105,16 @@ class LiteralNameParser(BaseParser):
 
     def __init__(self, name):
         self.name = name
-        self.match = match_by_name_enum(self)
+
+    def match(self, tokens: 'Sequence[Tokenizer]', meta: 'MetaInfo', recur: 'Recur' = Undef):
+        try:
+            value: 'Tokenizer' = tokens[meta.count]
+        except IndexError:
+            return Const.UnMatched
+        if value.name is self.name:
+            meta.new()
+            return value
+        return Const.UnMatched
 
 
 class LiteralValueParser(BaseParser):
@@ -66,28 +125,59 @@ class LiteralValueParser(BaseParser):
     def __init__(self, name, mode):
         self.name = name
         self.mode = mode
-        self.match = match_liter_by(self)
+
+    def match(self, tokens: 'Sequence[Tokenizer]', meta: 'MetaInfo', recur: 'Recur' = Undef):
+        try:
+            value: 'Tokenizer' = tokens[meta.count]
+        except IndexError:
+            return Const.UnMatched
+        if value.string is self.mode:
+            meta.new()
+            return value
+        return Const.UnMatched
 
 
-LiteralParsers = (LiteralValueParser, LiteralNameParser)
+class LiteralNameValueParser(BaseParser):
+    """
+    for const char* and its group name
+    """
+
+    def __init__(self, name, mode):
+        self.name = name
+        self.mode = mode
+
+    @debug('literal name value')
+    def match(self, tokens: 'Sequence[Tokenizer]', meta: 'MetaInfo', recur: 'Recur' = Undef):
+        try:
+            value: 'Tokenizer' = tokens[meta.count]
+        except IndexError:
+            return Const.UnMatched
+        if value.name is self.name and value.string is self.mode:
+            meta.new()
+            return value
+        return Const.UnMatched
 
 
 class Ref(BaseParser):
     def __init__(self, name):
         self.name = unique_literal_cache_pool[name]
 
+    def match(self, tokens: 'Sequence[Tokenizer]', meta: 'MetaInfo', recur: 'Recur' = Undef):
+        raise NotImplemented
+
 
 class AstParser(BaseParser):
 
-    def __init__(self, *ebnf, name=Undef, to_ignore=Undef):
+    def __init__(self, *cases, name=Undef, to_ignore=Undef):
         # each in the cache will be processed into a parser.
-        ebnf = tuple(
+        cases = tuple(
             tuple(
-                LiteralValueParser(unique_literal_cache_pool['auto_const'],
-                                   unique_literal_cache_pool[each]) if isinstance(each, str) else each
+                LiteralNameValueParser('auto_const', each) if isinstance(each, str) else
+                LiteralNameValueParser(each[0], each[1]) if isinstance(each, tuple) else
+                each
                 for each in p)
-            for p in ebnf)
-        self.cache = optimize(ebnf)
+            for p in cases)
+        self.cache: 'Tuple[Tuple[ParserCollections]]' = optimize(cases)
 
         # the possible output types for an series of input tokenized words.
         self.possibilities = []
@@ -99,8 +189,8 @@ class AstParser(BaseParser):
 
         self.name = name if name is not Undef else \
             ' | '.join(
-                ' '.join(map(lambda parser: parser.mode if parser.__class__ is LiteralValueParser else parser.name,
-                             ebnf_i)) for ebnf_i in ebnf)
+                ' '.join(
+                    map(parser_name_helper, case)) for case in cases)
 
         # is this parser compiled, must be False when initializing.
         self.compiled = False
@@ -108,7 +198,7 @@ class AstParser(BaseParser):
         #  if a parser's name is in this set, the result it output will be ignored when parsing.
         self.to_ignore = to_ignore
 
-    def compile(self, namespace, recur_searcher):
+    def compile(self, namespace: dict, recur_searcher: set):
         if self.name in recur_searcher:
             self.has_recur = True
             self.compiled = True
@@ -122,25 +212,46 @@ class AstParser(BaseParser):
             self.possibilities.append([])
 
             for e in es:
+
                 if e.__class__ is LiteralNameParser:
+
                     if e.name not in namespace:
                         unique_lit_name(e)
-                        namespace[e.name] = e.name
+                        namespace[e.name] = e
+
                     else:
                         e = namespace[e.name]
 
                     self.possibilities[-1].append(e)
 
                 elif e.__class__ is LiteralValueParser:
-                    unique_lit_name(e)
+                    literal = parser_name_helper(e)
+
+                    if literal not in namespace:
+                        unique_lit_value(e)
+                        namespace[literal] = e
+
+                    else:
+                        e = namespace[literal]
+
+                    self.possibilities[-1].append(e)
+
+                elif e.__class__ is LiteralNameValueParser:
+                    name_literal = parser_name_helper(e)
+
+                    if name_literal not in namespace:
+                        unique_lit_value(e)
+                        unique_lit_name(e)
+                        namespace[name_literal] = e
+                    else:
+                        e = namespace[name_literal]
+
                     self.possibilities[-1].append(e)
 
                 elif e.__class__ is Ref:
-                    unique_lit_name(e)
-
                     e = namespace[e.name]
 
-                    if e.__class__ not in LiteralParsers:
+                    if isinstance(e, AstParser):
                         e.compile(namespace, recur_searcher)
 
                     self.possibilities[-1].append(e)
@@ -149,8 +260,8 @@ class AstParser(BaseParser):
                         self.has_recur = True
 
                 else:
-                    unique_lit_name(e)
                     if e.name not in namespace:
+                        unique_lit_name(e)
                         namespace[e.name] = e
                     else:
                         e = namespace[e.name]
@@ -170,43 +281,38 @@ class AstParser(BaseParser):
         if not self.compiled:
             self.compiled = True
 
-    def match(self, objs, meta, recur=Undef):
+    @debug("match")
+    def match(self, tokens, meta: 'MetaInfo', recur: 'Recur' = Undef):
         if self.has_recur and self in meta.trace[meta.count]:
             if isinstance(self, SeqParser) or recur is self:
                 return Const.UnMatched
 
             raise RecursiveFound(self)
-
-        meta.branch()
+        history = meta.commit()
         if self.has_recur:
             meta.trace[meta.count].append(self)
 
         for possibility in self.possibilities:
-            meta.branch()
-            result = self.pattern_match(objs, meta, possibility, recur=recur)
+            result = self.pattern_match(tokens, meta, possibility, recur=recur)
             if result is Const.UnMatched:
-                meta.rollback()
+                meta.rollback(history)
                 continue
             elif isinstance(result, Ast):
-                meta.pull()
                 break
             elif isinstance(result, RecursiveFound):
-                meta.rollback()
+                meta.rollback(history)
                 break
+        else:
+            return Const.UnMatched
 
-        meta.pull()
         return result
 
-    if Debug:
-        match = debug('pattern-matching')(match)
-
-    # @debug('pattern-matching')
-    def pattern_match(self, objs, meta, possibility, recur=Undef):
+    def pattern_match(self, tokens, meta, possibility, recur=Undef):
 
         try:  # Not recur
             result = Ast(meta.clone(), self.name)
             for parser in possibility:
-                r = parser.match(objs, meta=meta, recur=recur)
+                r = parser.match(tokens, meta=meta, recur=recur)
                 # if `result` is still empty, it might not allow LR now.
                 if isinstance(r, Tokenizer) or isinstance(r, Ast):
                     result_merge(result, r, parser, self.to_ignore)
@@ -223,6 +329,7 @@ class AstParser(BaseParser):
                 return result
 
         except RecursiveFound as RecurInfo:
+            parser: 'ParserCollections'
             RecurInfo.add((self, possibility[possibility.index(parser) + 1:]))
 
             # RecurInfo has a trace of Beginning Recur Node to Next Recur Node with
@@ -230,10 +337,7 @@ class AstParser(BaseParser):
             if RecurInfo.node is not self:
                 return RecurInfo
 
-            return left_recursion(objs, meta, possibility, RecurInfo)
-
-    if Debug:
-        pattern_match = debug('pattern-matching')(pattern_match)
+            return left_recursion(tokens, meta, possibility, RecurInfo)
 
 
 def result_merge(result, r, parser, to_ignore):
@@ -244,9 +348,9 @@ def result_merge(result, r, parser, to_ignore):
         else:
             result.extend([item for item in r if
                            ((item.string not in to_ignore[Const.RawFilter]
-                             and item.name not in to_ignore[Const.NameFilter])
-                            if item.__class__ is Tokenizer else
-                            (item.name not in to_ignore[Const.NameFilter]))])
+                             and item.name not in to_ignore[Const.NameFilter]
+                             ) if item.__class__ is Tokenizer else (
+                                   item.name not in to_ignore[Const.NameFilter]))])
     else:
         if to_ignore is Undef:
             result.append(r)
@@ -258,25 +362,24 @@ def result_merge(result, r, parser, to_ignore):
                 result.append(r)
 
 
-def left_recursion(objs, meta, recur_case, recur_info):
+def left_recursion(cases, meta: 'MetaInfo', recur_case, recur_info):
     recur = recur_info.node
     for case in recur.possibilities:
-        if case is recur_case: continue
-        meta.branch()
-        very_first = recur.pattern_match(objs, meta, case, recur=recur)
+        if case is recur_case:
+            continue
+
+        very_first = recur.pattern_match(cases, meta, case, recur=recur)
         if isinstance(very_first, RecursiveFound) or very_first is Const.UnMatched:
-            meta.rollback()
             continue
         else:
-            meta.pull()
+            history = meta.commit()
             first = very_first
             recur_depth_count = 0
             while True:
-                meta.branch()
                 for parser, possibility in recur_info.possibilities:
-                    result = parser.pattern_match(objs, meta, possibility, recur=recur)
+                    result = parser.pattern_match(cases, meta, possibility, recur=recur)
                     if result is Const.UnMatched:
-                        meta.rollback()
+                        meta.rollback(history)
                         return Const.UnMatched if recur_depth_count is 0 else very_first
                     elif isinstance(result, Ast):
                         result.appendleft(first)
@@ -286,45 +389,42 @@ def left_recursion(objs, meta, recur_case, recur_info):
                         raise UnsolvedError("Unsolved return from method `patternMatch`.")
                     first = result
                 recur_depth_count += 1
-                meta.pull()
                 very_first = first
     else:
         # Fail to match any case.
         return Const.UnMatched
 
 
-class AccompaniedAstParser(AstParser): pass
+class AccompaniedAstParser(AstParser):
+    pass
 
 
 class SeqParser(AstParser):
 
-    def __init__(self, *ebnf, name=Undef, at_least=0, at_most=Undef):
-        super(SeqParser, self).__init__(*ebnf, name=name)
+    def __init__(self, *cases, name=Undef, at_least=0, at_most=Undef):
+        super(SeqParser, self).__init__(*cases, name=name)
 
         if at_most is Undef:
             if at_least is 0:
-                self.name = "({NAME})*".format(NAME=self.name)
+                self.name = f"({self.name})*"
             else:
-                self.name = '({NAME}){{{AT_LEAST}}}'.format(NAME=self.name, AT_LEAST=at_least)
+                self.name = f'({self.name}){{{at_least}}}'
         else:
-            self.name = "({NAME}){{{AT_LEAST},{AT_MOST}}}".format(
-                NAME=self.name,
-                AT_LEAST=at_least,
-                AT_MOST=at_most)
+            self.name = f"({self.name}){{{at_least},{at_most}}}"
+
         self.at_least = at_least
         self.at_most = at_most
 
-    # @debug('seqparser')
-    def match(self, objs, meta, recur=Undef):
+    def match(self, tokens, meta: 'MetaInfo', recur=Undef):
 
         result = Ast(meta.clone(), self.name)
 
-        if meta.count == len(objs):  # boundary cases
+        if meta.count == len(tokens):  # boundary cases
             if self.at_least is 0:
                 return result
             return Const.UnMatched
 
-        meta.branch()
+        history = meta.commit()
         matched_num = 0
         if self.at_most is not Undef:
             """ (ast){a b} """
@@ -332,7 +432,7 @@ class SeqParser(AstParser):
                 if matched_num >= self.at_most:
                     break
                 try:
-                    r = AstParser.match(self, objs, meta=meta, recur=recur)
+                    r = AstParser.match(self, tokens, meta=meta, recur=recur)
                 except IndexError:
                     break
 
@@ -348,7 +448,7 @@ class SeqParser(AstParser):
             """ ast{a} | [ast] | ast* """
             while True:
                 try:
-                    r = AstParser.match(self, objs, meta=meta, recur=recur)
+                    r = AstParser.match(self, tokens, meta=meta, recur=recur)
                 except IndexError:
                     break
 
@@ -362,11 +462,7 @@ class SeqParser(AstParser):
                 matched_num += 1
 
         if matched_num < self.at_least:
-            meta.rollback()
+            meta.rollback(history)
             return Const.UnMatched
 
-        meta.pull()
         return result
-
-    if Debug:
-        match = debug('pattern-matching')(match)

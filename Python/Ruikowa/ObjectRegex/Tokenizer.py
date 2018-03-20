@@ -135,17 +135,14 @@ class Tokenizer:
         return self.__str__()
 
     def __repr__(self):
-        return '[name: {}, string: "{}", lineno: {}, colno: {}]'.format(self.name,
-                                                                        self.string,
-                                                                        self.lineno,
-                                                                        self.colno)
+        return f'[name: {self.name}, string: "{self.string}", lineno: {self.lineno}, colno: {self.colno}]'
 
     def __str__(self):
 
         return '[name: {}, string: "{}"]'.format(self.name, self.string)
 
     @staticmethod
-    def from_raw_strings(raw_string: str, token_table: 'Iterable', to_ignore=({}, {}), cast_map=None):
+    def from_raw_strings(raw_string: str, token_table: 'Iterable', to_ignore=({}, {}), cast_map: dict = None):
         if cast_map is None:
             cast_map = {}
 
@@ -278,3 +275,8 @@ unique_literal_cache_pool = UniqueLiteralCachePool({})
 def unique_lit_name(obj):
     if obj.name is not unique_literal_cache_pool[obj.name]:
         obj.name = unique_literal_cache_pool[obj.name]
+
+
+def unique_lit_value(obj):
+    if obj.mode is not unique_literal_cache_pool[obj.mode]:
+        obj.mode = unique_literal_cache_pool[obj.mode]

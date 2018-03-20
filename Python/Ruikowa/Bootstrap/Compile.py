@@ -27,17 +27,23 @@ def compile(src_path, print_token=False):
     stmts = parser.from_file(src_path, MetaInfo(fileName=src_path), print_token=print_token)
     compiler = Compiler(filename=src_path, src_code=src_code)
     compiler.ast_for_stmts(stmts)
-
+    cast_map_dumps = "{{{}}}".format(
+        ', '.join(f"{k}: unique_literal_cache_pool['{v}']" for k, v in compiler.cast_map.items()))
     if compiler.token_func_src:
-        token_func_src = compiler.token_func_src
+        token_func_src = (f"token_table = {compiler.token_spec.to_token_table()}\n"
+                          f"{compiler.token_spec.to_name_enum()}\n"
+                          f"{cast_map_dumps}\n"
+                          f"{compiler.token_func_src}")
+
     else:
-        token_func_src = ("token_table = {}\n{}\n"
-                          "token_func = lambda _: "
-                          "Tokenizer.from_raw_strings(_, token_table, ({}, {}))"
-                          ).format(compiler.token_spec.to_token_table(),
-                                   compiler.token_spec.to_name_enum(),
-                                   compiler.token_ignores[0],
-                                   compiler.token_ignores[1])
+        token_func_src = (f"token_table = {compiler.token_spec.to_token_table()}\n"
+                          f"{compiler.token_spec.to_name_enum()}\n"
+                          f"cast_map = {cast_map_dumps}\n"
+                          f"token_func = lambda _: "
+                          "Tokenizer.from_raw_strings(_, token_table, "
+                          f"({compiler.token_ignores[0]}, "
+                          f"{compiler.token_ignores[1]}),"
+                          f"cast_map=cast_map)")
 
     literal_parsers = '\n'.join(compiler.literal_parser_definitions)
 

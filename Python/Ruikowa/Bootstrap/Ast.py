@@ -1,12 +1,12 @@
-import linq
 import os
-from collections import namedtuple, OrderedDict
-from typing import List, Tuple
-from .Token import NameEnum, Tokenizer
-from ..ObjectRegex.Tokenizer import Mode, TokenSpec
+import linq
+from collections import namedtuple
+from typing import List
+from .Token import NameEnum
 from ..Core.BaseDef import *
 from ..ErrorFamily import UnsupportedStringPrefix, find_location
 from ..ObjectRegex.Node import Ast
+from ..ObjectRegex.Tokenizer import Mode, TokenSpec, Tokenizer
 from ..color import Colored
 from ..io import grace_open
 
@@ -35,6 +35,8 @@ class Compiler:
         self.token_func_src = None
         self.token_spec = TokenSpec()
         self.token_ignores = ('{}', '{}')
+        self.prefix_mapping = {}
+        self.cast_map = {}
 
         self.generated_token_names = set()
 
@@ -84,11 +86,23 @@ class Compiler:
             self.token_func_src = content.string[2:-2]
 
     def ast_for_equals(self, equals: T):
+
         if equals[-2].name is NameEnum.Str:
-            name, _, *str_tks, _ = equals
+
+            if equals[1].name is NameEnum.Prefix:
+                name, prefix, _, *str_tks, _ = equals
+                prefix: 'Ast'
+                prefix_string = prefix[1].string
+                if len(prefix_string) > 1:
+                    raise UnsupportedStringPrefix(prefix_string,
+                                                  " the length of prefix name should be 1 only." +
+                                                  find_location(self.filename, prefix[1], self.src))
+                self.prefix_mapping[prefix_string] = name.string
+            else:
+                name, _, *str_tks, _ = equals
+
             name = name.string
             for str_tk in str_tks:
-                str_tk: 'Tokenizer'
                 mode, string = get_string_and_mode(str_tk.string)
                 if mode is 'R':
                     mode = Mode.regex
@@ -130,7 +144,8 @@ class Compiler:
                     name_ignore="{{{}}}".format(', '.join(map(lambda _: '"' + _.string + '"', grouped[False])))
                 ))
 
-    def ast_for_throw(self, throw: T):
+    @classmethod
+    def ast_for_throw(cls, throw: T):
         _, _, *items, _ = throw
         return items
 
@@ -142,7 +157,6 @@ class Compiler:
         return '[{}]'.format(', '.join(self.ast_for_atom_expr(each) for each in or_expr))
 
     def handle_atom_with_trailer(self, atom: T):
-        atom: 'Ast'
         maybe_tk, default_attrs = self.ast_for_atom(atom)
         default_attrs: 'SeqParserParams'
         if maybe_tk.__class__ is Tokenizer:
@@ -201,7 +215,15 @@ class Compiler:
                         self.compile_helper.reachable.add(name)
 
                     return "Ref('{}')".format(name)
-                raise UnsupportedStringPrefix(mode, find_location(self.filename, maybe_tk, self.src))
+                elif mode not in self.prefix_mapping:
+
+                    raise UnsupportedStringPrefix(mode, "Prefix not defined."
+                                                  + find_location(self.filename, maybe_tk, self.src))
+
+                else:
+                    name = self.prefix_mapping[mode]
+                    self.cast_map[string] = name
+                    return f"('{name}', {string})"
 
         return dict(possibilities=', '.join(maybe_tk),
                     at_least=default_attrs.at_least,
@@ -229,10 +251,9 @@ class Compiler:
 
         return ('SeqParser({possibilities}, '
                 'at_least={at_least},'
-                'at_most={at_most})'
-                .format(possibilities=res if res[0] is '[' else f'[{res}]',
-                        at_most=attrs.at_most,
-                        at_least=attrs.at_least))
+                'at_most={at_most})'.format(possibilities=res if res[0] is '[' else f'[{res}]',
+                                            at_most=attrs.at_most,
+                                            at_least=attrs.at_least))
 
     def ast_for_atom(self, atom: 'Ast'):
         if atom[0].string is '(':
@@ -242,7 +263,8 @@ class Compiler:
 
         return atom[0], None
 
-    def ast_for_trailer(self, trailer):
+    @classmethod
+    def ast_for_trailer(cls, trailer):
         if len(trailer) is 1:
             trailer: 'Tokenizer' = trailer[0]
             return SeqParserParams(0, 'Undef') if trailer.string is '*' else SeqParserParams(1, 'Undef')

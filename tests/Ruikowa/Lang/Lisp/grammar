@@ -1,7 +1,6 @@
-Ignore [N]
+ignore [N]
 
-someConst := 'as' 'we' 'can';
-
+someConst as K := 'as' 'we' 'can';
 
 N       := R'\n', R'\t', ' ';
 
@@ -9,8 +8,10 @@ Atom    := R'[^\(\)\s\`]+'; # use Regex
 
 Expr    ::= Atom
           | Quote
-          | '(' Expr* ')' ('as' 'we' 'can');
+          | '(' Expr* ')' (K'as' K'we' K'can');
 
 
 Quote   ::=  '`' Expr ;
 Stmt    ::= Expr*;
+
+

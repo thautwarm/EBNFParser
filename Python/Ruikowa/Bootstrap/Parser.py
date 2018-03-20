@@ -5,7 +5,7 @@ Created on Tue Oct 17 10:16:52 2017
 
 @author: misakawa
 """
-from ..ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralNameParser
+from ..ObjectRegex.Node import Ref, AstParser, SeqParser, LiteralNameParser, LiteralNameValueParser
 from ..ObjectRegex.Tokenizer import Tokenizer
 from ..ObjectRegex.MetaInfo import MetaInfo
 
@@ -18,28 +18,34 @@ namespace = globals()
 recurSearcher = set()
 
 TokenIgnore = AstParser(
-    ['Ignore',
+    [('keyword', 'ignore'),
      '[',
      SeqParser([Name], [Str]),
      ']'],
     name='TokenIgnore')
 
+Prefix = AstParser(
+    [('keyword', 'as'), Name],
+    name='Prefix')
+
 Stmts = AstParser(
-    [SeqParser([Ref('TokenIgnore')], [Ref('TokenDef')], at_most=1),
+    [SeqParser([Ref('TokenIgnore')],
+               [Ref('TokenDef')],
+               at_most=1),
      SeqParser([Ref('Equals')])],
     name='Stmts')
 
 TokenDef = AstParser(
-    ['Token', SeqParser([Name], [Codes], at_most=1, at_least=1)],
+    [('keyword', 'deftoken'), SeqParser([Name], [Codes], at_most=1, at_least=1)],
     name='TokenDef')
 
 Equals = AstParser(
+    [Name, SeqParser([Ref('Prefix')], at_most=1), ':=', SeqParser([Str]), ';'],
     [Name, SeqParser([Ref('Throw')], at_most=1), '::=', Ref('Expr'), ';'],
-    [Name, ':=', SeqParser([Str]), ';'],
     name='Equals')
 
 Throw = AstParser(
-    ['Throw',
+    [('keyword', 'throw'),
      '[',
      SeqParser([Name], [Str]),
      ']'
@@ -72,4 +78,3 @@ Trailer = AstParser(
     name='Trailer')
 
 Stmts.compile(namespace, recurSearcher)
-

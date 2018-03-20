@@ -1,15 +1,17 @@
-def analyze(ebnf):
-    from .Node import LiteralValueParser
-    if len(ebnf) is 1 or not all(ebnf):
+def analyze(cases):
+    from .Node import LiteralValueParser, LiteralNameValueParser
+    if len(cases) is 1 or not all(cases):
         return None
 
     groups = dict()
     group_order = []
 
-    for case in ebnf:
+    for case in cases:
         head = case[0]
         if isinstance(head, LiteralValueParser):
             group_id = "value:" + head.mode
+        elif isinstance(head, LiteralNameValueParser):
+            group_id = f'ref: {head.name} value: {head.mode}'
         else:
             group_id = "ref:" + head.name
 
@@ -26,7 +28,7 @@ def analyze(ebnf):
     return groups, group_order
 
 
-def grammar_remake(groups, groupOrder):
+def grammar_remake(groups, group_order):
     from .Node import AccompaniedAstParser
     return tuple(
         (
@@ -35,12 +37,12 @@ def grammar_remake(groups, groupOrder):
              )
             if len(groups[groupId]) > 1 else groups[groupId][0]
         )
-        for groupId in groupOrder)
+        for groupId in group_order)
 
 
-def optimize(ebnf):
-    analyzed = analyze(ebnf)
+def optimize(cases):
+    analyzed = analyze(cases)
     if analyzed is None:
-        return ebnf
+        return cases
     groups, group_order = analyzed
     return grammar_remake(groups, group_order)

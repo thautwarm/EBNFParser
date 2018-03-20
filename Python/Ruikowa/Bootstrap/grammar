@@ -1,13 +1,15 @@
 Stmts    ::= [TokenIgnore | TokenDef] Equals*;
 
-TokenIgnore ::= 'Ignore' '[' (Name|Str)* ']';
+TokenIgnore ::= 'ignore' '[' (Name|Str)* ']';
 
-TokenDef ::= 'Token' (Name | Codes);
+TokenDef ::= 'deftoken' (Name | Codes);
 
-Equals   ::= Name ':='  Str + ';'|
+Prefix   ::= 'as' Name;
+
+Equals   ::= Name  [Prefix] ':='  Str + ';'|
              Name [Throw] '::=' Expr ';';
 
-Throw    ::= 'Throw' '[' (Name | Str)* ']';
+Throw    ::= 'throw' '[' (Name | Str)* ']';
 
 Expr     ::= Or ('|' Or)*;
 
@@ -21,5 +23,11 @@ Atom     ::=  Str         |
               '[' Expr ']';
 
 Trailer  ::= '*' | '+' | '{' Number{1 2} '}';
+
+/*
+
+keyword :
+    ['ignore', 'deftoken', 'as', 'throw']
+*/
 
 

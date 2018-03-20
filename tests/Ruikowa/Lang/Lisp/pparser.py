@@ -8,34 +8,30 @@ token_table = ((unique_literal_cache_pool["someConst"], str_matcher(('we', 'can'
                (unique_literal_cache_pool["N"], regex_matcher('\t')),
                (unique_literal_cache_pool["N"], char_matcher((' '))),
                (unique_literal_cache_pool["Atom"], regex_matcher('[^\(\)\s\`]+')),
-               (unique_literal_cache_pool["auto_const"], char_matcher((')', '('))),
-               (unique_literal_cache_pool["auto_const"], str_matcher(('we', 'can', 'as'))),
-               (unique_literal_cache_pool["auto_const"], char_matcher(('`'))))
+               (unique_literal_cache_pool["auto_const"], char_matcher(('`', ')', '('))))
 
 class UNameEnum:
 # names
-    auto_const = unique_literal_cache_pool['auto_const']
-    someConst = unique_literal_cache_pool['someConst']
-    Atom = unique_literal_cache_pool['Atom']
-    Expr = unique_literal_cache_pool['Expr']
-    N = unique_literal_cache_pool['N']
     Quote = unique_literal_cache_pool['Quote']
+    Expr = unique_literal_cache_pool['Expr']
+    Atom = unique_literal_cache_pool['Atom']
+    auto_const = unique_literal_cache_pool['auto_const']
     Stmt = unique_literal_cache_pool['Stmt']
+    N = unique_literal_cache_pool['N']
+    someConst = unique_literal_cache_pool['someConst']
 # values
-    someConst_we = unique_literal_cache_pool['we']
-    someConst_can = unique_literal_cache_pool['can']
-    auto_const_as = unique_literal_cache_pool['as']
-    auto_const_can = unique_literal_cache_pool['can']
-    auto_const_we = unique_literal_cache_pool['we']
     someConst_as = unique_literal_cache_pool['as']
+    someConst_can = unique_literal_cache_pool['can']
+    someConst_we = unique_literal_cache_pool['we']
         
-token_func = lambda _: Tokenizer.from_raw_strings(_, token_table, ({"N"}, {}))
+cast_map = {'as': unique_literal_cache_pool['someConst'], 'we': unique_literal_cache_pool['someConst'], 'can': unique_literal_cache_pool['someConst']}
+token_func = lambda _: Tokenizer.from_raw_strings(_, token_table, ({"N"}, {}),cast_map=cast_map)
 someConst = LiteralNameParser('someConst')
 N = LiteralNameParser('N')
 Atom = LiteralNameParser('Atom')
 Expr = AstParser([Ref('Atom')],
                  [Ref('Quote')],
-                 ['(', SeqParser([Ref('Expr')], at_least=0,at_most=Undef), ')', SeqParser(['as', 'we', 'can'], at_least=1,at_most=1)],
+                 ['(', SeqParser([Ref('Expr')], at_least=0,at_most=Undef), ')', SeqParser([('someConst', 'as'), ('someConst', 'we'), ('someConst', 'can')], at_least=1,at_most=1)],
                  name="Expr",
                  to_ignore=({}, {}))
 Quote = AstParser(['`', Ref('Expr')],
