@@ -17,9 +17,9 @@ Parse Many, Any, Every
    -  `Old Version :
       Ruikowa(v1.x) <https://github.com/thautwarm/EBNFParser/tree/boating-new/README.md>`__
 
-P.S: Everything except THIS README is out of date, you can refer [here]
-for more
-information.(https://github.com/thautwarm/ebnfparser-dev-notes/tree/master/code\_examples).
+P.S: Everything except THIS README is out of date, you can refer
+`here <https://github.com/thautwarm/ebnfparser-dev-notes/tree/master/code_examples>`__
+for more information..
 
 --------------
 
