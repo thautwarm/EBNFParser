@@ -4,3 +4,4 @@ Attempts-which-failed/
 .vscode/
 *.idea/
 Ruiko/cmake-build-debug/
+CSharp/
