@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/thautwarm/EBNFParser.svg?branch=boating-new)](https://travis-ci.org/thautwarm/EBNFParser)
 [![PyPI version](https://img.shields.io/pypi/v/EBNFParser.svg)](https://pypi.python.org/pypi/EBNFParser)
-<!-- [![Chinese Doc](https://img.shields.io/badge/docs-RuikowaEBNF-yellow.svg?style=flat)](https://github.com/thautwarm/EBNFParser/blob/boating-new/Ruikowa.zh.md) -->
+[![Doc](https://img.shields.io/badge/docs-yellow.svg?style=flat)](http://ebnfparser.readthedocs.io/en/boating-new)
 [![Release Note](https://img.shields.io/badge/note-release-orange.svg)](https://github.com/thautwarm/EBNFParser/blob/boating-new/Python/release-note)
 [![MIT License](https://img.shields.io/badge/license-MIT-Green.svg?style=flat)](https://github.com/thautwarm/EBNFParser/blob/boating-new/LICENSE)
 
