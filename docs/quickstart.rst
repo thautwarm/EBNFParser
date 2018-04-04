@@ -56,7 +56,7 @@ Finally, test it.
 .. code ::
 
     ruiko lisp.ruiko lisp_parser.py --test
-    python test_lang.py Stmt "(definie f (x y z) (add (add x y) z))"
+    python test_lang.py Stmts "(definie f (x y z) (add (add x y) z))"
 
 
 
