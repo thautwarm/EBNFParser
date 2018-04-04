@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 if test -n $1
 then
 	bash INSTALL.sh
