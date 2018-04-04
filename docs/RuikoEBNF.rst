@@ -1,7 +1,8 @@
-
+Ruiko EBNF
+=====================
 
 Cast Map
-=================
+--------------
 
 
 .. code ::
@@ -27,7 +28,7 @@ The literal parser defined as :code:`Alpha := R'[a-z]+'` just matches the tokeni
 
 
 Prefix
-======================
+--------------------------
 
 If you're using custom tokenizing, several :code:`Tokenizer` object 
 with the same string "abc"(and have the same memory address)
@@ -47,11 +48,11 @@ To distinguish from each other, you can do as the following:
 
 .. code ::
 
-    Tokenizers:
         [name: SomeToken, string: "abc"]
         ...
 
-If you are using combined parser :code:`G` to match these tokenizers, you'll fail,
+
+If you are using combined parser :code:`G` to match above tokenizers, you'll fail,
 because in the grammar :code:`G` is defined as :code:`G::='abc'` , it means :code:`G` only accepts
 the a tokenizer who has an attribute :code:`name="auto_const"` and another attribute :code:`string="abc"`
 (and it's from the unique buff pool, not a string created by regex matching).

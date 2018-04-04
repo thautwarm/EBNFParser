@@ -6,14 +6,12 @@
 
 # EBNFParser
 Parse Many, Any, Every
----------
+-----------------------
 [HomePage](https://github.com/thautwarm/EBNFParser)
 
 - [Python Project(Support Python 3.6+)](https://github.com/thautwarm/EBNFParser/tree/boating-new/Python) (v 2.0)
-    - [Old Version : Misakawa(v0.x)](https://github.com/thautwarm/EBNFParser/tree/boating-new/Misakawa.md)
-    - [Old Version : Ruikowa(v1.x)](https://github.com/thautwarm/EBNFParser/tree/boating-new/README.md)
-
-P.S: Everything except THIS README is out of date, you can refer [here](https://github.com/thautwarm/ebnfparser-dev-notes/tree/master/code_examples) for more information..
+    - [Old Version : Misakawa(v0.x)](https://github.com/thautwarm/EBNFParser/tree/master/Misakawa.md)
+    - [Old Version : Ruikowa(v1.x)](https://github.com/thautwarm/EBNFParser/tree/master/README.md)
  
 --------------------
 

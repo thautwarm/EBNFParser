@@ -8,15 +8,8 @@ Welcome to EBNFParser's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
-   
+   :caption: Notes
+
    quickstart
-   Automatical-Tokenizing/Prefix-And-CastMap
+   RuikoEBNF
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

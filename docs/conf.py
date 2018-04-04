@@ -171,4 +171,11 @@ texinfo_documents = [
 ]
 
 
+source_suffix = ['.rst', '.md', '.MD']
+html_theme = 'sphinx_rtd_theme'
 
+from recommonmark.parser import CommonMarkParser 
+source_parsers = {
+    '.md': CommonMarkParser,
+    '.MD': CommonMarkParser,
+}
