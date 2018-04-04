@@ -1,0 +1,15 @@
+
+ignore [space]
+
+space   := R'\s';
+
+Atom    := R'[^\(\)\s\`]+'; # use Regex
+
+Expr    ::= Atom
+        | Quote
+        | '(' Expr* ')';
+
+
+Quote   ::=  '`' Expr ;
+
+Stmts   ::= Expr*;

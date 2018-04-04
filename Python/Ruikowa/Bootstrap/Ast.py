@@ -69,6 +69,11 @@ class Compiler:
         for each in equals:
             self.ast_for_equals(each)
 
+        # if every combined parser can reach any other combined, 
+        # just take any of them and compile it!
+        if not self.compile_helper.alone and self._current__combined_parser_name:
+            self.compile_helper.alone.add(self._current__combined_parser_name)
+
     def ast_for_token_ignore(self, token_ignore: T):
         _, _, *items, _ = token_ignore
         grouped = linq.Flow(items).GroupBy(lambda x: x.name is NameEnum.Str).Unboxed()

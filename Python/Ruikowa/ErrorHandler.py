@@ -32,7 +32,7 @@ class ErrorHandler:
     def from_tokens(self, filename: str, src_code: str, tokens: 'Sequence[Tokenizer]', meta: 'MetaInfo', partial=False):
         if meta is None:
             from .ObjectRegex.MetaInfo import MetaInfo
-            meta = MetaInfo()
+            meta = MetaInfo(fileName=filename)
 
         if not meta:
             raise CheckConditionError("Meta Information not defined yet!")
