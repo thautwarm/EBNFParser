@@ -4,6 +4,6 @@ then
 	bash INSTALL.sh
 
 fi
-
 cd tests/Ruikowa/Lang
+
 bash Lisp/testLisp.sh
