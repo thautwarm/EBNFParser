@@ -44,7 +44,7 @@ TokenDef = AstParser(
     name='TokenDef')
 
 Equals = AstParser(
-    [Name, SeqParser([Ref('Prefix')], [Ref('Of')], at_most=1), ':=', SeqParser([Str]), ';'],
+    [Name, SeqParser(['cast'], at_most=1) ,SeqParser([Ref('Prefix')], [Ref('Of')], at_most=1), ':=', SeqParser([Str]), ';'],
     [Name, SeqParser([Ref('Throw')], at_most=1), '::=', Ref('Expr'), ';'],
     name='Equals')
 

@@ -1,6 +1,6 @@
 ignore [N]
 
-someConst as K := 'as' 'we' 'can';
+someConst cast as K := 'as' 'we' 'can';
 
 N       := R'\n', R'\t', ' ';
 

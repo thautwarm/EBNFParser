@@ -58,7 +58,7 @@ class TokenSpec:
             return '(unique_literal_cache_pool["{}"], str_matcher(({})))'.format(name, match_mode)
 
         token_items = linq.Flow(groups).Map(make_each).Filter(lambda x: x).Then(_join).Unboxed()
-        return '({})'.format(token_items)
+        return '({},)'.format(token_items)
 
     def to_name_enum(self):
 

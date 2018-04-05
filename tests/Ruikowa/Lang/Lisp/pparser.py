@@ -3,11 +3,12 @@ from Ruikowa.ObjectRegex.Tokenizer import unique_literal_cache_pool, regex_match
 from Ruikowa.ObjectRegex.Node import AstParser, Ref, SeqParser, LiteralValueParser as L, LiteralNameParser, Undef
 namespace = globals()
 recur_searcher = set()
-token_table = ((unique_literal_cache_pool["N"], regex_matcher('\n')),
+token_table = ((unique_literal_cache_pool["someConst"], str_matcher(('we', 'can', 'as'))),
+               (unique_literal_cache_pool["N"], regex_matcher('\n')),
                (unique_literal_cache_pool["N"], regex_matcher('\t')),
                (unique_literal_cache_pool["N"], char_matcher((' '))),
                (unique_literal_cache_pool["Atom"], regex_matcher('[^\(\)\s\`]+')),
-               (unique_literal_cache_pool["auto_const"], char_matcher(('`', ')', '('))))
+               (unique_literal_cache_pool["auto_const"], char_matcher(('`', ')', '('))),)
 
 class UNameEnum:
 # names

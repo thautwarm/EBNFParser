@@ -92,11 +92,44 @@ class Compiler:
         else:
             self.token_func_src = content.string[2:-2]
 
-    def ast_for_equals(self, equals: T):
+    def ast_for_combined_parser_def(self, equals: T):
+        if equals[1].name is NameEnum.Throw:
+            name, throw, _, expr, _ = equals
+            throw: 'T' = self.ast_for_throw(throw)
+            grouped = linq.Flow(throw).GroupBy(lambda x: x.name is NameEnum.Str).Unboxed()
+        else:
+            name, _, expr, _ = equals
+            grouped = {True: (), False: ()}
+
+        name = self._current__combined_parser_name = name.string
+        self.token_spec.enums.__setitem__(name, f"'{name}'")
+
+        if name not in self.compile_helper.reachable:
+            self.compile_helper.alone.add(name)
+
+        indent = '             ' + " " * len(name)
+        self.combined_parsers.append(
+            '{name} = AstParser({possibilities},\n'
+            '{indent}name="{name}",\n'
+            '{indent}to_ignore=({name_ignore}, {lit_ignore}))'
+            ''.format(
+                indent=indent,
+                name=name,
+                possibilities=(',\n{}'.format(indent)).join(self.ast_for_expr(expr)),
+                lit_ignore="{{{}}}".format(', '.join(map(lambda _: _.string, grouped[True]))),
+                name_ignore="{{{}}}".format(', '.join(map(lambda _: '"' + _.string + '"', grouped[False])))
+            ))
+
+    def ast_for_literal_parser_def(self, equals: T):
         str_tks: 'List[Tokenizer]'
+        defining_cast_map = False
         if equals[-2].name is NameEnum.Str:
 
-            defining_cast_map = False
+            if equals[1].string is NameEnum.keyword_cast:
+                defining_cast_map = True
+                h, _, *t = equals
+                equals = [h, *t]
+
             if equals[1].name is NameEnum.Prefix:
                 name, prefix, _, *str_tks, _ = equals
                 prefix: 'Ast'
@@ -106,7 +139,6 @@ class Compiler:
                                                   " the length of prefix name should be 1 only." +
                                                   find_location(self.filename, prefix[1], self.src))
                 self.prefix_mapping[prefix_string] = name.string
-                defining_cast_map = True
 
             elif equals[1].name is NameEnum.Of:
 
@@ -118,7 +150,6 @@ class Compiler:
                 name, _, *str_tks, _ = equals
 
             name = name.string
-
             if defining_cast_map:
                 # define cast map
                 for str_tk in str_tks:
@@ -128,55 +159,30 @@ class Compiler:
                                                       'do not support setting prefix when defining custom prefix.' +
                                                       find_location(self.filename, str_tk, self.src))
                     self.cast_map[string] = name
-                    if str_tk.string[1:-1].isidentifier():
-                        self.token_spec.enums.__setitem__(f'{name}_{str_tk.string[1:-1]}', str_tk.string)
-            else:
-                # define how to tokenize
-                for str_tk in str_tks:
-                    mode, string = get_string_and_mode(str_tk.string)
-                    if mode is 'R':
-                        mode = Mode.regex
-                    elif len(string) is 3:
-                        mode = Mode.char
-                    else:
-                        mode = Mode.const
-                    self.token_spec.tokens.append((name, mode, string))
-                    if string[1:-1].isidentifier():
-                        self.token_spec.enums.__setitem__(f'{name}_{string[1:-1]}', string)
+
+            # define how to tokenize
+            for str_tk in str_tks:
+                mode, string = get_string_and_mode(str_tk.string)
+                if mode is 'R':
+                    mode = Mode.regex
+                elif len(string) is 3:
+                    mode = Mode.char
+                else:
+                    mode = Mode.const
+                self.token_spec.tokens.append((name, mode, string))
+                if string[1:-1].isidentifier():
+                    self.token_spec.enums.__setitem__(f'{name}_{string[1:-1]}', string)
 
             if name not in self.generated_token_names:
                 self.literal_parser_definitions.append("{} = LiteralNameParser('{}')".format(name, name))
                 self.generated_token_names.add(name)
             self.token_spec.enums.__setitem__(name, f"'{name}'")
 
-
-        else:
-            if equals[1].name is NameEnum.Throw:
-                name, throw, _, expr, _ = equals
-                throw: 'T' = self.ast_for_throw(throw)
-                grouped = linq.Flow(throw).GroupBy(lambda x: x.name is NameEnum.Str).Unboxed()
-            else:
-                name, _, expr, _ = equals
-                grouped = {True: (), False: ()}
-
-            name = self._current__combined_parser_name = name.string
-            self.token_spec.enums.__setitem__(name, f"'{name}'")
-
-            if name not in self.compile_helper.reachable:
-                self.compile_helper.alone.add(name)
-
-            indent = '             ' + " " * len(name)
-            self.combined_parsers.append(
-                '{name} = AstParser({possibilities},\n'
-                '{indent}name="{name}",\n'
-                '{indent}to_ignore=({name_ignore}, {lit_ignore}))'
-                ''.format(
-                    indent=indent,
-                    name=name,
-                    possibilities=(',\n{}'.format(indent)).join(self.ast_for_expr(expr)),
-                    lit_ignore="{{{}}}".format(', '.join(map(lambda _: _.string, grouped[True]))),
-                    name_ignore="{{{}}}".format(', '.join(map(lambda _: '"' + _.string + '"', grouped[False])))
-                ))
+    def ast_for_equals(self, equals: T):
+        if equals[-2].name is NameEnum.Str:
+            self.ast_for_literal_parser_def(equals)
+            return
+        self.ast_for_combined_parser_def(equals)
 
     @classmethod
     def ast_for_throw(cls, throw: T):

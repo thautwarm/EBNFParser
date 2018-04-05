@@ -5,10 +5,10 @@ TokenIgnore ::= 'ignore' '[' (Name|Str)* ']';
 TokenDef ::= 'deftoken' (Name | Codes);
 
 Prefix   ::= 'as' Name;
-Of      ::= 'of' Name;
+Of       ::= 'of' Name;
 
 
-Equals   ::= Name  [Prefix|Of] ':='  Str + ';'|
+Equals   ::= Name ['cast'] [Prefix|Of] ':='  Str + ';'|
              Name [Throw] '::=' Expr ';';
 
 Throw    ::= 'throw' '[' (Name | Str)* ']';

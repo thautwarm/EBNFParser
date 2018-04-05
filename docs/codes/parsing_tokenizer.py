@@ -3,21 +3,18 @@ from Ruikowa.ObjectRegex.Tokenizer import unique_literal_cache_pool, regex_match
 from Ruikowa.ObjectRegex.Node import AstParser, Ref, SeqParser, LiteralValueParser as L, LiteralNameParser, Undef
 namespace = globals()
 recur_searcher = set()
-token_table = ((unique_literal_cache_pool["MyTokenType"], str_matcher(('abc', '233'))),
-               (unique_literal_cache_pool["AddOne"], str_matcher(('+1'))))
+token_table = ((unique_literal_cache_pool["MyTokenType"], str_matcher(('abc', '233'))),)
 
 class UNameEnum:
 # names
 
     MyTokenType_abc = unique_literal_cache_pool['abc']
     MyTokenType = unique_literal_cache_pool['MyTokenType']
-    AddOne = unique_literal_cache_pool['AddOne']
     parserToTest = unique_literal_cache_pool['parserToTest']
         
 cast_map = {}
 token_func = lambda _: Tokenizer.from_raw_strings(_, token_table, ({}, {}),cast_map=cast_map)
 MyTokenType = LiteralNameParser('MyTokenType')
-AddOne = LiteralNameParser('AddOne')
 parserToTest = AstParser([SeqParser([Ref('MyTokenType')], at_least=1,at_most=Undef)],
                          name="parserToTest",
                          to_ignore=({}, {}))

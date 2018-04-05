@@ -1,0 +1,12 @@
+
+
+ignore [space]
+space        := R'\s+';
+# ignore the whitespace characters.
+
+
+identifier   := R'[a-zA-Z_]{1}[a-zA-Z_0-9]*';
+keyword cast := 'def' 'for' 'public';
+
+
+parserToTest ::= (identifier | keyword)+;

@@ -1,3 +1,2 @@
 MyTokenType  := 'abc' '233';
-AddOne       := '+1';
 parserToTest ::= MyTokenType+;

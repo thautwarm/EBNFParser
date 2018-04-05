@@ -13,6 +13,7 @@ class NameEnum:
     keyword_throw = unique_literal_cache_pool['throw']
     keyword_deftoken = unique_literal_cache_pool['deftoken']
     keyword_ignore = unique_literal_cache_pool['ignore']
+    keyword_cast = unique_literal_cache_pool['cast']
 
     Of = unique_literal_cache_pool['Of']
     Prefix = unique_literal_cache_pool['Prefix']
@@ -75,7 +76,8 @@ cast_map = {
     'deftoken': keyword,
     'ignore': keyword,
     'for': keyword,
-    'of': keyword
+    'of': keyword,
+    'cast': keyword
 }
 
 token_func = lambda _: Tokenizer.from_raw_strings(_,
