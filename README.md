@@ -78,7 +78,7 @@ LR ::= LR 'a' 'b' | LR 'c' | 'd';
 
 Need more? See [the documents](http://ebnfparser.readthedocs.io/en/boating-new).
 
-## Examples:
+## Examples
 
 Here are some examples to refer:  
 
