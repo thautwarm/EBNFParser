@@ -3,10 +3,8 @@
 EBNFParser
 ==========
 
-Parse Many, Any, Every
-----------------------
-
-|Doc|
+Parse Many, Any, Every |Doc|
+----------------------------
 
 ::
 
