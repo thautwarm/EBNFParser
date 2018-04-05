@@ -186,9 +186,7 @@ which is proposed by EBNFParser to extend primary EBNF.
     ArgList                     ::= ... # omit
     
 
-
-
-EBNFParser supplies you a convenient way to use an EBNF idiom to   
+What's more, EBNFParser supports unlimited **left recursions**.   
 
 .. _Scala-flatMap: https://www.scala-lang.org/api/current/?search=flatMap
 

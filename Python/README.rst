@@ -1,4 +1,4 @@
-|Build Status| |PyPI version| |Release Note| |MIT License|
+|Build Status| |PyPI version| |Doc| |Release Note| |MIT License|
 
 EBNFParser
 ==========
@@ -13,13 +13,9 @@ Parse Many, Any, Every
    (v 2.0)
 
    -  `Old Version :
-      Misakawa(v0.x) <https://github.com/thautwarm/EBNFParser/tree/boating-new/Misakawa.md>`__
+      Misakawa(v0.x) <https://github.com/thautwarm/EBNFParser/tree/master/Misakawa.md>`__
    -  `Old Version :
-      Ruikowa(v1.x) <https://github.com/thautwarm/EBNFParser/tree/boating-new/README.md>`__
-
-P.S: Everything except THIS README is out of date, you can refer
-`here <https://github.com/thautwarm/ebnfparser-dev-notes/tree/master/code_examples>`__
-for more information..
+      Ruikowa(v1.x) <https://github.com/thautwarm/EBNFParser/tree/master/README.md>`__
 
 --------------
 
@@ -191,6 +187,8 @@ License
    :target: https://travis-ci.org/thautwarm/EBNFParser
 .. |PyPI version| image:: https://img.shields.io/pypi/v/EBNFParser.svg
    :target: https://pypi.python.org/pypi/EBNFParser
+.. |Doc| image:: https://img.shields.io/badge/docs-2.1-yellow.svg?style=flat
+   :target: http://ebnfparser.readthedocs.io/en/boating-new
 .. |Release Note| image:: https://img.shields.io/badge/note-release-orange.svg
    :target: https://github.com/thautwarm/EBNFParser/blob/boating-new/Python/release-note
 .. |MIT License| image:: https://img.shields.io/badge/license-MIT-Green.svg?style=flat
