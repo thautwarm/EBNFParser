@@ -10,14 +10,16 @@ Parse Many, Any, Every
 
 ::
 
+    LR ::= LR 'a' 'b' | LR 'c' | 'd';
+
 -  `Python Project(Support Python
    3.6+) <https://github.com/thautwarm/EBNFParser/tree/boating-new/Python>`__
-   (v 2.0)
+   (v 2.0+)
 
-   -  `Old Version :
-      Misakawa(v0.x) <https://github.com/thautwarm/EBNFParser/tree/master/Misakawa.md>`__
-   -  `Old Version :
-      Ruikowa(v1.x) <https://github.com/thautwarm/EBNFParser/tree/master/README.md>`__
+   -  `Old Version : Misakawa
+      v0.x <https://github.com/thautwarm/EBNFParser/tree/master/Misakawa.md>`__
+   -  `Old Version : Ruikowa
+      v1.x <https://github.com/thautwarm/EBNFParser/tree/master/README.md>`__
 
 --------------
 
@@ -47,7 +49,7 @@ Usage
 
    .. code:: shell
 
-       ruiko ./<grammar File> ./<output Python File(endswith ".py")>
+       ruiko ./<grammar File> ./<output filename>
                [--testTk] # print tokenized words or not
                [--test] # generate test script "test_lang.py"
 
