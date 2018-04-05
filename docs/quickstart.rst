@@ -34,7 +34,7 @@ Here is a source code example:
 
 .. code ::
 
-   ignore [space]  # ignore the tokens with this(these) name(s).
+    ignore [space]  # ignore the tokens with this(these) name(s).
 
     space   := R'\s';
 
@@ -49,6 +49,8 @@ Here is a source code example:
 
     Stmts   ::= Expr*;
 
+
+
 And then use it to generate a parser and make a test script automatically by EBNFParser.
 
 Finally, test it.
@@ -57,13 +59,20 @@ Finally, test it.
 
     ruiko lisp.ruiko lisp_parser.py --test
     python test_lang.py Stmts "(definie f (x y z) (add (add x y) z))"
+     =========================ebnfparser test script================================
+    Stmts[
+        Expr[
+            [name: auto_const, string: "("]
+            Expr[
+                [name: Atom, string: "definie"]
+    ...(omit)
 
 
 
 Integrate EBNFParser Into Your Own Project
 ---------------------------------------------
 
-For example, if we have generated the lisp parser file like the above as a module `MyProject.Lisp.parser`.
+For example, if we have generated the lisp parser file like the above as a module :code:`MyProject.Lisp.parser` .
 
 .. code :: python
 

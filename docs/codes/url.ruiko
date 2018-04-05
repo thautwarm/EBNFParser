@@ -1,0 +1,3 @@
+url := R'https.*?\.(com|cn|org|net)';
+other := R'.';
+parserToTest throw [other] ::= (url | other)+;

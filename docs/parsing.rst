@@ -1,16 +1,15 @@
-About Parser
+Parsing in EBNFParser
 =======================
 
 
-EBNFParser is a parser generator framework to parse raw string into structured AST.
+EBNFParser is a parser generator framework to parse raw string into structured nested list(AST).
 
 Pasring of EBNFParser has following steps:
 
 Tokenizing
 ---------------
 
-Tokenizing is the very first step to split input string and 
-transform each to a :code:`Ruikowa.ObjectRegex.Tokenizer` object.
+Tokenizing is the very first step to split input string into a sequence of :code:`Ruikowa.ObjectRegex.Tokenizer` objects.
 
 A :code:`Ruikowa.ObjectRegex.Tokenizer` has the following **readonly** attributes:
 

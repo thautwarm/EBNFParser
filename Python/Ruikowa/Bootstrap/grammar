@@ -29,7 +29,7 @@ Trailer  ::= '*' | '+' | '{' Number{1 2} '}';
 /*
 
 keyword :
-    ['ignore', 'deftoken', 'as', 'throw', 'of']
+    ['ignore', 'deftoken', 'as', 'throw', 'of'， 'cast']
 */
 
 

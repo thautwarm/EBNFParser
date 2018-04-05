@@ -5,7 +5,7 @@ namespace = globals()
 recur_searcher = set()
 token_table = ((unique_literal_cache_pool["space"], regex_matcher('\s')),
                (unique_literal_cache_pool["Atom"], regex_matcher('[^\(\)\s\`]+')),
-               (unique_literal_cache_pool["auto_const"], char_matcher(('`', ')', '('))))
+               (unique_literal_cache_pool["auto_const"], char_matcher(('`', ')', '('))),)
 
 class UNameEnum:
 # names
