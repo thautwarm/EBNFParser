@@ -56,12 +56,25 @@ Example:
         [name: MyTokenType, string: "233"]
     ]
 
-Take care that if you're using anonymous literal pattern when definining a combined parser like the following:
+Take care that if you're using anonymous literal pattern when definining a combined parser,
+like the following:
 
 .. code :: 
 
-    Just ::= 'just';
+    Just ::= 'just'+;
 
+Then name of all the anonymous tokenizers is just :code:`"auto_const"` :
+
+.. code ::
+
+    ruiko just.ruiko just --test
+    python test_lang.py Just "justjustjust"
+    =========================ebnfparser test script================================
+    Just[
+        [name: auto_const, string: "just"]
+        [name: auto_const, string: "just"]
+        [name: auto_const, string: "just"]
+    ]
 
 
 CastMap(Optional)

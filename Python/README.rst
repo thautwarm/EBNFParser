@@ -88,8 +88,8 @@ Usage
 Need more? See `the
 documents <http://ebnfparser.readthedocs.io/en/boating-new>`__.
 
-Examples:
----------
+Examples
+--------
 
 Here are some examples to refer:
 
