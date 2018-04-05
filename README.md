@@ -4,10 +4,8 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-Green.svg?style=flat)](https://github.com/thautwarm/EBNFParser/blob/boating-new/LICENSE)
 
 # EBNFParser
-Parse Many, Any, Every
+Parse Many, Any, Every [![Doc](https://img.shields.io/badge/document-2.1.2-yellow.svg?style=flat)](http://ebnfparser.readthedocs.io/en/boating-new)
 -----------------------
-
-[![Doc](https://img.shields.io/badge/document-2.1.2-yellow.svg?style=flat)](http://ebnfparser.readthedocs.io/en/boating-new)
 
 ```
 LR ::= LR 'a' 'b' | LR 'c' | 'd';
