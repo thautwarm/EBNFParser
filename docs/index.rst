@@ -11,5 +11,7 @@ Welcome to EBNFParser's documentation!
    :caption: Notes
 
    quickstart
+   parsing
    RuikoEBNF
+
 

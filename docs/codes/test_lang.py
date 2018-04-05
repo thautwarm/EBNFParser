@@ -21,7 +21,7 @@ if args.debug:
 from Ruikowa.ErrorHandler import ErrorHandler, Colored
 from Ruikowa.ObjectRegex.ASTDef import Ast
 from Ruikowa.io import grace_open
-from lisp_parser import *              
+from parsing_tokenizer import *              
 print(Colored.Green,'=========================ebnfparser test script================================', Colored.Clear)
 
 print_token = args.testTk
